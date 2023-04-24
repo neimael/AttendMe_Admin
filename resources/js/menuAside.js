@@ -1,16 +1,21 @@
 import {
-  mdiAccountCircle,
+
   mdiMonitor,
-  mdiGithub,
   mdiLock,
-  mdiAlertCircle,
-  mdiSquareEditOutline,
-  mdiTable,
   mdiViewList,
-  mdiTelevisionGuide,
-  mdiResponsive,
-  mdiPalette,
-  mdiReact,
+  mdiHome, mdiAccountMultiple, mdiPlus,
+  mdiAccount,
+  mdiFormatListText,
+ mdiClipboardList,
+  mdiCashRegister,
+  mdiElevator,
+  mdiElevatorUp,
+  mdiElevatorPassenger,
+  mdiElevatorPassengerOffOutline,
+  mdiElevatorPassengerOutline,
+  mdiEmoticonSick,
+  mdiPrinterPosWrenchOutline,
+  mdiListBoxOutline
 } from "@mdi/js";
 
 export default [
@@ -20,67 +25,63 @@ export default [
     label: "Dashboard",
   },
   {
-    to: "/tables",
-    label: "Tables",
-    icon: mdiTable,
-  },
-  {
-    to: "/forms",
-    label: "Forms",
-    icon: mdiSquareEditOutline,
-  },
-  {
-    to: "/ui",
-    label: "UI",
-    icon: mdiTelevisionGuide,
-  },
-  {
-    to: "/responsive",
-    label: "Responsive",
-    icon: mdiResponsive,
-  },
-  {
-    to: "/",
-    label: "Styles",
-    icon: mdiPalette,
-  },
-  {
-    to: "/profile",
-    label: "Profile",
-    icon: mdiAccountCircle,
-  },
-  {
-    to: "/login",
-    label: "Login",
-    icon: mdiLock,
-  },
-  {
-    to: "/error",
-    label: "Error",
-    icon: mdiAlertCircle,
-  },
-  {
-    label: "Dropdown",
-    icon: mdiViewList,
+
+    label: "Elevators",
+    icon: mdiElevatorPassengerOutline,
     menu: [
       {
-        label: "Item One",
+        label: "View All",
+        icon: mdiViewList,
+        to: "/elevators",
       },
       {
-        label: "Item Two",
+        label: "Add New",
+        icon: mdiPlus,
+        to: "/add-elevator",
       },
     ],
   },
   {
-    href: "https://github.com/justboil/admin-one-vue-tailwind",
-    label: "GitHub",
-    icon: mdiGithub,
-    target: "_blank",
+
+    label: "Regulations",
+    icon: mdiPrinterPosWrenchOutline,
+    menu: [
+      {
+        label: "Sanitary",
+        icon: mdiEmoticonSick,
+        to: "/sanitary_issues",
+      },
+      {
+        label: "Technical",
+        icon:  mdiPrinterPosWrenchOutline ,
+        to: "/technical_issues",
+      },
+    ],
   },
   {
-    href: "https://github.com/justboil/admin-one-react-tailwind",
-    label: "React version",
-    icon: mdiReact,
-    target: "_blank",
+    to: "/attandance",
+    icon: mdiListBoxOutline,
+    label: "Attendance",
   },
+
+  {
+
+    label: "Users",
+    icon: mdiAccountMultiple,
+    menu: [
+      {
+        label: "Employees",
+        icon: mdiAccount,
+        to: "/employees",
+      },
+      {
+        label: "Admins",
+        icon: mdiLock,
+        to: "/admins",
+      },
+    ],
+  },
+
+
+
 ];
