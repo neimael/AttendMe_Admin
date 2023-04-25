@@ -21,7 +21,7 @@ const styleStore = useStyleStore();
 const logoutItem = computed(() => ({
   label: "Logout",
   icon: mdiLogout,
-  color: "info",
+  color: "blue-200",
   isLogout: true,
 }));
 
@@ -50,8 +50,10 @@ const asideLgCloseClick = (event) => {
         <div
           class="text-center flex-1 lg:text-left lg:pl-6 xl:text-center xl:pl-0"
         >
-          <b class="font-black">One</b>
+          <img src="/logo.png" alt="logo" class="h-40 mx-auto mt-20 " />
+          
         </div>
+        
         <button
           class="hidden lg:inline-block xl:hidden p-3"
           @click.prevent="asideLgCloseClick"
@@ -71,7 +73,7 @@ const asideLgCloseClick = (event) => {
       </div>
 
       <ul>
-        <AsideMenuItem :item="logoutItem" @menu-click="menuClick" />
+        <AsideMenuItem class="bg-blue-400" :item="logoutItem" @menu-click="menuClick" />
       </ul>
     </div>
   </aside>

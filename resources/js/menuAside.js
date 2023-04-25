@@ -19,6 +19,19 @@ import {
 } from "@mdi/js";
 
 export default [
+
+    {
+      // Add a spacer object before the "Dashboard" item
+      spacer: true,
+    },
+    {
+      // Add a spacer object before the "Dashboard" item
+      spacer: true,
+    },
+    {
+      // Add a spacer object before the "Dashboard" item
+      spacer: true,
+    },
   {
     to: "/",
     icon: mdiMonitor,

@@ -17,9 +17,11 @@ const menuClick = (event, item) => {
 };
 </script>
 
-<template>
+<template >
+
   <ul>
-    <AsideMenuItem
+   
+    <AsideMenuItem 
       v-for="(item, index) in menu"
       :key="index"
       :item="item"
