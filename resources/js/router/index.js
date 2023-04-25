@@ -65,7 +65,7 @@ const routes = [
       title: "AddElevator",
     },
     path: "/add-elevator",
-    name: "add-elevators",
+    name: "add-elevator",
     component: () => import("../pages/NewElevatorView.vue"),
   },
   //manage attendance
@@ -84,7 +84,15 @@ const routes = [
     },
     path: "/assignments",
     name: "assignments",
-    component: () => import("../pages/AsignementView.vue"),
+    component: () => import("../pages/AssignmentView.vue"),
+  },
+  {
+    meta: {
+    title: "AddAssignments",
+    },
+    path: "/add-assignment",
+    name: "add-assignment",
+    component: () => import("../pages/NewAssignmentView.vue"),
   },
   {
     meta: {

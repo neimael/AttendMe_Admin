@@ -68,7 +68,7 @@ export default [
       {
         label: "Add New",
         icon: mdiPlus,
-        to: "/add-assignments",
+        to: "/add-assignment",
       },
     ],
   },

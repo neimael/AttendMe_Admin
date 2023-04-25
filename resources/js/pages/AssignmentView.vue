@@ -1,5 +1,5 @@
 <script setup>
-import { mdiPlus, mdiLock,
+import { mdiPlus, mdiLock,mdiOrderBoolAscendingVariant
 }
   from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
@@ -16,7 +16,7 @@ import BaseButton from "@/components/BaseButton.vue";
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiLock" title="Elevator Assignments" main>
+      <SectionTitleLineWithButton :icon="mdiOrderBoolAscendingVariant" title="Elevator Assignments" main>
         <router-link to="/add-assignments">
           <BaseButton
             target="_blank"
