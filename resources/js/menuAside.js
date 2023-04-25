@@ -5,6 +5,7 @@ import {
   mdiViewList,
   mdiHome, mdiAccountMultiple, mdiPlus,
   mdiAccount,
+  mdiOrderBoolAscendingVariant,
   mdiFormatListText,
  mdiClipboardList,
   mdiCashRegister,
@@ -56,6 +57,24 @@ export default [
   },
   {
 
+    label: "assignments",
+    icon: mdiOrderBoolAscendingVariant,
+    menu: [
+      {
+        label: "View All",
+        icon: mdiViewList,
+        to: "/assignments",
+      },
+      {
+        label: "Add New",
+        icon: mdiPlus,
+        to: "/add-assignments",
+      },
+    ],
+  },
+
+  {
+
     label: "Regulations",
     icon: mdiPrinterPosWrenchOutline,
     menu: [
@@ -72,7 +91,7 @@ export default [
     ],
   },
   {
-    to: "/attandance",
+    to: "/attendances",
     icon: mdiListBoxOutline,
     label: "Attendance",
   },
@@ -95,6 +114,6 @@ export default [
     ],
   },
 
-
+ 
 
 ];

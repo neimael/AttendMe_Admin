@@ -50,13 +50,41 @@ const routes = [
     name: "add-employee",
     component: () => import("../pages/NewEmployeeView.vue"),
   },
+  //manage elevators
   {
     meta: {
-      title: "Forms",
+      title: "Elevators",
     },
-    path: "/forms",
-    name: "forms",
-    component: () => import("../pages/FormsView.vue"),
+    path: "/elevators",
+    name: "elevators",
+    component: () => import("../pages/ElevatorView.vue"),
+  },
+  
+  {
+    meta: {
+      title: "AddElevator",
+    },
+    path: "/add-elevator",
+    name: "add-elevators",
+    component: () => import("../pages/NewElevatorView.vue"),
+  },
+  //manage attendance
+  {
+    meta: {
+    title: "Attendance",
+    },
+    path: "/attendances",
+    name: "attendances",
+    component: () => import("../pages/AttendanceView.vue"),
+  },
+  //manage Asignements
+  {
+    meta: {
+    title: "Assignments",
+    },
+    path: "/assignments",
+    name: "assignments",
+    component: () => import("../pages/AsignementView.vue"),
   },
   {
     meta: {
@@ -66,22 +94,8 @@ const routes = [
     name: "profile",
     component: () => import("../pages/ProfileView.vue"),
   },
-  {
-    meta: {
-      title: "Ui",
-    },
-    path: "/ui",
-    name: "ui",
-    component: () => import("../pages/UiView.vue"),
-  },
-  {
-    meta: {
-      title: "Responsive layout",
-    },
-    path: "/responsive",
-    name: "responsive",
-    component: () => import("../pages/ResponsiveView.vue"),
-  },
+ 
+ 
   {
     meta: {
       title: "Login",
@@ -98,6 +112,7 @@ const routes = [
     name: "error",
     component: () => import("../pages/ErrorView.vue"),
   },
+
 ];
 
 const router = createRouter({
