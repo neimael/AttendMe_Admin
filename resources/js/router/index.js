@@ -18,11 +18,20 @@ const routes = [
   
   {
     meta: {
-      title: "Tables",
+      title: "Admins",
     },
-    path: "/tables",
-    name: "tables",
-    component: () => import("../pages/TablesView.vue"),
+    path: "/admins",
+    name: "admins",
+    component: () => import("../pages/AdminView.vue"),
+  },
+  
+  {
+    meta: {
+      title: "AddAdmin",
+    },
+    path: "/add-admin",
+    name: "add-admin",
+    component: () => import("../pages/NewAdminView.vue"),
   },
   {
     meta: {
