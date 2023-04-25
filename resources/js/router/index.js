@@ -66,7 +66,7 @@ const routes = [
     },
     path: "/add-elevator",
     name: "add-elevators",
-    component: () => import("../pages/NewEmployeeView.vue"),
+    component: () => import("../pages/NewElevatorView.vue"),
   },
   {
     meta: {
