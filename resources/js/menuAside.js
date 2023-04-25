@@ -81,12 +81,12 @@ export default [
       {
         label: "Sanitary",
         icon: mdiEmoticonSick,
-        to: "/sanitary_issues",
+        to: "/sanitary-issues",
       },
       {
         label: "Technical",
         icon:  mdiPrinterPosWrenchOutline ,
-        to: "/technical_issues",
+        to: "/technical-issues",
       },
     ],
   },

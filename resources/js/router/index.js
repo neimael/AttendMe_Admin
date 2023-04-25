@@ -94,6 +94,23 @@ const routes = [
     name: "add-assignment",
     component: () => import("../pages/NewAssignmentView.vue"),
   },
+  //manage regulations
+  {
+    meta: {
+    title: "SanitaryIssues",
+    },
+    path: "/sanitary-issues",
+    name: "sanitaryIssues",
+    component: () => import("../pages/SanitaryIssuesView.vue"),
+  },
+  {
+    meta: {
+    title: "TechnicalIssues",
+    },
+    path: "/technical-issues",
+    name: "technicalIssues",
+    component: () => import("../pages/TechnicalIssuesView.vue"),
+  },
   {
     meta: {
       title: "Profile",
