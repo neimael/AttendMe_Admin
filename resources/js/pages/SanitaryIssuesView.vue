@@ -1,10 +1,11 @@
 <script setup>
-import { mdiPlus, mdiLock,
+import { mdiPlus, mdiLock,mdiElevatorPassengerOutline,mdiListBoxOutline
 }
   from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 
-import TableAsignement from "@/components/TableAsignement.vue";
+import TableSanitaryIssues from "@/components/TableSanitaryIssues.vue";
+
 
 import CardBox from "@/components/CardBox.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
@@ -16,21 +17,21 @@ import BaseButton from "@/components/BaseButton.vue";
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiLock" title="Elevator Assignments" main>
-        <router-link to="/add-assignments">
+      <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Sanitary Issues Regulations" main>
+       <!-- <router-link to="/add-manual-attendance">
           <BaseButton
             target="_blank"
-            :icon="mdiPlus"
-            label="Add new assignments"
+            :icon="mdiElevatorPassengerOutline"
+            label="Add new elevator"
             color="contrast"
             rounded-full
             small
           />
-        </router-link>
+        </router-link>-->
       </SectionTitleLineWithButton>
 
       <CardBox has-table>
-        <TableAsignement />
+        <TableSanitaryIssues/>
       </CardBox>
     </SectionMain>
   </LayoutAuthenticated>

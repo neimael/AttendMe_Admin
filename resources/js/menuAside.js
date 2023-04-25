@@ -68,7 +68,7 @@ export default [
       {
         label: "Add New",
         icon: mdiPlus,
-        to: "/add-assignments",
+        to: "/add-assignment",
       },
     ],
   },
@@ -81,12 +81,12 @@ export default [
       {
         label: "Sanitary",
         icon: mdiEmoticonSick,
-        to: "/sanitary_issues",
+        to: "/sanitary-issues",
       },
       {
         label: "Technical",
         icon:  mdiPrinterPosWrenchOutline ,
-        to: "/technical_issues",
+        to: "/technical-issues",
       },
     ],
   },
