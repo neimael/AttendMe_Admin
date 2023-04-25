@@ -50,6 +50,24 @@ const routes = [
     name: "add-employee",
     component: () => import("../pages/NewEmployeeView.vue"),
   },
+  //manage elevators
+  {
+    meta: {
+      title: "Elevators",
+    },
+    path: "/elevators",
+    name: "elevators",
+    component: () => import("../pages/ElevatorView.vue"),
+  },
+  
+  {
+    meta: {
+      title: "AddElevator",
+    },
+    path: "/add-elevator",
+    name: "add-elevators",
+    component: () => import("../pages/NewEmployeeView.vue"),
+  },
   {
     meta: {
       title: "Forms",
