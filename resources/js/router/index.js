@@ -15,7 +15,7 @@ const routes = [
     name: "dashboard",
     component: Home,
   },
-  
+  //manage users
   {
     meta: {
       title: "Admins",
@@ -32,6 +32,23 @@ const routes = [
     path: "/add-admin",
     name: "add-admin",
     component: () => import("../pages/NewAdminView.vue"),
+  },
+  {
+    meta: {
+      title: "Employees",
+    },
+    path: "/employees",
+    name: "employees",
+    component: () => import("../pages/EmployeeView.vue"),
+  },
+  
+  {
+    meta: {
+      title: "AddEmployee",
+    },
+    path: "/add-employee",
+    name: "add-employee",
+    component: () => import("../pages/NewEmployeeView.vue"),
   },
   {
     meta: {

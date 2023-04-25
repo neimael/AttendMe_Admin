@@ -107,7 +107,8 @@ const checked = (isChecked, client) => {
         <th>Name</th>
         <th>Email</th>
         <th>Phone Number</th>
-        
+        <th>Birthday</th>
+        <th>CIN</th>
         <th>Created</th>
         <th />
       </tr>
@@ -133,7 +134,12 @@ const checked = (isChecked, client) => {
         <td data-label="City">
           {{ client.city }}
         </td>
-       
+        <td data-label="Company">
+          {{ client.company }}
+        </td>
+        <td data-label="City">
+          {{ client.city }}
+        </td>
         <td data-label="Created" class="lg:w-1 whitespace-nowrap">
           <small
             class="text-gray-500 dark:text-slate-400"
@@ -149,13 +155,13 @@ const checked = (isChecked, client) => {
               small
               @click="isModalActive = true"
             />
-           <!--<BaseButton
+           <BaseButton
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + client.id"
+            :to="'/update-employee/' + client.id"
            
-          />-->
+          />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
