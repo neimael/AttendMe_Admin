@@ -12,13 +12,13 @@ class PresenceRegulation extends Model
     protected $table='presence_regulation';
     protected $primaryKey = 'id_presence_regulation';
     protected $fillable = [
-        'id_presence_regulation',
         'id_employee',
-        'date',
-        'time_in',
-        'time_out',
+        'attendance_day',
+        'check_in',
+        'check_out',
         'status',
-        'note',
+        'issue_type',
+        
     ];
 
     public function employee()

@@ -13,13 +13,11 @@ class SanitaryIssues extends Model
     protected $table='sanitary_issues';
     protected $primaryKey = 'id_sanitary_issue';
     protected $fillable = [
-        'id_sanitary_issue',
+        
         'id_employee',
-        'date',
-        'time_in',
-        'time_out',
-        'status',
-        'note',
+        'regulation_date',
+        'certificat',
+        
     ];
 
     public function employee()
