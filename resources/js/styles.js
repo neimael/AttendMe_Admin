@@ -1,5 +1,6 @@
+
 export const white = {
-  aside: "bg-white",
+  aside: "bg-white dark:bg-slate-900",
   asideScrollbars: "aside-scrollbars-light",
   asideBrand: "",
   asideMenuItem: "text-blue-400 hover:text-black dark:text-white ",
@@ -10,3 +11,4 @@ export const white = {
   navBarItemLabelActiveColor: "text-black",
   overlay: "from-white via-gray-100 to-white",
 };
+
