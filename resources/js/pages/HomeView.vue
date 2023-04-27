@@ -21,21 +21,9 @@ import BaseButton from "@/components/BaseButton.vue";
 import CardBoxTransaction from "@/components/CardBoxTransaction.vue";
 import CardBoxClient from "@/components/CardBoxClient.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
-import { useStyleStore } from "@/stores/style.js";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionBannerStarOnGitHub from "@/components/SectionBannerStarOnGitHub.vue";
-const styles = ["white", "basic"];
 
-const styleStore = useStyleStore();
-
-styleStore.setDarkMode(false);
-
-const router = useRouter();
-
-const click = (slug) => {
-  styleStore.setStyle(slug);
-  router.push("/dashboard");
-};
 const chartData = ref(null);
 
 const fillChartData = () => {
@@ -44,7 +32,6 @@ const fillChartData = () => {
 
 onMounted(() => {
   fillChartData();
-  click("white");
 });
 
 const mainStore = useMainStore();
