@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAsignmentElevator;
 use App\Models\AssignmentElevator;
 use Illuminate\Http\Request;
+use App\Http\Resources\AssignmentElevatorResource;
 
 class AssignmentElevatorController extends Controller
 {
@@ -12,7 +14,10 @@ class AssignmentElevatorController extends Controller
      */
     public function index()
     {
-        //
+        
+        $assignmentElevator=AssignmentElevator::all();
+        //return $employees[0]-> sanitaryIssues;
+        return  AssignmentElevatorResource::collection($assignmentElevator);
     }
 
     /**
@@ -26,9 +31,18 @@ class AssignmentElevatorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAsignmentElevator $request)
     {
-        //
+            
+            $assignmentElevator=new AssignmentElevator();
+            $assignmentElevator->id_employee=$request->id_employee;
+            $assignmentElevator->id_elevator=$request->id_elevator;
+            $assignmentElevator->start_date=$request->start_date;
+            $assignmentElevator->end_date=$request->end_date;
+            $assignmentElevator->time_in=$request->time_in;
+            $assignmentElevator->time_out=$request->time_out;
+            $assignmentElevator->save();
+            return new AssignmentElevatorResource($assignmentElevator);
     }
 
     /**

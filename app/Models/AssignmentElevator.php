@@ -13,14 +13,15 @@ class AssignmentElevator extends Model
     protected $table='assignment_elevator';
     protected $primaryKey = 'id_assignment_elevator';
     protected $fillable = [
-        'id_assignment_elevator',
+        
         'id_employee',
         'id_elevator',
-        'date',
+        'end_date',
+        'start_date',
         'time_in',
         'time_out',
-        'status',
-        'note',
+
+        
     ];
     public function employee()
     {

@@ -16,7 +16,6 @@ class Presence extends Model
     protected $fillable = [
         'id_employee',
         'id_elevator',
-        'date',
         'check_in',
         'check_out',
         'attendance_day',

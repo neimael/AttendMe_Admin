@@ -14,6 +14,14 @@ class AdminResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'phone_number' => $this->phone_number,
+            'avatar' => $this->avatar ? 'data:image/png;base64,' . $this->avatar : null,
+            // assuming the avatar is stored as a PNG image
+        ];
     }
 }
