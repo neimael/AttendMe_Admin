@@ -15,6 +15,16 @@ const routes = [
     name: "dashboard",
     component: Home,
   },
+  {
+    // Document title tag
+    // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
+    meta: {
+      title: "Login",
+    },
+    path: "/login",
+    name: "login",
+    component: import("../pages/LoginView.vue"),
+  },
   //manage users
   {
     meta: {

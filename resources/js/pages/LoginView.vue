@@ -10,17 +10,28 @@ import FormControl from "@/components/FormControl.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import LayoutGuest from "@/auth/LayoutGuest.vue";
+import { useStyleStore } from "@/stores/style.js";
+const styles = ["white", "basic"];
 
+const styleStore = useStyleStore();
+
+styleStore.setDarkMode(false);
+
+const router = useRouter();
+
+const click = (slug) => {
+ 
+  router.push("/dashboard");
+};
 const form = reactive({
   login: "john.doe",
   pass: "highly-secure-password-fYjUw-",
   remember: true,
 });
-
-const router = useRouter();
-
-const submit = () => {
-  router.push("/dashboard");
+const submit = (slug) => {
+  styleStore.setStyle(slug);
+  router.push("/");
+  
 };
 </script>
 
