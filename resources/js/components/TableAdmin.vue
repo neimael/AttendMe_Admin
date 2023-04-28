@@ -14,40 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,13 +29,13 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, admin) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(admin);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === admin.id_admin
     );
   }
 };
@@ -107,40 +76,34 @@ const checked = (isChecked, client) => {
         <th>Name</th>
         <th>Email</th>
         <th>Phone Number</th>
-        
-        <th>Created</th>
+       
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="admin in paginatedAdmins" :key="admin.id">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, admin)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
-          <UserAvatar
-            :username="client.name"
-            class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
-          />
-        </td>
+          <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
+    <img :src="admin.avatar" alt="Avatar" style="width: 100%; height: 100%; display: block;">
+  </div>
+</td>
         <td data-label="Name">
-          {{ client.name }}
+          {{ admin.first_name }} {{ admin.last_name }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Email">
+          {{ admin.email }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="Phone Number">
+          {{ admin.phone_number }}
         </td>
        
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
-          <small
-            class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
-          >
-        </td>
+       
+       
+        
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
@@ -149,13 +112,13 @@ const checked = (isChecked, client) => {
               small
               @click="isModalActive = true"
             />
-           <!--<BaseButton
+           <BaseButton
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + client.id"
+            :to="'/update-admin/' + admin.id"
            
-          />-->
+          />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
@@ -184,3 +147,45 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+
+export default {
+  name: "AdminView",
+  data() {
+    return {
+      admins: [],
+      currentPage: 0,
+      pageSize: 5,
+      ADMIN_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/admins",
+    };
+
+  },
+  methods: {
+    async getAdmin() {
+      await axios.get(this.ADMIN_API_BASE_URL)
+        .then(response => this.admins = response.data)
+        .catch(error => console.log(error))
+    }
+  },
+  computed: {
+    paginatedAdmins: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.admins.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.admins.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    }
+  },
+  mounted() {
+    this.getAdmin();
+  }
+};
+</script>

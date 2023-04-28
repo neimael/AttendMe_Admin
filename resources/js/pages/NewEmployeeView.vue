@@ -81,7 +81,7 @@ window.Swal = swal;
              <div class="flex justify-center">
             <BaseButtons > 
               
-              <BaseButton  type="submit" color="warning" label="Add" @click="addEmployee"/> 
+              <BaseButton  type="submit" color="warning" label="Add" @click="addEmployee()"/> 
                <BaseButton  type="reset" color="warning" outline label="Reset"/>
             </BaseButtons>
         </div>
@@ -105,7 +105,7 @@ export default {
       cin: "",
       birthday_date: "",
       phone_number: "",
-      avatar: "",
+      
       email: "",
       password: "",
     }
@@ -120,13 +120,13 @@ export default {
         cin: this.cin,
         birthday_date: this.birthday_date,
         phone_number: this.phone_number,
-        avatar: this.avatar,
+        
         email: this.email,
         password: this.password,
       };
 
 
-      axios.post('http://localhost/AttendMe_Admin/public/api/add_employee', newEmployee)
+      axios.post('api/add_employee', newEmployee)
         .then(() => {
           swal({
             text: "Employee Added Successfully!",

@@ -104,12 +104,34 @@ export default [
       {
         label: "Employees",
         icon: mdiAccount,
-        to: "/employees",
+        menu: [
+          {
+            label: "View All",
+            icon: mdiViewList,
+            to: "/employees",
+          },
+          {
+            label: "Add New",
+            icon: mdiPlus,
+            to: "/add-employee",
+          },
+        ],
       },
       {
         label: "Admins",
         icon: mdiLock,
-        to: "/admins",
+        menu: [
+          {
+            label: "View All",
+            icon: mdiViewList,
+            to: "/admins",
+          },
+          {
+            label: "Add New",
+            icon: mdiPlus,
+            to: "/add-admin",
+          },
+        ],
       },
     ],
   },
