@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreElevator;
+use App\Http\Resources\ElevatorResource;
 use App\Models\Elevator;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\Request;
 
 class ElevatorController extends Controller
@@ -12,7 +15,8 @@ class ElevatorController extends Controller
      */
     public function index()
     {
-        //
+        $elevators=Elevator::all();
+        return ElevatorResource::collection($elevators);
     }
 
     /**
@@ -26,9 +30,15 @@ class ElevatorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreElevator $request)
     {
-        //
+            
+            $elevator=new Elevator();
+            $elevator->name=$request->name;
+            $elevator->qr_code=$request->qr_code;
+            $elevator->id_location=$request->id_location;
+            $elevator->save();
+            return new ElevatorResource($elevator);
     }
 
     /**

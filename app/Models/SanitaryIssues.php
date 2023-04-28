@@ -10,13 +10,14 @@ class SanitaryIssues extends Model
 {
     use HasFactory;
     
-    protected $table='sanitary_issues';
-    protected $primaryKey = 'id_sanitary_issue';
+    protected $table='sanitary_regulation';
+    protected $primaryKey = 'id_sanitary_regulation';
     protected $fillable = [
         
         'id_employee',
         'regulation_date',
-        'certificat',
+        'certificate',
+        'report'
         
     ];
 
