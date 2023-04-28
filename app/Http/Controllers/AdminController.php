@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAdminRequest;
+use App\Http\Resources\AdminResource;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        //
+        $admins=Admin::all();
+        //return $employees[0]-> sanitaryIssues;
+        return  AdminResource::collection($admins);
     }
 
     /**
@@ -26,9 +30,23 @@ class AdminController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAdminRequest $request)
     {
-        //
+        $admin=new Admin();
+        $admin->first_name=$request->first_name;
+        $admin->last_name=$request->last_name;
+        $admin->email=$request->email;
+        $admin->phone_number=$request->phone_number;
+        // Convert the image to base64 encoding
+        if ($request->has('avatar')) {
+            $image = $request->file('avatar');
+            $base64Image = base64_encode(file_get_contents($image->getPathname()));
+            $admin->avatar = $base64Image;
+        }
+        $admin->password=$request->password;
+        $admin->save();
+        return new AdminResource($admin);
+
     }
 
     /**

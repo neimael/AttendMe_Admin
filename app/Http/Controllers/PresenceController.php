@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePresenceRequest;
+use App\Http\Resources\PresenceResource;
 use App\Models\Presence;
 use Illuminate\Http\Request;
 
@@ -12,7 +14,8 @@ class PresenceController extends Controller
      */
     public function index()
     {
-        //
+        $presences=Presence::all();
+        return PresenceResource::collection($presences);
     }
 
     /**
@@ -26,9 +29,22 @@ class PresenceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePresenceRequest $request)
     {
-        //
+            $presence=new Presence();
+            $presence->id_employee=$request->id_employee;
+            $presence->id_elevator=$request->id_elevator;
+            $presence->check_in=$request->check_in;
+            $presence->check_out=$request->check_out;
+            $presence->attendance_day=$request->attendance_day;
+            $presence->qrcode=$request->qrcode;
+            if ($request->has('selfie')) {
+                $image = $request->file('selfie');
+                $base64Image = base64_encode(file_get_contents($image->getPathname()));
+                $presence->selfie = $base64Image;
+            }
+            $presence->save();
+            return new PresenceResource($presence);
     }
 
     /**

@@ -19,6 +19,7 @@ class PresenceRegulation extends Model
         'status',
         'issue_type',
         
+        
     ];
 
     public function employee()
