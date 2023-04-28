@@ -7,7 +7,7 @@ import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
+import UserAvatar from "@/components/UserAvaxtar.vue";
 
 defineProps({
   checkable: Boolean,

@@ -38,13 +38,13 @@ window.Swal = swal;
         </router-link>
       </SectionTitleLineWithButton>
       <div class="container w-7/12 mx-auto">
-        <CardBox form @submit.prevent="submit">
+        <CardBox form>
             <FormField>
           <FormField label="FirstName">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="text" v-model="first_name" required/>
           </FormField>
           <FormField label="LastName">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="text" v-model="last_name" required/>
           </FormField>
             </FormField>
             <FormField>
@@ -52,7 +52,7 @@ window.Swal = swal;
             <FormControl type="email" v-model="email" required/>
           </FormField>
           <FormField label="Phone Number">
-            <FormControl type="phone" v-model="email" required/>
+            <FormControl type="phone" v-model="phone_number" required/>
           </FormField>
         </FormField>
           <FormField label="Password">
@@ -66,16 +66,13 @@ window.Swal = swal;
                  @change="onImageSelected"
                  />
         </FormField>
-
-
           <template #footer>
-             <div class="flex justify-center">
-            <BaseButtons > 
+            <BaseButtons >  
+               <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin()"/>
                 <BaseButton  type="reset" color="warning" outline label="Reset"/>
-              <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin"/>
-             
+
             </BaseButtons>
-        </div>
+       
           </template>
         </CardBox>
       </div>
@@ -84,4 +81,45 @@ window.Swal = swal;
 
   </LayoutAuthenticated>
 </template>
+<script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      
+      email: "",
+      password: "",
+    }
+  },
+  props: [],
+  methods: {
+    async addAdmin() {
+      const newAdmin = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        phone_number: this.phone_number,
+        
+        email: this.email,
+        password: this.password,
+      };
+      axios.post('api/add_admin',newAdmin )
+        .then(() => {
+          swal({
+            text: "Admin Added Successfully!",
+            icon: "success",
+            closeOnClickOutside: false,
+          });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+}
+</script>
+
 

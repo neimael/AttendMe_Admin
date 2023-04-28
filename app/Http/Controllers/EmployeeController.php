@@ -20,7 +20,7 @@ class EmployeeController extends Controller
         
         //
     }
-    public function store(StoreEmployeeRequest $request)
+    public function store(request $request)
     {
         $employee = new User();
         $employee->first_name=$request->first_name;
