@@ -14,40 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,13 +29,13 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, employee) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(employee);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === employee.id_employee
     );
   }
 };
@@ -103,50 +72,49 @@ const checked = (isChecked, client) => {
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th />
+        <th ></th>
         <th>Name</th>
         <th>Email</th>
         <th>Phone Number</th>
         <th>Birthday</th>
         <th>CIN</th>
-        <th>Created</th>
+       <!--<th>Created</th>--> 
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="employee in paginatedEmployees" :key="employee.id">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, employee)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
-          <UserAvatar
-            :username="client.name"
-            class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
-          />
-        </td>
+          <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
+    <img :src="employee.avatar" alt="Avatar" style="width: 100%; height: 100%; display: block;">
+  </div>
+</td>
         <td data-label="Name">
-          {{ client.name }}
+          {{ employee.first_name }} {{ employee.last_name }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Email">
+          {{ employee.email }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="Phone Number">
+          {{ employee.phone_number }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="birthday">
+          {{ employee.birthday_date }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="CIN">
+          {{ employee.cin }}
         </td>
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
+        <!--<td data-label="Created" class="lg:w-1 whitespace-nowrap">
           <small
             class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
+            :title="employee.created_at"
+            >{{ employee.created_at}}</small
           >
-        </td>
+        </td>-->
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
@@ -159,7 +127,7 @@ const checked = (isChecked, client) => {
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-employee/' + client.id"
+            :to="'/update-employee/' + employee.id"
            
           />
             <BaseButton
@@ -190,3 +158,45 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+
+export default {
+  name: "EmployeeView",
+  data() {
+    return {
+      employees: [],
+      currentPage: 0,
+      pageSize: 5,
+      EMPLOYEE_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/employees",
+    };
+
+  },
+  methods: {
+    async getEmployees() {
+      await axios.get(this.EMPLOYEE_API_BASE_URL)
+        .then(response => this.employees = response.data)
+        .catch(error => console.log(error))
+    }
+  },
+  computed: {
+    paginatedEmployees: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.employees.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.employees.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    }
+  },
+  mounted() {
+    this.getEmployees();
+  }
+};
+</script>
