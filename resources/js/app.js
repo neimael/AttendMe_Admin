@@ -9,6 +9,7 @@ import { darkModeKey, styleKey } from "@/config.js";
 
 import "../css/app.css";
 
+
 /* Init Pinia */
 const pinia = createPinia();
 

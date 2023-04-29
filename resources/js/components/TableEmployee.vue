@@ -7,7 +7,7 @@ import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvaxtar.vue";
+
 
 defineProps({
   checkable: Boolean,
@@ -83,15 +83,15 @@ const checked = (isChecked, employee) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="employee in paginatedEmployees" :key="employee.id">
+      <tr v-for="employee in paginatedEmployees" :key="employee.id_employee">
         <TableCheckboxCell
           v-if="checkable"
           @checked="checked($event, employee)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
           <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
-    <img :src="employee.avatar" alt="Avatar" style="width: 100%; height: 100%; display: block;">
-  </div>
+            <img :src="'/storage/EmployeeAvatar/' + employee.avatar " alt="employee" class="w-full h-full object-cover"> </div>
+  
 </td>
         <td data-label="Name">
           {{ employee.first_name }} {{ employee.last_name }}

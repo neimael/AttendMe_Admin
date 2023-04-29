@@ -7,7 +7,7 @@ import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
+
 
 defineProps({
   checkable: Boolean,
@@ -81,15 +81,14 @@ const checked = (isChecked, admin) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="admin in paginatedAdmins" :key="admin.id">
+      <tr v-for="admin in paginatedAdmins" :key="admin.id_admin">
         <TableCheckboxCell
           v-if="checkable"
           @checked="checked($event, admin)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
           <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
-    <img :src="admin.avatar" alt="Avatar" style="width: 100%; height: 100%; display: block;">
-  </div>
+            <img :src="'/storage/AdminAvatar/' + admin.avatar " alt="admin" class="w-full h-full object-cover"> </div>
 </td>
         <td data-label="Name">
           {{ admin.first_name }} {{ admin.last_name }}
@@ -116,7 +115,7 @@ const checked = (isChecked, admin) => {
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + admin.id"
+            :to="'/update-admin/' + admin.id_admin"
            
           />
             <BaseButton
@@ -157,7 +156,7 @@ export default {
       admins: [],
       currentPage: 0,
       pageSize: 5,
-      ADMIN_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/admins",
+      ADMIN_API_BASE_URL: "api/admins",
     };
 
   },

@@ -3,7 +3,7 @@
 import {mdiPlus, mdiLock,mdiAccountMultiple} from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
-
+import Form from "@/form.js";
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
@@ -38,41 +38,39 @@ window.Swal = swal;
         </router-link>
       </SectionTitleLineWithButton>
       <div class="container w-7/12 mx-auto">
-        <CardBox form @submit.prevent="submit">
+        <CardBox form >
             <FormField>
           <FormField label="FirstName" >
-            <FormControl type="text" v-model="first_name" required/>
+            <FormControl type="text" v-model="form.first_name" required/>
           </FormField>
           <FormField label="LastName" >
-            <FormControl type="text" v-model="last_name" required/>
+            <FormControl type="text" v-model="form.last_name" required/>
           </FormField>
             </FormField>
             <FormField>
           <FormField label="Email" >
-            <FormControl type="email" v-model="email" required/>
+            <FormControl type="email" v-model="form.email" required/>
           </FormField>
           <FormField label="Phone Number" >
-            <FormControl type="phone" v-model="phone_number" required/>
+            <FormControl type="phone" v-model="form.phone_number" required/>
           </FormField>
         </FormField>
         <FormField>
             <FormField label="CIN" >
-            <FormControl type="text" v-model="cin" required/>
+            <FormControl type="text" v-model="form.cin" required/>
           </FormField>
           <FormField label="Birthday" >
-            <FormControl type="date" v-model="birthday_date" required/>
+            <FormControl type="date" v-model="form.birthday_date" required/>
           </FormField>
           
         </FormField>
-          <FormField label="Password" >
-            <FormControl v-model="password" required/>
-          </FormField>
+          
           <FormField label="Images" >
           <input type="file"
-                 id="images"
-                 name="images"
+                 id="avatar"
+                 
                  class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"
-                 @change="onImageSelected"
+                
                  />
         </FormField>
 
@@ -97,49 +95,51 @@ window.Swal = swal;
 <script>
 import axios from "axios";
 
+
 export default {
   data() {
     return {
-      first_name: "",
-      last_name: "",
-      cin: "",
-      birthday_date: "",
-      phone_number: "",
-      
-      email: "",
-      password: "",
+      form: new Form({
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        cin: "",
+        birthday_date: "",
+        email: "",
+        password: "",
+      })
     }
-  },
+    },
+  
   props: [],
   methods: {
-
     async addEmployee() {
-      const newEmployee = {
-        first_name: this.first_name,
-        last_name: this.last_name,
-        cin: this.cin,
-        birthday_date: this.birthday_date,
-        phone_number: this.phone_number,
-        
-        email: this.email,
-        password: this.password,
-      };
 
-
-      axios.post('api/add_employee', newEmployee)
-        .then(() => {
+        let data = new FormData();
+        data.append('first_name', this.form.first_name);
+        data.append('last_name', this.form.last_name);
+        data.append('phone_number', this.form.phone_number);
+        data.append('email', this.form.email);
+        data.append('cin', this.form.cin);
+        data.append('birthday_date', this.form.birthday_date);
+        //data.append('avatar', this.form.avatar);
+        data.append('password', this.form.password);
+        if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}
+        axios.post('api/add_employee', data).then(() => {
           swal({
             text: "Employee Added Successfully!",
             icon: "success",
             closeOnClickOutside: false,
           });
-        })
-        .catch(error => {
+          this.$router.go();
+        }).catch(error => {
           console.log(error);
         });
-
-    }
+      },
+   
   }
-
 }
 </script>
+
+
+
