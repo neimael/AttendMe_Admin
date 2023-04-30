@@ -121,20 +121,20 @@ const checked = (isChecked, employee) => {
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="showAllInfo"
             />
            <BaseButton
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-employee/' + employee.id"
+            :to="'/update-employee/' + employee.id_employee"
            
           />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="confirmDelete(employee.id_employee)"
             />
           </BaseButtons>
         </td>
@@ -160,6 +160,7 @@ const checked = (isChecked, employee) => {
 </template>
 <script>
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 export default {
   name: "EmployeeView",
@@ -167,7 +168,7 @@ export default {
     return {
       employees: [],
       currentPage: 0,
-      pageSize: 5,
+      pageSize: 10,
       EMPLOYEE_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/employees",
     };
 
@@ -177,7 +178,48 @@ export default {
       await axios.get(this.EMPLOYEE_API_BASE_URL)
         .then(response => this.employees = response.data)
         .catch(error => console.log(error))
+    },
+    confirmDelete(employeeId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this employee record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked the "Yes" button, so proceed with delete request
+            axios.delete('api/delete_employee/' + employeeId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Employee has been deleted successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+},
+showAllInfo() {
+      // format your information here as a string
+      const info = `
+      
+      `
+      // use SweetAlert2 to display the information
+      Swal.fire({
+        icon: 'info',
+        title: 'All Information',
+        html: info,
+        confirmButtonText: 'OK'
+      })
     }
+
   },
   computed: {
     paginatedEmployees: function () {

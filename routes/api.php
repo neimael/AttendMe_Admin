@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //employees
 Route::get('employees', [EmployeeController::class,'index']);
 Route::post('add_employee', [EmployeeController::class, 'store']);
+Route::delete('delete_employee/{id}', [EmployeeController::class, 'destroy']);
 //sanitaryIssues
 Route::post('add_sanitary_issue', [SanitaryIssuesController::class, 'store']);
 //admins
