@@ -22,18 +22,17 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $table='employee';
-    protected $primaryKey = 'id_employee';
     protected $fillable = [
     
         'first_name',
         'last_name',
         'email',
-        'phone_number',
+        'phone_number',  
+        'adress',
         'password',
         'avatar',
         'cin',
-        'birthday_date',
+        'birthday',
     ];
 
     /**
@@ -54,21 +53,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function presences()
-   {
-       return $this->hasMany(Presence::class,'id_employee','id_employee');
-   }
-   public function assignments()
-   {
-       return $this->hasMany(AssignmentElevator::class,'id_employee','id_employee');
-   }
-   public function sanitaryIssues()
-   {
-       return $this->hasMany(SanitaryIssues::class,'id_employee','id_employee');
-   }
-   public function presenceRegulations()
-   {
-       return $this->hasMany(PresenceRegulation::class,'id_employee','id_employee');
-   }
+//     public function presences()
+//    {
+//        return $this->hasMany(Presence::class,'id_employee','id_employee');
+//    }
+//    public function assignments()
+//    {
+//        return $this->hasMany(AssignmentElevator::class,'id_employee','id_employee');
+//    }
+//    public function sanitaryIssues()
+//    {
+//        return $this->hasMany(SanitaryIssues::class,'id_employee','id_employee');
+//    }
+//    public function presenceRegulations()
+//    {
+//        return $this->hasMany(PresenceRegulation::class,'id_employee','id_employee');
+//    }
 
 }
