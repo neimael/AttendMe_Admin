@@ -33,6 +33,8 @@ Route::post('add_sanitary_issue', [SanitaryIssuesController::class, 'store']);
 //admins
 Route::get('admins', [AdminController::class, 'index']);
 Route::post('add_admin', [AdminController::class, 'store']);
+Route::delete('delete_admin/{id}', [AdminController::class, 'destroy']);
+
 //Asignement
 Route::post('add_asignment', [AssignmentElevatorController::class, 'store']);
 Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index']);

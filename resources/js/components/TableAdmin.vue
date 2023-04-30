@@ -122,7 +122,7 @@ const checked = (isChecked, admin) => {
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              v-if="admin.id_admin !== loggedInAdminId" @click="confirmDelete(admin.id_admin)"
             />
           </BaseButtons>
         </td>
@@ -148,6 +148,7 @@ const checked = (isChecked, admin) => {
 </template>
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 export default {
   name: "AdminView",
@@ -155,8 +156,9 @@ export default {
     return {
       admins: [],
       currentPage: 0,
-      pageSize: 5,
+      pageSize: 10,
       ADMIN_API_BASE_URL: "api/admins",
+      loggedInAdminId: 1 // set to the ID of the currently logged-in admin
     };
 
   },
@@ -165,7 +167,36 @@ export default {
       await axios.get(this.ADMIN_API_BASE_URL)
         .then(response => this.admins = response.data)
         .catch(error => console.log(error))
-    }
+    },
+    confirmDelete(adminId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this admin record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked the "Yes" button, so proceed with delete request
+            axios.delete('api/delete_admin/' + adminId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Admin has been deleted successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+}
+
+
   },
   computed: {
     paginatedAdmins: function () {
@@ -181,7 +212,8 @@ export default {
     },
     pagesList: function () {
       return Array.from({length: this.numPages}, (v, k) => k);
-    }
+    },
+    
   },
   mounted() {
     this.getAdmin();
