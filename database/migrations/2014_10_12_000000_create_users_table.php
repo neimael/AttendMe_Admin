@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->string('cin');
             $table->string('phone_number');
+            $table->string('adress');
             $table->date('birthday');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

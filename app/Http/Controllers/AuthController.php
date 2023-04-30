@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+
+
 class AuthController extends Controller
 {
 
@@ -18,6 +20,7 @@ class AuthController extends Controller
             'cin' => 'required|string',
             'birthday' => 'required|date',
             'phone_number' => 'required|string',
+            'adress' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed'
         ]);
@@ -29,6 +32,7 @@ class AuthController extends Controller
             'cin' => $attr['cin'],
             'birthday' => $attr['birthday'],
             'phone_number' => $attr['phone_number'],
+            'adress' => $attr['adress'],
             'email' => $attr['email'],
             'password' => bcrypt($attr['password']),
         ]);
@@ -71,5 +75,35 @@ class AuthController extends Controller
         return response([
             'user' => auth() ->user()
         ],200);
+    }
+
+    //update
+    public function update(Request $request)
+    {
+        $attr = $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'birthday' => 'required|date',
+            'phone_number' => 'required|string',
+            'adress' => 'required|string',
+            'email' => 'required|email',
+        ]);
+
+        $image = $this->saveImage($request->avatar, 'profiles');
+
+        auth()->user()->update([
+            'first_name' => $attr['first_name'],
+            'last_name' => $attr['last_name'],
+            'birthday' => $attr['birthday'],
+            'phone_number' => $attr['phone_number'],
+            'adress' => $attr['adress'],
+            'email' => $attr['email'],
+            'avatar' => $image
+        ]);
+
+        return response([
+            'message' => 'User updated.',
+            'user' => auth()->user()
+        ], 200);
     }
 }
