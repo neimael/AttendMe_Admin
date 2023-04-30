@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\AdminCreated;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -36,8 +38,6 @@ class AdminController extends Controller
      */
     public function store(request $request)
     {
-      
-    
         $add_admin = new Admin();
         $add_admin->first_name = $request->input('first_name');
         $add_admin->last_name = $request->input('last_name');
@@ -54,11 +54,16 @@ class AdminController extends Controller
             Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
             $add_admin->avatar = $filename;
         } else {
-            $add_admin->avatar = '/files/icons8-scan-reconnaissance-faciale-100 (1).png';
+            $add_admin->avatar = '/AdminAvatar/1682800678AttendMeS.png';
         }
-           
         $add_admin->save();
-        
+        try {
+            Mail::to($request->input('email'))->send(new AdminCreated($request->input('email'), $password));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error sending email: ' . $e->getMessage()
+            ], 500);
+        }
         return response()->json([
             'message' => 'Admin added successfully.',
             'password' => $password // Return the generated password

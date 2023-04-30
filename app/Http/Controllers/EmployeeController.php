@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\EmployeeCreated;
+use Illuminate\Support\Facades\Mail;
+
 
 class EmployeeController extends Controller
 {
@@ -47,7 +50,17 @@ class EmployeeController extends Controller
             $employee->avatar = '/files/icons8-scan-reconnaissance-faciale-100 (1).png';
         }   
         $employee->save();
-        
+        try {
+            Mail::to($request->input('email'))->send(new EmployeeCreated($request->input('email'), $password));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error sending email: ' . $e->getMessage()
+            ], 500);
+        }
+        return response()->json([
+            'message' => 'Admin added successfully.',
+            'password' => $password // Return the generated password
+        ]);
 
     }
 
