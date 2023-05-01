@@ -88,11 +88,27 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Admin $admin)
+    public function update(Request $request, $id)
     {
-        //
+        $admin = Admin::findOrFail($id);
+        $admin->first_name = $request->input('first_name');
+        $admin->last_name = $request->input('last_name');
+        $admin->email = $request->input('email');
+        $admin->phone_number = $request->input('phone_number');
+    
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . $file->getClientOriginalName();
+            Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
+            $admin->avatar = $filename;
+        } 
+        $admin->save();
+    
+        return response()->json([
+            'message' => 'Admin updated successfully.',
+        ]);
     }
-
     /**
      * Remove the specified resource from storage.
      */

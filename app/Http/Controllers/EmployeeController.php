@@ -83,6 +83,31 @@ class EmployeeController extends Controller
 
     return response()->json($employee);
 }
+public function update(Request $request, $id)
+{
+    $employee = User::findOrFail($id);
+    $employee->first_name = $request->input('first_name');
+    $employee->last_name = $request->input('last_name');
+    $employee->email = $request->input('email');
+    $employee->phone_number = $request->input('phone_number');
+    $employee->cin = $request->input('cin');
+    $employee->adress = $request->input('adress');
+    $employee->birthday = $request->input('birthday');
+    
+
+    if ($request->hasFile('avatar')) {
+        $file = $request->file('avatar');
+        $extension = $file->getClientOriginalExtension();
+        $filename = time() . $file->getClientOriginalName();
+        Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
+        $employee->avatar = $filename;
+    } 
+    $employee->save();
+
+    return response()->json([
+        'message' => 'Admin updated successfully.',
+    ]);
+}
 
    
 }

@@ -27,7 +27,6 @@ window.Swal = swal;
       >
         <router-link to="/employees">
           <BaseButton
-
             target="_blank"
             :icon="mdiAccountMultiple"
             label="Show Employees"
