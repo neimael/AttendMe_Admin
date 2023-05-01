@@ -22,7 +22,7 @@ window.Swal = swal;
     <SectionMain>
       <SectionTitleLineWithButton
         :icon="mdiPlus"
-        title="New Admin"
+        title="Update Admin"
         main
       >
         <router-link to="/admins">
@@ -41,7 +41,7 @@ window.Swal = swal;
         <CardBox form>
             <FormField>
           <FormField label="FirstName">
-            <FormControl type="text" v-model="form.first_name" required/>
+            <FormControl type="text" v-model="form.first_name" autocomplete required/>
           </FormField>
           <FormField label="LastName">
             <FormControl type="text" v-model="form.last_name" required/>
@@ -55,18 +55,27 @@ window.Swal = swal;
             <FormControl type="phone" v-model="form.phone_number" required/>
           </FormField>
         </FormField>
-         
+         <FormField>
           <FormField label="Images">
           <input type="file"
                 id="avatar"
                  class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"
+
+                 
+              @change="OnFileChange"
                 
                  />
+        </FormField>
+        <div style="width: 130px; height: 130px; border-radius: 40%; overflow: hidden;">
+           <!--<img v-if="form.avatar" :src="'/storage/AdminAvatar/' + form.avatar" alt="admin" class="w-full h-full object-cover">--> 
+            <!--<img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">-->
+        <img v-bind:src="previewImage==null ?  '/storage/AdminAvatar/' + form.avatar :previewImage" class="w-full h-full object-cover" />
+          </div>
         </FormField>
           <template #footer>
             <div class="flex justify-center">
             <BaseButtons >  
-               <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin()"/>
+               <BaseButton  type="submit" color="warning" label="Update" @click="updateAdmin"/>
                 <BaseButton  type="reset" color="warning" outline label="Reset"/>
 
             </BaseButtons>
@@ -86,11 +95,13 @@ import axios from "axios";
 export default {
   data() {
     return {
+      previewImage : null,
       form: new Form({
         first_name: "",
         last_name: "",
         phone_number: "",
         email: "",
+        avatar: "",
        
       })
     }
@@ -98,29 +109,72 @@ export default {
   
   props: [],
   methods: {
-    async addAdmin() {
+    getAdminById(){
+      const id = this.$route.params.id;
+      axios.get(`api/get_admin/${id}`).then((response) => {
+  this.form = response.data
+})
+    },
+    async updateAdmin() {
+  const id = this.$route.params.id;
 
-        let data = new FormData();
-        data.append('first_name', this.form.first_name);
-        data.append('last_name', this.form.last_name);
-        data.append('phone_number', this.form.phone_number);
-        data.append('email', this.form.email);
-        //data.append('avatar', this.form.avatar);
-       // data.append('password', this.form.password);
-        if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}
-        axios.post('api/add_admin', data).then(() => {
-          swal({
-            text: "Admin Added Successfully!",
-            icon: "success",
-            closeOnClickOutside: false,
-          });
-          this.$router.go();
-        }).catch(error => {
-          console.log(error);
-        });
-      },
-   
+  // Create a new object that only contains the fields you want to update
+  const updatedData = {
+    first_name: this.form.first_name,
+    last_name: this.form.last_name,
+    phone_number: this.form.phone_number,
+    email: this.form.email,
+    avatar: this.previewImage==null ?  this.form.avatar :this.previewImage,
+    
+  };
+
+  // Create a new FormData object to send the updated form data
+
+
+  // Make the PUT request with the updated data and the FormData object
+  axios.put(`api/update_admin/${id}`, updatedData)
+    .then(() => {
+      swal({
+        text: "Admin Updated Successfully!",
+        icon: "success",
+        closeOnClickOutside: false,
+      });
+      console.log(updatedData);
+      this.$router.go();
+    })
+    .catch(error => {
+      console.log(error);
+      swal({
+        text: "Error updating admin",
+        icon: "error",
+        closeOnClickOutside: false,
+      });
+    });
+},
+
+OnFileChange(e) {
+  this.form.avatar = e.target.files[0];
+  let reader = new FileReader();
+  reader.addEventListener("load", () => {
+    this.previewImage = reader.result;
+  }, false);
+  if (this.form.avatar) {
+    if (this.form.avatar.type.match('image.*')) {
+      reader.readAsDataURL(this.form.avatar);
+    }
+  } else {
+    this.previewImage = null;
   }
+},
+
+    },
+   mounted() {
+
+this.getAdminById();
+
+},
+ 
+
 }
 </script>
 

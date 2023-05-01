@@ -45,11 +45,27 @@ const routes = [
   },
   {
     meta: {
+      title: "UpdateAdmin",
+    },
+    path: "/update-admin/:id",
+    name: "update-admin",
+    component: () => import("../pages/UpdateAdminView.vue"),
+  },
+  {
+    meta: {
       title: "Employees",
     },
     path: "/employees",
     name: "employees",
     component: () => import("../pages/EmployeeView.vue"),
+  },
+  {
+    meta: {
+      title: "UpdateEmployee",
+    },
+    path: "/update-employee/:id",
+    name: "update-employee",
+    component: () => import("../pages/UpdateEmployeeView.vue"),
   },
   
   {

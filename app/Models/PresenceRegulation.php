@@ -24,6 +24,6 @@ class PresenceRegulation extends Model
 
     public function employee()
     {
-        return $this->belongsTo(User::class,'id_employee','id_employee');
+        return $this->belongsTo(User::class,'id','id_employee');
     }
 }
