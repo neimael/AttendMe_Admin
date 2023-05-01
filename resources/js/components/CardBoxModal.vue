@@ -73,8 +73,8 @@ window.addEventListener("keydown", (e) => {
       </div>
 
       <template #footer>
-        <BaseButtons>
-          <BaseButton :label="buttonLabel" :color="button" @click="confirm" />
+        <BaseButtons class="flex justify-center">
+          <BaseButton class="bg-blue-300  text-blue-400 hover:bg-blue-400 hover:text-white font-bold py-2 px-4 rounded" :label="buttonLabel"  @click="confirm" />
           <BaseButton
             v-if="hasCancel"
             label="Cancel"

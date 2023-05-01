@@ -60,11 +60,14 @@ window.Swal = swal;
             <FormControl type="text" v-model="form.cin" required/>
           </FormField>
           <FormField label="Birthday" >
-            <FormControl type="date" v-model="form.birthday_date" required/>
+            <FormControl type="date" v-model="form.birthday" required/>
           </FormField>
           
         </FormField>
-          
+        <FormField>
+        <FormField label="Address" >
+            <FormControl type="text" v-model="form.adress" required/>
+          </FormField>
           <FormField label="Images" >
           <input type="file"
                  id="avatar"
@@ -73,7 +76,7 @@ window.Swal = swal;
                 
                  />
         </FormField>
-
+      </FormField>
 
           <template #footer>
              <div class="flex justify-center">
@@ -104,9 +107,10 @@ export default {
         last_name: "",
         phone_number: "",
         cin: "",
-        birthday_date: "",
+        birthday: "",
         email: "",
         password: "",
+        adress: "",
       })
     }
     },
@@ -121,7 +125,8 @@ export default {
         data.append('phone_number', this.form.phone_number);
         data.append('email', this.form.email);
         data.append('cin', this.form.cin);
-        data.append('birthday_date', this.form.birthday_date);
+        data.append('birthday', this.form.birthday);
+        data.append('adress', this.form.adress);
         //data.append('avatar', this.form.avatar);
         data.append('password', this.form.password);
         if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}

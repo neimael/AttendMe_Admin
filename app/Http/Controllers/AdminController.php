@@ -53,9 +53,7 @@ class AdminController extends Controller
             $filename = time() . $file->getClientOriginalName();
             Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
             $add_admin->avatar = $filename;
-        } else {
-            $add_admin->avatar = '/AdminAvatar/1682800678AttendMeS.png';
-        }
+        } 
         $add_admin->save();
         try {
             Mail::to($request->input('email'))->send(new AdminCreated($request->input('email'), $password));
@@ -109,5 +107,15 @@ class AdminController extends Controller
     $admin->delete();
 
     return response()->json(['message' => 'Admin has been deleted successfully']);
+}
+public function getAdmin($id)
+{
+    $admin = Admin::find($id);
+
+    if (!$admin) {
+        return response()->json(['error' => 'admin not found.'], 404);
+    }
+
+    return response()->json($admin);
 }
 }

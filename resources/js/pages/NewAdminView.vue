@@ -64,12 +64,13 @@ window.Swal = swal;
                  />
         </FormField>
           <template #footer>
+            <div class="flex justify-center">
             <BaseButtons >  
                <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin()"/>
                 <BaseButton  type="reset" color="warning" outline label="Reset"/>
 
             </BaseButtons>
-       
+       </div>
           </template>
         </CardBox>
       </div>

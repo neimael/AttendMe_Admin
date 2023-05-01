@@ -53,21 +53,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-//     public function presences()
-//    {
-//        return $this->hasMany(Presence::class,'id_employee','id_employee');
-//    }
-//    public function assignments()
-//    {
-//        return $this->hasMany(AssignmentElevator::class,'id_employee','id_employee');
-//    }
-//    public function sanitaryIssues()
-//    {
-//        return $this->hasMany(SanitaryIssues::class,'id_employee','id_employee');
-//    }
-//    public function presenceRegulations()
-//    {
-//        return $this->hasMany(PresenceRegulation::class,'id_employee','id_employee');
-//    }
+    public function presences()
+   {
+       return $this->hasMany(Presence::class,'id_employee','id'); 
+      }
+   public function assignments()
+   {        return $this->hasMany(AssignmentElevator::class,'id_employee','id');
+   }    public function sanitaryIssues()
+   {
+        return $this->hasMany(SanitaryIssues::class,'id_employee','id');
+   }
+    public function presenceRegulations()
+   {
+        return $this->hasMany(PresenceRegulation::class,'id_employee','id');
+   }
 
 }

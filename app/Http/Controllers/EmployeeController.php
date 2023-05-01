@@ -24,7 +24,6 @@ class EmployeeController extends Controller
     {
         $employees=User::all();
         return $employees;
-        
         //
     }
     public function store(request $request)
@@ -38,7 +37,8 @@ class EmployeeController extends Controller
         $password = Str::random(8); // Generate an 8-character random password
         $employee->password = Hash::make($password); // Hash the password
         $employee->cin=$request->cin;
-        $employee->birthday_date=$request->birthday_date;
+        $employee->adress=$request->adress;
+        $employee->birthday=$request->birthday;
         if($request['avatar']){
             $file = $request->file('avatar');
             $extension = $file->getClientOriginalExtension();
@@ -46,9 +46,7 @@ class EmployeeController extends Controller
             Storage::disk('public')->put('EmployeeAvatar/'.$filename,  File::get($file));
             $employee->avatar = $filename;;
         }
-        else {
-            $employee->avatar = '/files/icons8-scan-reconnaissance-faciale-100 (1).png';
-        }   
+         
         $employee->save();
         try {
             Mail::to($request->input('email'))->send(new EmployeeCreated($request->input('email'), $password));
@@ -75,6 +73,16 @@ class EmployeeController extends Controller
     
         return response()->json(['message' => 'Employee has been deleted successfully']);
     }
+    public function getEmployee($id)
+{
+    $employee = User::find($id);
+
+    if (!$employee) {
+        return response()->json(['error' => 'Employee not found.'], 404);
+    }
+
+    return response()->json($employee);
+}
 
    
 }

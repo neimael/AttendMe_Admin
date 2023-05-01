@@ -42,10 +42,19 @@ const checked = (isChecked, admin) => {
 </script>
 
 <template>
-  <CardBoxModal v-model="isModalActive" title="Sample modal">
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
-  </CardBoxModal>
+<CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Admin">
+  <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
+    <img v-if="Selectedadmin.avatar" :src="'/storage/AdminAvatar/' + Selectedadmin.avatar" alt="admin" class="w-full h-full object-cover">
+    <img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">
+  </div>
+  <div class="mt-4 ml-4">
+    <p class="font-bold"><b>Name :</b> {{ Selectedadmin.first_name }} {{ Selectedadmin.last_name }}</p>
+    
+    <p><b>Phone Number:</b> {{ Selectedadmin.phone_number }}</p>
+    <p><b>Email :</b> {{ Selectedadmin.email }}</p>
+  </div>
+
+</CardBoxModal>
 
   <CardBoxModal
     v-model="isModalDangerActive"
@@ -88,7 +97,9 @@ const checked = (isChecked, admin) => {
         />
         <td class="border-b-0 lg:w-6 before:hidden">
           <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
-            <img :src="'/storage/AdminAvatar/' + admin.avatar " alt="admin" class="w-full h-full object-cover"> </div>
+            <img v-if="admin.avatar" :src="'/storage/AdminAvatar/' + admin.avatar" alt="admin" class="w-full h-full object-cover">
+            <img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">
+                     </div>
 </td>
         <td data-label="Name">
           {{ admin.first_name }} {{ admin.last_name }}
@@ -104,12 +115,12 @@ const checked = (isChecked, admin) => {
        
         
         <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
+          <BaseButtons no-wrap>
             <BaseButton
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="isModalActive = true ,getAdmin(admin)"
             />
            <BaseButton
             color="success"
@@ -155,6 +166,7 @@ export default {
   data() {
     return {
       admins: [],
+      Selectedadmin: {},
       currentPage: 0,
       pageSize: 10,
       ADMIN_API_BASE_URL: "api/admins",
@@ -163,11 +175,21 @@ export default {
 
   },
   methods: {
-    async getAdmin() {
+    async getAdmins() {
       await axios.get(this.ADMIN_API_BASE_URL)
         .then(response => this.admins = response.data)
         .catch(error => console.log(error))
     },
+    async getAdmin(admin) {
+  try {
+    const response = await axios.get(`api/get_admin/${admin.id_admin}`);
+    this.Selectedadmin = response.data;
+    console.log(this.Selectedadmin.id_admin);
+   
+  } catch (error) {
+    console.log(error);
+  }
+},
     confirmDelete(adminId) {
     Swal.fire({
         title: 'Are you sure?',
@@ -216,7 +238,7 @@ export default {
     
   },
   mounted() {
-    this.getAdmin();
+    this.getAdmins();
   }
 };
 </script>
