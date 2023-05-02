@@ -18,6 +18,7 @@ class Elevator extends Model
         'id_qr_code',
         'id_location',
         
+        
        
     ];
     public function presences()
@@ -32,8 +33,9 @@ class Elevator extends Model
     {
         return $this->hasOne(Location::class,'id_location','id_location');
     }
+
     public function qrcode()
     {
-        return $this->hasMany(qrcode::class,'id_qr_code','id_qr_code');
+        return $this->belongsTo(qrcodes::class,'id_elevator','id_elevator');
     }
 }

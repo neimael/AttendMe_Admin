@@ -75,8 +75,7 @@ const checked = (isChecked, elevator) => {
         <th>Name</th>
         <th>location</th>
         <th>Qr Code</th>
-        
-        <th>Created</th>
+       
         <th />
       </tr>
     </thead>
@@ -88,21 +87,17 @@ const checked = (isChecked, elevator) => {
         />
        
         <td data-label="Name">
-          {{ elevator.name }}
+          {{ elevator.elevator.name }}
         </td>
         <td data-label="Location">
-          {{ elevator.location.ville }}
+        {{ elevator.elevator.location.ville }}, {{ elevator.elevator.location.adress }},  {{ elevator.elevator.location.longitude }}-{{ elevator.elevator.location.latitude }}
         </td>
-        <td data-label="Qr Code">
-          {{ elevator.qrcode.qr_code }}
+        <td data-label="Qr Code"> 
+          {{ elevator.qr_code }}
+           
         </td>
        
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
-          <small
-            class="text-gray-500 dark:text-slate-400"
-            :title="elevator.created">
-            {{ elevator.created_at }}</small>
-        </td>
+        
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
@@ -155,7 +150,7 @@ export default {
   data() {
     return {
       elevators: [],
-      
+      qrcode:[],
       Selectedelevator: {},
       currentPage: 0,
       pageSize: 10,

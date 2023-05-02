@@ -34,6 +34,8 @@ Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index'])
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);
+//Location
+Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
 Route::post('add_presence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);

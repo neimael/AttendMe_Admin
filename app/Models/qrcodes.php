@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class qrcode extends Model
+class qrcodes extends Model
 {
     use HasFactory;
     protected $table='qrcode';
@@ -13,11 +13,12 @@ class qrcode extends Model
     protected $fillable = [
         'mission',
         'qr_code',
+        'id_elevator',
         
     
     ];
     public function elevator()
     {
-        return $this->belongsTo(Elevator::class,'id_qr_code');
+        return $this->hasone(Elevator::class,'id_elevator','id_elevator');
     }
 }
