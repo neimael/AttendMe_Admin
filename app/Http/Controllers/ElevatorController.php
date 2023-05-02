@@ -15,8 +15,9 @@ class ElevatorController extends Controller
      */
     public function index()
     {
-        $elevators=Elevator::all();
-        return ElevatorResource::collection($elevators);
+        $elevators = Elevator::with('location','qrcode')->get();
+        //return ElevatorResource::collection($elevators);
+        return $elevators;
     }
 
     /**

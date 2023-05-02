@@ -12,8 +12,15 @@ class ElevatorResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request)
     {
-        return parent::toArray($request);
+        //return parent::toArray($request);
+        return [
+            'id_elevator' => $this->id_elevator,
+            'name' => $this->name,
+            'location' => $this->location->region,
+            
+        ];
+
     }
 }
