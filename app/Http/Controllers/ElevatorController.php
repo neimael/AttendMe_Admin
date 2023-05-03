@@ -71,25 +71,36 @@ class ElevatorController extends Controller
         $elevator->save();
         $areas = ['area1', 'area2', 'area3'];
        foreach ($areas as $area) {
-        $qrCode = QrCode::format('png')->size(200)->generate($area);
+        $qrCode = QrCode::format('png')->size(200)->generate("Location : ". $location-> ville.' '.$location->adress.' '.$location->longitude. '-' .$location->latitude ."\n".'Name : '.$elevator-> name ."\n" .'Mission : ' .$area);
         $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
-        Storage::put($qrCodePath, $qrCode);
+        Storage::disk('public')->put($qrCodePath, $qrCode);
         qrcodes::create([
             'mission' => $area,
             'qr_code' => $qrCodePath,
-            'elevator_id' => $elevator->id_elevator,
+            'id_elevator' => $elevator->id_elevator,
         ]);
     }
     
         return $elevator;
     }
+    public function getElevator($id)
+{
+    $elevator = qrcodes::with('elevator.location')->where('id_elevator', $id)->get();
+
+    if (!$elevator) {
+        return response()->json(['error' => ' elevator not found.'], 404);
+    }
+
+    return response()->json($elevator);
+}
 
     /**
      * Display the specified resource.
      */
-    public function show(Elevator $elevator)
+    public function show()
     {
-        //
+        $elevators=Elevator::with('location')->get();
+        return $elevators;
     }
 
     /**

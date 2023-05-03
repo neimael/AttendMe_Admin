@@ -129,7 +129,7 @@ let data = new FormData();
 axios.post('/api/add_elevator', this.form)
 .then(() => {
           swal({
-            text: "Employee Added Successfully!",
+            text: "Elevator Added Successfully! And qrCodes are generated",
             icon: "success",
             closeOnClickOutside: false,
           });

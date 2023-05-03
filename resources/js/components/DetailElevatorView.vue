@@ -12,35 +12,10 @@ defineProps({
   checkable: Boolean,
 });
 
-const mainStore = useMainStore();
-const isModalActive = ref(false);
-const isModalDangerActive = ref(false);
-const checkedRows = ref([]);
-const remove = (arr, cb) => {
-  const newArr = [];
-
-  arr.forEach((item) => {
-    if (!cb(item)) {
-      newArr.push(item);
-    }
-  });
-
-  return newArr;
-};
-
-const checked = (isChecked, elevator) => {
-  if (isChecked) {
-    checkedRows.value.push(elevator);
-  } else {
-    checkedRows.value = remove(
-      checkedRows.value,
-      (row) => row.id === elevator.id_elevator
-    );
-  }
-};
 </script>
 
 <template>
+  
   <CardBoxModal v-model="isModalActive" title="Sample modal">
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
     <p>This is sample modal</p>
@@ -56,15 +31,8 @@ const checked = (isChecked, elevator) => {
     <p>This is sample modal</p>
   </CardBoxModal>
 
-  <div v-if="checkedRows.length" class="p-3 bg-gray-100/50 dark:bg-slate-800">
-    <span
-      v-for="checkedRow in checkedRows"
-      :key="checkedRow.id"
-      class="inline-block px-2 py-1 rounded-sm mr-2 text-sm bg-gray-100 dark:bg-slate-700"
-    >
-      {{ checkedRow.name }}
-    </span>
-  </div>
+ 
+
 
 
   <table>
@@ -74,6 +42,8 @@ const checked = (isChecked, elevator) => {
      
         <th>Name</th>
         <th>Location</th>
+        <th>Area</th>
+        <th>Qr Code</th>
        
         <th />
       </tr>
@@ -86,29 +56,25 @@ const checked = (isChecked, elevator) => {
         />
        
         <td data-label="Name">
-          {{ elevator.name }}
+          {{ elevator.elevator.name }}
         </td>
         <td data-label="Location">
-        {{ elevator.location.ville }}, {{ elevator.location.adress }},  {{ elevator.location.longitude }}-{{ elevator.location.latitude }}
+        {{ elevator.elevator.location.ville }}, {{ elevator.elevator.location.adress }},  {{ elevator.elevator.location.longitude }}-{{ elevator.elevator.location.latitude }}
         </td>
-       
+        <td data-label="Area">
+          {{ elevator.mission }}
+        </td>
+        <td data-label="Qr Code"> 
+          <div style="width: 100px; height: 100px; overflow: hidden;">
+          <img v-if="elevator.qr_code"  :src="'/storage/' + elevator.qr_code" alt="qrcode" >
+          <img v-else src="/storage/EmployeeAvatar/default.png" alt="default" class="w-full h-full object-cover">
+          </div>
+        </td>
         
         
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
-            <BaseButton
-              color="info"
-              :icon="mdiEye"
-              small
-              :to="'/detail-elevator/' + elevator.id_elevator"
-            />
-           <BaseButton
-            color="success"
-            :icon="mdiHumanEdit" 
-            small
-            :to="'/update-elevator/' + elevator.id_elevator"
-           
-          />
+         
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
@@ -136,6 +102,7 @@ const checked = (isChecked, elevator) => {
       <small>Page {{ currentPageHuman }} of {{ numPages }}</small>
     </BaseLevel>
   </div>
+
 </template>
 <script>
 import axios from 'axios';
@@ -150,24 +117,19 @@ export default {
       Selectedelevator: {},
       currentPage: 0,
       pageSize: 10,
-      ELEVATOR_API_BASE_URL: "api/get_all",
+      ELEVATOR_API_BASE_URL: "api/elevators",
     
     };
 
   },
   methods: {
-    async getElevators() {
-      await axios.get(this.ELEVATOR_API_BASE_URL)
-        .then(response => this.elevators = response.data)
-        
-        .catch(error => console.log(error))
-      
-    },
-    async getElevator(elevator) {
+  
+    async getElevator() {
+    const id = this.$route.params.id;
   try {
-    const response = await axios.get(`api/get_elevator/${elevator.id_elevator}`);
-    this.Selectedelevator = response.data;
-    console.log(this.Selectedelevator.id_elevator);
+    const response = await axios.get(`api/get_elevator/${id}`);
+    this.elevators = response.data;
+    console.log(this.elevators.id_elevator);
    
   } catch (error) {
     console.log(error);
@@ -221,7 +183,7 @@ export default {
     
   },
   mounted() {
-    this.getElevators();
+    this.getElevator();
   }
 };
 </script>
