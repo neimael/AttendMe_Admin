@@ -18,12 +18,13 @@ class PresenceRegulation extends Model
         'check_out',
         'status',
         'issue_type',
+        'report',
         
         
     ];
 
-    public function employee()
-    {
-        return $this->belongsTo(User::class,'id_employee','id_employee');
-    }
+    // public function employee()
+    // {
+    //     return $this->belongsTo(User::class,'id_employee','id_employee');
+    // }
 }

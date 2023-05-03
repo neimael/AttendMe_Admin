@@ -45,6 +45,8 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user', [AuthController::class, 'update']);
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
+    Route::post('/addAttIssues', [AuthController::class, 'addAttIssues']);
+    // Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
 
 });
 

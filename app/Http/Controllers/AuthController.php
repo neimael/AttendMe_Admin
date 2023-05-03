@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\PresenceRegulation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -150,4 +151,74 @@ class AuthController extends Controller
             ], 500);        
         }
     }
+
+    //addAttIssues 
+    public function addAttIssues(Request $request){
+        $attr = $request->validate([
+            'check_in' => 'required|time',
+            'check_out' => 'required|time',
+            'attendance_day' => 'required|date',
+            'issue_type' => 'required|string',
+            'status' => 'required|string',
+            'report' => 'required|String',
+            'id_employee' => 'required|integer|exists:users,id'
+        ]);
+
+        $presence_regulation = PresenceRegulation::create([
+            'check_in' => $attr['check_in'],
+            'check_out' => $attr['check_out'],
+            'attendance_day' => $attr['attendance_day'],
+            'issue_type' => $attr['issue_type'],
+            'status' => $attr['status'],
+            'report' => $attr['report'],
+            'id_employee' => $attr['id_employee'],
+        ]);
+
+        return response([
+            'presence_regulation' => $presence_regulation,
+            'message' => 'Your regulation has been sent successfully',
+        ]);
+    }
+
+    //sendOTP
+    // public function sendOTP(Request $request)
+    // {
+    //     // Validate phone number input
+    //     $this->validate($request, [
+    //         'phone_number' => 'required|regex:/^\+?[1-9]\d{1,14}$/'
+    //     ]);
+
+    //     // Generate a random 4-digit OTP code
+    //     $otp = mt_rand(1000, 9999);
+
+    //     // Your Twilio account SID and auth token from https://www.twilio.com/console
+    //     $account_sid = 'YOUR_ACCOUNT_SID';
+    //     $auth_token = 'YOUR_AUTH_TOKEN';
+
+    //     // Your Twilio phone number from https://www.twilio.com/console/phone-numbers/incoming
+    //     $twilio_number = '+1415XXXXXXX';
+
+    //     // Initialize the Twilio client
+    //     $client = new Client($account_sid, $auth_token);
+
+    //     // Send the message via Twilio
+    //     try {
+    //         $message = $client->messages->create(
+    //             $request->phone_number,
+    //             array(
+    //                 'from' => $twilio_number,
+    //                 'body' => "Your OTP code fir AttendMe Application is: $otp"
+    //             )
+    //         );
+
+    //         // Store the OTP code in the session for verification later
+    //         $request->session()->put('otp_code', $otp);
+    //         $request->session()->put('phone_number', $request->phone_number);
+
+    //         return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
+    //     } catch (\Exception $e) {
+    //         // Handle Twilio exceptions here
+    //         return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
+    //     }
+    // }
 }

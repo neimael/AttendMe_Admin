@@ -12,6 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    //save image
     public function saveImage($image, $path = 'public')
     {
         if(!$image)
