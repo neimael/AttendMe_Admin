@@ -93,6 +93,14 @@ class ElevatorController extends Controller
 
     return response()->json($elevator);
 }
+public function getOneElevator($id)
+{
+   $elevator = Elevator::with('location')->where('id_elevator', $id)->get();
+    if (!$elevator) {
+        return response()->json(['error' => ' elevator not found. '], 404);
+    }
+    return $elevator;
+}
 
     /**
      * Display the specified resource.
@@ -114,16 +122,67 @@ class ElevatorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Elevator $elevator)
+    public function update(Request $request, $id)
     {
-        //
+        $elevator = Elevator::findOrFail($id);
+        $elevator->name = $request->name;
+        
+        // update or create the location
+        $location = Location::updateOrCreate(
+            [
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                'adress' => $request->adress,
+                'ville' => $request->ville,
+            ],
+            [
+                'longitude' => $request->longitude,
+                'latitude' => $request->latitude,
+                'adress' => $request->adress,
+                'ville' => $request->ville,
+            ]
+        );
+        $elevator->id_location = $location->id_location;
+        $elevator->save();
+        
+        // update the QR codes
+        $areas = ['area1', 'area2', 'area3'];
+        foreach ($areas as $area) {
+            $qrCode = QrCode::format('png')->size(200)->generate("Location : ". $location-> ville.' '.$location->adress.' '.$location->longitude. '-' .$location->latitude ."\n".'Name : '.$elevator-> name ."\n" .'Mission : ' .$area);
+            $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
+            Storage::disk('public')->put($qrCodePath, $qrCode);
+            
+            // update the QR code or create a new one
+            $qrCodeModel = QrCodes::updateOrCreate(
+                [
+                    'mission' => $area,
+                    'id_elevator' => $elevator->id_elevator,
+                ],
+                [
+                    'mission' => $area,
+                    'qr_code' => $qrCodePath,
+                    'id_elevator' => $elevator->id_elevator,
+                ]
+            );
+        }
+        
+        return $elevator;
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Elevator $elevator)
-    {
-        //
+    public function destroy($id)
+{
+    $elevator = Elevator::find($id);
+
+    if (!$elevator) {
+        return response()->json(['message' => 'Elevator not found'], 404);
     }
+
+    $elevator->delete();
+
+    return response()->json(['message' => 'Elevator has been deleted successfully']);
+}
 }

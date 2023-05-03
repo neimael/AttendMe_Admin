@@ -102,6 +102,14 @@ const routes = [
     name: "detail-elevator",
     component: () => import("../pages/DetailElevator.vue"),
   },
+  {
+    meta: {
+      title: "UpdateElevators",
+    },
+    path: "/update-elevator/:id",
+    name: "update-elevator",
+    component: () => import("../pages/UpdateElevatorView.vue"),
+  },
   
 
   //manage attendance

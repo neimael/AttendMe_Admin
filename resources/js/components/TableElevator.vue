@@ -71,7 +71,7 @@ const checked = (isChecked, elevator) => {
     <thead>
       <tr>
         <th v-if="checkable" />
-     
+     <th>Id</th>
         <th>Name</th>
         <th>Location</th>
        
@@ -84,16 +84,16 @@ const checked = (isChecked, elevator) => {
           v-if="checkable"
           @checked="checked($event, elevator)"
         />
-       
+        <td data-label="Name">
+          {{ elevator.id_elevator }}
+        </td>
         <td data-label="Name">
           {{ elevator.name }}
         </td>
         <td data-label="Location">
-        {{ elevator.location.ville }}, {{ elevator.location.adress }},  {{ elevator.location.longitude }}-{{ elevator.location.latitude }}
+        {{ elevator.location.ville }},{{ elevator.location.adress }},{{ elevator.location.longitude }}-{{ elevator.location.latitude }}
         </td>
-       
-        
-        
+              
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
@@ -113,7 +113,7 @@ const checked = (isChecked, elevator) => {
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="confirmDelete(elevator.id_elevator)"
             />
           </BaseButtons>
         </td>

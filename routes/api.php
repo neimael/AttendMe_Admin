@@ -35,7 +35,10 @@ Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index'])
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);
 Route::get('get_elevator/{id}', [ElevatorController::class, 'getElevator']);
+Route::get('get_elevatoor/{id}', [ElevatorController::class, 'getOneElevator']);
 Route::get('get_all', [ElevatorController::class, 'show']);
+Route::delete('delete_elevator/{id}', [ElevatorController::class, 'destroy']);
+Route::put('/update_elevator/{id}', [ElevatorController::class, 'update']);
 //Location
 Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
