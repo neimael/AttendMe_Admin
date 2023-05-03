@@ -73,10 +73,19 @@ const checked = (isChecked, client) => {
 </script>
 
 <template>
-  <CardBoxModal v-model="isModalActive" title="Sample modal">
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
-  </CardBoxModal>
+ <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Regulation">
+  <div class="mt-4 ml-24">
+
+    <p><b>Check In :</b> {{ Selectedregulation.check_in }}</p>
+    <p><b>Check Out :</b> {{ Selectedregulation.check_out }}</p>
+    <!-- <p><b>Employee's name : </b> {{ Selectedregulation.employee.first_name }} {{ Selectedregulation.employee.last_name }}</p>
+    <p><b>Employee's cin :</b>  {{ Selectedregulation.employee.cin }}</p>  -->
+    <p><b>Issue Type:</b> {{ Selectedregulation.issue_type }}</p>
+    <p><b>Status :</b> {{ Selectedregulation.status }}</p>
+    <p><b>Regulation Date :</b> {{ Selectedregulation.regulation_day }}</p>
+    <p><b>Report :</b> {{ Selectedregulation.report }}</p>
+  </div>
+</CardBoxModal>
 
   <CardBoxModal
     v-model="isModalDangerActive"
@@ -103,7 +112,7 @@ const checked = (isChecked, client) => {
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th>Id</th>
+       
         <th>Employee</th>
         <th>Report</th>
         <th>Check In</th>
@@ -115,34 +124,33 @@ const checked = (isChecked, client) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="regulation in paginatedRegulations" :key="regulation.id_presence_regulation">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, regulation)"
         />
-        <td data-label="Name">
-          {{ client.id }}
+       
+        <td data-label="Employee">
+          {{regulation.employee.first_name}} {{regulation.employee.last_name}}
+        </td>
+        <td data-label="Report">
+          {{ regulation.report }}
         </td>
        
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Check In">
+          {{ regulation.check_in }}
         </td>
-        <td data-label="Name">
-          {{ client.id }}
-        </td>
-       
-        <td data-label="Company">
-          {{ client.company }}
-        </td>
-        <td data-label="Name">
-          {{ client.id }}
+        <td data-label="Check Out">
+          {{ regulation.check_out }}
         </td>
        
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Type">
+          {{ regulation.issue_type }}
         </td>
-        <td data-label="City">
-          <div class="badge badge-warning">Pending</div>
+        <td data-label="Status">
+          <div v-if="regulation.status=='Pending'" class="badge badge-warning">Pending</div>
+          <div v-else-if="regulation.status=='Approved'" class="badge badge-success">Approved</div>
+          <div v-else class="badge badge-error ">Rejected</div>
         </td>
        
        
@@ -150,8 +158,8 @@ const checked = (isChecked, client) => {
         <td data-label="Created" class="lg:w-1 whitespace-nowrap">
           <small
             class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
+            :title="regulation.attendance_day"
+            >{{ regulation.attendance_day }}</small
           >
         </td>
         <td class="before:hidden lg:w-1 whitespace-nowrap">
@@ -160,29 +168,22 @@ const checked = (isChecked, client) => {
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="isModalActive = true ,getRegulation(regulation)" 
             />
           
-          <BaseButton
+          <BaseButton v-if="regulation.status=='Pending' || regulation.status=='Rejected'"  
             color="success"
             :icon="mdiCheck"
             small
-            
-            
+            @click="ApproveRegulation(regulation .id_presence_regulation)"
           />
-          <BaseButton
+          <BaseButton v-if="regulation.status=='Pending' || regulation.status=='Approved'" 
             color="warning"
             :icon="mdiClose"
             small
-         
-            
+         @click="RejectRegulation(regulation.id_presence_regulation)"   
           />
-            <BaseButton
-              color="danger"
-              :icon="mdiTrashCan"
-              small
-              @click="isModalDangerActive = true"
-            />
+           
           </BaseButtons>
         </td>
       </tr>
@@ -205,3 +206,90 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+export default {
+  name: "RegulationView",
+  data() {
+    return {
+      regulations: [],
+      Selectedregulation: {},
+      currentPage: 0,
+      pageSize: 10,
+     
+    };
+
+  },
+  methods: {
+    async getRegulations() {
+      await axios.get('api/presence_regulations')
+        .then(response => this.regulations = response.data)
+        .catch(error => console.log(error))
+    },
+    
+    
+ApproveRegulation(regulationId){
+  axios.put('api/aprove_presence_regulation/' + regulationId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Presence Regulation has been Approved successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+},
+RejectRegulation(regulationId){
+  axios.put('api/reject_presence_regulation/' + regulationId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Presence Regulation has been Rejected successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+},
+
+  async getRegulation(regulation) {
+  try {
+    const response = await axios.get(`api/get_presence_regulation/${regulation.id_presence_regulation}`);
+    this.Selectedregulation = response.data;
+  } catch (error) {
+    console.log(error);
+  }
+},
+
+  },
+  computed: {
+    paginatedRegulations: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.regulations.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.regulations.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    }
+  },
+  mounted() {
+    this.getRegulations();
+   
+  }
+};
+</script>

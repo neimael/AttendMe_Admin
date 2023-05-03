@@ -9,6 +9,7 @@ use App\Http\Controllers\SanitaryIssuesController;
 use App\Http\Controllers\ElevatorController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PresenceRegulationsController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -46,9 +47,11 @@ Route::post('add_presence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
-Route::get('presence_regulations', [PresenceRegulationController::class, 'index']);
-
-
+Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);
+Route::put('reject_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToRejected']);
+Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToApproved']);
+Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
+//Auth
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
