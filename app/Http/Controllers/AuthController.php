@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\PresenceRegulation;
+use App\Models\SanitaryIssues;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -179,6 +180,32 @@ class AuthController extends Controller
             'message' => 'Your regulation has been sent successfully',
         ]);
     }
+
+    //add Sanitary Issues
+public function addSanitary(Request $request){
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+        'report' => 'required|string',
+        'certificate' => 'required|String',
+        'extension' => 'required|String',
+    ]);
+
+
+    $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
+
+
+    $sanitary_regulation = SanitaryIssues::create([
+        'id_employee' => $attr['id_employee'],
+        'report' => $attr['report'],
+        'certificate' => $file,
+    ]);
+
+    return response([
+        'sanitary_regulation' => $sanitary_regulation,
+        'message' => 'Your certificate has been sent successfully',
+    ]);
+}
+
 
     //sendOTP
     // public function sendOTP(Request $request)

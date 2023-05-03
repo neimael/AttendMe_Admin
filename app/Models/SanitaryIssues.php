@@ -11,18 +11,17 @@ class SanitaryIssues extends Model
     use HasFactory;
     
     protected $table='sanitary_regulation';
-    protected $primaryKey = 'id_sanitary_regulation';
+    protected $primaryKey = 'id_sanitary';
     protected $fillable = [
         
         'id_employee',
-        'regulation_date',
+        'report',
         'certificate',
-        'report'
         
     ];
 
-    public function employee()
-    {
-        return $this->belongsTo(User::class,'id_employee','id_employee');
-    }
+    // public function employee()
+    // {
+    //     return $this->belongsTo(User::class,'id_employee','id_employee');
+    // }
 }
