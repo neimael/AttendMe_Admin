@@ -22,12 +22,14 @@
         "chart.js": "^4.2.1",
         "compressorjs": "^1.2.1",
         "daisyui": "^2.51.6",
+        "laravel-vue-pagination": "^4.1.0",
         "numeral": "^2.0.6",
         "ol": "^7.3.0",
         "pinia": "^2.0.35",
         "sweetalert": "^2.1.2",
         "sweetalert2": "^11.7.3",
         "vue": "^3.2.36",
+        "vue-pagination-2": "^3.1.0",
         "vue-router": "^4.0.13"
     }
 }

@@ -18,7 +18,7 @@ import BaseButton from "@/components/BaseButton.vue";
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Sanitary Issues Regulations" main>
-       <!-- <router-link to="/add-manual-attendance">
+       <!--<router-link to="/add-manual-attendance">
           <BaseButton
             target="_blank"
             :icon="mdiElevatorPassengerOutline"

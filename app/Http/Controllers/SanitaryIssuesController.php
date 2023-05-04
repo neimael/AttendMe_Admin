@@ -15,7 +15,8 @@ class SanitaryIssuesController extends Controller
      */
     public function index()
     {
-        //
+        $sanitaryissue= SanitaryIssues::with('employee')->get();
+       return $sanitaryissue;
     }
 
     /**
@@ -28,46 +29,11 @@ class SanitaryIssuesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSanitaryIssuesRequest $request)
-    {
-        $sanitary_issues=new SanitaryIssues();
-        $sanitary_issues->id_employee=1;
-        $sanitary_issues->regulation_date=$request->regulation_date;
-        $sanitary_issues->certificate=$request->certificate;
-        $sanitary_issues->report=$request->report;
-        $sanitary_issues->save();
-        return new SanitaryIssuesResource($sanitary_issues);
-    }
+  
 
     /**
      * Display the specified resource.
      */
-    public function show(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
+    
 }

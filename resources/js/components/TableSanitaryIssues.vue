@@ -14,40 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,13 +29,13 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, regulation) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(regulation);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === regulation.id
     );
   }
 };
@@ -107,58 +76,66 @@ const checked = (isChecked, client) => {
         <th>Employee</th>
         <th>Report</th>
         <th>Date</th>
-        <th />
+        <th>Certificate</th>
+       
+       
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="regulation in paginatedRegulations" :key="regulation.id_presence_regulation">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, regulation)"
         />
-        <td data-label="Name">
-          {{ client.id }}
+        <td data-label="Id">
+          {{ regulation.id_sanitary }}
         </td>
        
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Employee">
+          {{regulation.employee.first_name}} {{regulation.employee.last_name}}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="report">
+          {{ regulation.report }}
         </td>
-       
-       
         
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
+        <td data-label="Date" class="lg:w-1 whitespace-nowrap">
           <small
             class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
+            :title="regulation.created_at"
+            >{{regulation.created_at}}</small
           >
         </td>
-        <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
-            <BaseButton
+        <td data-label="certificate">
+  <a class="ml-1"  :href="'/storage/certificates/' + regulation.certificate" download>
+     <BaseButton
+              color="success"
+              :icon="mdiDownload"
+              small
+            
+            />
+  </a>
+
+  <a  class="ml-6" :href="'/storage/certificates/' + regulation.certificate" target="_blank">
+     <BaseButton
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+            
             />
-           <BaseButton
-            color="success"
-            :icon="mdiDownload" 
-            small
-            :to="'/update-admin/' + client.id"
-           
-          />
-            <BaseButton
-              color="danger"
-              :icon="mdiTrashCan"
-              small
-              @click="isModalDangerActive = true"
-            />
-          </BaseButtons>
-        </td>
+  </a>
+  
+</td>
+     <!--  <span v-if="regulation.certificate.endsWith('.pdf')">
+        <mdi-icon name="file-pdf" />
+      </span>
+      <span v-else-if="regulation.certificate.endsWith('.png') || regulation.certificate.endsWith('.jpg') || regulation.certificate.endsWith('.jpeg')">
+        <mdi-icon name="file-image" />
+      </span>
+      <span v-else>
+        {{ regulation.certificate }}
+      </span> -->
+   
+      
       </tr>
     </tbody>
   </table>
@@ -179,3 +156,60 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+export default {
+  name: "SanitaryView",
+  data() {
+    return {
+      regulations: [],
+      Selectedregulation: {},
+      currentPage: 0,
+      pageSize: 10,
+     
+    };
+
+  },
+  methods: {
+    async getRegulations() {
+      await axios.get('api/sanitaryIssues')
+        .then(response => this.regulations = response.data)
+        .catch(error => console.log(error))
+    },
+    
+    
+
+  async getRegulation(regulation) {
+  try {
+    const response = await axios.get(`api/get_sanitary_issue/${regulation.id_presence_regulation}`);
+    this.Selectedregulation = response.data;
+  } catch (error) {
+    console.log(error);
+  }
+},
+
+  },
+  computed: {
+    paginatedRegulations: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.regulations.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.regulations.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    }
+  },
+  mounted() {
+    this.getRegulations();
+   
+  }
+};
+</script>
