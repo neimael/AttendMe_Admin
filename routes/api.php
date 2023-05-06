@@ -9,6 +9,7 @@ use App\Http\Controllers\SanitaryIssuesController;
 use App\Http\Controllers\ElevatorController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PresenceRegulationsController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -34,14 +35,23 @@ Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index'])
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);
+Route::get('get_elevator/{id}', [ElevatorController::class, 'getElevator']);
+Route::get('get_elevatoor/{id}', [ElevatorController::class, 'getOneElevator']);
+Route::get('get_all', [ElevatorController::class, 'show']);
+Route::delete('delete_elevator/{id}', [ElevatorController::class, 'destroy']);
+Route::put('/update_elevator/{id}', [ElevatorController::class, 'update']);
+//Location
+Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
 Route::post('add_presence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
-Route::get('presence_regulations', [PresenceRegulationController::class, 'index']);
-
-
+Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);
+Route::put('reject_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToRejected']);
+Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToApproved']);
+Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
+//Auth
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);

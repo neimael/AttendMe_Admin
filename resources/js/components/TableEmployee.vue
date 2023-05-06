@@ -106,7 +106,6 @@ const checked = (isChecked, employee) => {
             <img v-if="employee.avatar" :src="'/storage/EmployeeAvatar/' + employee.avatar" alt="employee" class="w-full h-full object-cover">
             <img v-else src="/storage/EmployeeAvatar/default.png" alt="default" class="w-full h-full object-cover">
             </div>
-  
 </td>
         <td data-label="Name">
           {{ employee.first_name }} {{ employee.last_name }}

@@ -15,8 +15,10 @@ class Elevator extends Model
     protected $primaryKey = 'id_elevator';
     protected $fillable = [
         'name',
-        'qr_code',
+        'id_qr_code',
         'id_location',
+        
+        
        
     ];
     public function presences()
@@ -26,5 +28,14 @@ class Elevator extends Model
     public function assignments()
     {
         return $this->hasMany(AssignmentElevator::class,'id_elevator','id_elevator');
+    }
+    public function location()
+    {
+        return $this->hasOne(Location::class,'id_location','id_location');
+    }
+
+    public function qrcode()
+    {
+        return $this->belongsTo(qrcodes::class,'id_elevator','id_elevator');
     }
 }

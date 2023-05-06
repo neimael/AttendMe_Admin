@@ -14,66 +14,48 @@ class PresenceRegulationsController extends Controller
      */
     public function index()
     {
-       $presenceRegulations = PresenceRegulation::all();
-       return PresenceRegulationResource::collection($presenceRegulations) ;
+       $presenceRegulations = PresenceRegulation::with('employee')->get();
+       return $presenceRegulations;
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+   
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePresenceRegulationRequest $request)
+   
+    public function updateStatusToApproved(Request $request, $id)
+{
+    $regulation = PresenceRegulation::findOrFail($id);
+    $regulation->status = "Approved";
+    $regulation->save();
+    return response()->json([
+        "message" => "Regulation Approved  successfully",
+        "data" => $regulation
+    ], 200);
+}
+
+public function updateStatusToRejected(Request $request, $id)
+{
+    $regulation = PresenceRegulation::findOrFail($id);
+    $regulation->status = "Rejected";
+    $regulation->save();
+    return response()->json([
+        "message" => "Regulation Rejected successfully",
+        "data" => $regulation
+    ], 200);
+}
+
+    public function getRegulation($id)
     {
-        $presenceRegulation=new PresenceRegulation();
-        $presenceRegulation->id_employee=$request->id_employee;
-        $presenceRegulation->check_in=$request->check_in;
-        $presenceRegulation->check_out=$request->check_out;
-        $presenceRegulation->status=$request->status;
-        $presenceRegulation->attendance_day=$request->attendance_day;
-        $presenceRegulation->issue_type=$request->issue_type;
-        $presenceRegulation->save();
-        return new PresenceRegulationResource($presenceRegulation);
-
-
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(PresenceRegulation $presenceRegulation)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PresenceRegulation $presenceRegulation)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PresenceRegulation $presenceRegulation)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PresenceRegulation $presenceRegulation)
-    {
-        //
+        $regulation = PresenceRegulation::with('employee')->findOrFail($id);
+        if (!$regulation) {
+            return response()->json(['error' => 'admin not found.'], 404);
+        }
+    
+        return response()->json($regulation);
     }
 }

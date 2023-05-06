@@ -65,7 +65,7 @@ class User extends Authenticatable
    }
     public function presenceRegulations()
    {
-        return $this->hasMany(PresenceRegulation::class,'id_employee','id');
+        return $this->belongsTo(PresenceRegulation::class,'id_employee','id');
    }
 
 }

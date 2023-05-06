@@ -7,47 +7,15 @@ import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
 
 defineProps({
   checkable: Boolean,
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,13 +28,13 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, elevator) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(elevator);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === elevator.id_elevator
     );
   }
 };
@@ -103,64 +71,49 @@ const checked = (isChecked, client) => {
     <thead>
       <tr>
         <th v-if="checkable" />
-        <th />
+     <th>Id</th>
         <th>Name</th>
-        <th>location</th>
-        <th>Qr Code</th>
-        
-        <th>Created</th>
+        <th>Location</th>
+       
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="elevator in paginatedElevators" :key="elevator.id_elevator">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, elevator)"
         />
-        <td class="border-b-0 lg:w-6 before:hidden">
-          <UserAvatar
-            :username="client.name"
-            class="w-24 h-24 mx-auto lg:w-6 lg:h-6"
-          />
+        <td data-label="Name">
+          {{ elevator.id_elevator }}
         </td>
         <td data-label="Name">
-          {{ client.name }}
+          {{ elevator.name }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Location">
+        {{ elevator.location.ville }},{{ elevator.location.adress }},{{ elevator.location.longitude }}-{{ elevator.location.latitude }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
-        </td>
-       
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
-          <small
-            class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
-          >
-        </td>
+              
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              :to="'/detail-elevator/' + elevator.id_elevator"
             />
            <BaseButton
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + client.id"
+            :to="'/update-elevator/' + elevator.id_elevator"
            
           />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="confirmDelete(elevator.id_elevator)"
             />
           </BaseButtons>
         </td>
@@ -184,3 +137,91 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+import Swal from 'sweetalert2'
+
+export default {
+  name: "ElevatorView",
+  data() {
+    return {
+      elevators: [],
+      qrcode:[],
+      Selectedelevator: {},
+      currentPage: 0,
+      pageSize: 10,
+      ELEVATOR_API_BASE_URL: "api/get_all",
+    
+    };
+
+  },
+  methods: {
+    async getElevators() {
+      await axios.get(this.ELEVATOR_API_BASE_URL)
+        .then(response => this.elevators = response.data)
+        
+        .catch(error => console.log(error))
+      
+    },
+    async getElevator(elevator) {
+  try {
+    const response = await axios.get(`api/get_elevator/${elevator.id_elevator}`);
+    this.Selectedelevator = response.data;
+    console.log(this.Selectedelevator.id_elevator);
+   
+  } catch (error) {
+    console.log(error);
+  }
+},
+    confirmDelete(elevatorId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this elevator record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked the "Yes" button, so proceed with delete request
+            axios.delete('api/delete_elevator/' + elevatorId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Elevator has been deleted successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+}
+
+
+  },
+  computed: {
+    paginatedElevators: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.elevators.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.elevators.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    },
+    
+  },
+  mounted() {
+    this.getElevators();
+  }
+};
+</script>

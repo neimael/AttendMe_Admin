@@ -59,9 +59,7 @@ window.Swal = swal;
           <FormField label="Images">
           <input type="file"
                 id="avatar"
-                 class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"
-
-                 
+                 class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"     
               @change="OnFileChange"
                 
                  />
@@ -102,7 +100,6 @@ export default {
         phone_number: "",
         email: "",
         avatar: "",
-       
       })
     }
     },

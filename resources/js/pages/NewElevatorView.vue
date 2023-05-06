@@ -3,7 +3,7 @@
 import {mdiPlus, mdiLock,mdiElevatorPassengerOutline} from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
-
+import Form from "@/form.js";
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
@@ -38,21 +38,23 @@ window.Swal = swal;
         </router-link>
       </SectionTitleLineWithButton>
       <div class="container w-7/12 mx-auto">
-        <CardBox form @submit.prevent="submit">
+        <CardBox form>
            
           <FormField label="Name">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="name" v-model="form.name"  required/>
           </FormField>
           
           <FormField label="Location">
             <div ref="mapContainer" style="height: 344px;"></div>
           </FormField>
+          <FormField >
           <FormField label="City">
-            <FormControl type="text" />
+            <FormControl type="text" :options="cities"  v-model="form.ville" />
           </FormField>
           <FormField label="Address">
-            <FormControl type="text" />
+            <FormControl type="text" v-model="form.adress" />
           </FormField>
+        </FormField>
           <div id="map"></div>
 
 
@@ -61,7 +63,7 @@ window.Swal = swal;
              <div class="flex justify-center">
             <BaseButtons > 
                 <BaseButton  type="reset" color="warning" outline label="Reset"/>
-              <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin"/>
+                <BaseButton  type="submit" color="warning" label="Add" @click="addElevator"/>
              
             </BaseButtons>
         </div>
@@ -88,11 +90,60 @@ import VectorLayer from 'ol/layer/Vector';
 import {transform} from 'ol/proj';
 import {fromLonLat} from "ol/proj";
 
-export default {
-  name: "NewPropertyView",
+import axios from 'axios';
 
+
+export default {
+  data() {
+    return {
+      
+      form: new Form({
+        name: '',
+        longitude: '',
+        latitude: '',
+        adress: '',
+        ville: ''
+      }),
+      cities: [],
+    }
+  
+  },
+  methods:{
+getCities(){
+  axios.get('/api/cities')
+      .then(response => {
+        this.cities = response.data.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+},
+async addElevator(){
+
+let data = new FormData();
+        data.append('name', this.form.name);
+        data.append('adress', this.form.adress);
+        data.append('longitude', this.form.longitude);
+        data.append('latitude',  this.form.latitude);
+
+axios.post('/api/add_elevator', this.form)
+.then(() => {
+          swal({
+            text: "Elevator Added Successfully! And qrCodes are generated",
+            icon: "success",
+            closeOnClickOutside: false,
+          });
+          this.$router.go();
+        }).catch(error => {
+          console.log(error);
+        });
+      },
+   
+
+  },
    
   mounted() {
+    this.getCities();
     // Define the map view
     const view = new View({
       center: fromLonLat([-9.6, 30.4]), // Set center to Agadir coordinates
@@ -144,6 +195,8 @@ export default {
       //fill the location object
       //this.property.location.longitude = longitude;
      // this.property.location.latitude = latitude;
+     this.form.longitude = longitude;
+     this.form.latitude = latitude;
       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
       //console.log("location", this.property.location);
       marker.setGeometry(new Point(event.coordinate));
