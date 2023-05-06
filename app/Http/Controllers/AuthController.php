@@ -9,13 +9,10 @@ use App\Models\PresenceRegulation;
 use App\Models\SanitaryIssues;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-// use Infobip\api\client\SendSmsClient;
-// use App\Http\Controllers\Infobip\api\client\SendSmsClient;
-// use Infobip\Api\Client;
-// use Infobip\Api\Configuration\BasicAuthConfiguration;
-// use Infobip\Api\Model\SMSAdvancedTextualRequest;
 use Nexmo\Client;
 use Nexmo\Client\Credentials\Basic;
+use Illuminate\Support\Facades\Mail;
+
 
 
 
@@ -215,67 +212,44 @@ public function addSanitary(Request $request){
 
 
     //sendOTP
-public function sendOTP(Request $request)
-{
-    // Validate phone number input
-    $this->validate($request, [
-        'phone_number' => 'required|String'
-    ]);
-
-    // Get the user with the specified phone number from the database
-    $user = User::where('phone_number', $request->phone_number)->first();
-
-    if (!$user) {
-        return response()->json(['status' => 'error', 'message' => 'User not found']);
-    }
-
-    // Generate a random 4-digit OTP code
-    $otp = mt_rand(1000, 9999);
-
-    // Your Nexmo API key and secret from https://dashboard.nexmo.com/settings
-    // $api_key = 'cc6432cd';
-    // $api_secret = 'lfwtfhxk6gucOCUh';
-
-    // Your Nexmo virtual number or alphanumeric sender ID
-
-    // Initialize the Nexmo client
-    // $basic = new Basic($api_key, $api_secret);
-    // $client = new Client($basic);
-
-    $basic  = new \Vonage\Client\Credentials\Basic("f7f3a7cd", "F5R4jXGlwmZqFElJ");
-$client = new \Vonage\Client($basic);
-    // Send the message via Nexmo
-    try {
-        $phone_number = '+212' . substr($request->phone_number, 1); // add +212 to the beginning and remove the first character (0)
-
-        // $response = $client->sms()->send([
-        //     'to' => $phone_number,
-        //     'from' => $from,
-        //     'text' => "Your OTP code for AttendMe is: $otp"
-        // ]);
-
-        $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS($phone_number, +447867773672, 'Your OTP code for AttendMe is: '.$otp)
-        );
-
-        $message = $response->current();
-
-        if ($message->getStatus() == 0) {
-            echo "The message was sent successfully\n";
-        } else {
-            echo "The message failed with status: " . $message->getStatus() . "\n";
+    public function sendOTP(Request $request)
+    {
+        // Validate email input
+        $this->validate($request, [
+            'email' => 'required|email'
+        ]);
+    
+        // Get the user with the specified email from the database
+        $user = User::where('email', $request->email)->first();
+    
+        // if (!$user) {
+        //     return response()->json(['status' => 'error', 'message' => 'User not found']);
+        // }
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
         }
-
-        // Store the OTP code in the user's session for verification later
-        $user->otp_code = $otp;
-        $user->save();
-
-        return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
-    } catch (Exception $e) {
-        // Handle Nexmo exceptions here
-        return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
+    
+        // Generate a random 4-digit OTP code
+        $otp = mt_rand(1000, 9999);
+    
+        // Send the message via email
+        try {
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
+                $message->to($request->email);
+                $message->subject('Your OTP code for AttendMe');
+            });
+    
+            // Store the OTP code in the user's session for verification later
+            $user->otp_code = $otp;
+            $user->save();
+    
+            return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
+        } catch (Exception $e) {
+            // Handle email sending exceptions here
+            return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
+        }
     }
-}
+    
 
 
     

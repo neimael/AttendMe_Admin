@@ -39,6 +39,8 @@ Route::get('presence_regulations', [PresenceRegulationController::class, 'index'
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
+Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
+
 
 Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -47,7 +49,6 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
     Route::post('/addAttIssues', [AuthController::class, 'addAttIssues']);
     Route::post('/addSanitary', [AuthController::class, 'addSanitary']);
-    // Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
 
 });
 
