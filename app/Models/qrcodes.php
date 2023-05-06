@@ -21,4 +21,8 @@ class qrcodes extends Model
     {
         return $this->hasone(Elevator::class,'id_elevator','id_elevator');
     }
+    public function assignments()
+    {
+        return $this->belongsTo(AssignmentElevator::class,'id_elevator','id_qr_code');
+    }
 }

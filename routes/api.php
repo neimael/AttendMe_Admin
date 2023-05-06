@@ -21,6 +21,8 @@ Route::post('add_employee', [EmployeeController::class, 'store']);
 Route::delete('delete_employee/{id}', [EmployeeController::class, 'destroy']);
 Route::get('/get_employee/{id}', [EmployeeController::class, 'getEmployee']);
 Route::put('/update_employee/{id}', [EmployeeController::class, 'update']);
+Route::get('export_employees', [EmployeeController::class, 'export']);
+Route::get('export_employees_pdf', [EmployeeController::class, 'exportToPDF']);
 //sanitaryIssues
 Route::get('sanitaryIssues', [SanitaryIssuesController::class, 'index']);
 //admins
@@ -32,6 +34,7 @@ Route::put('/update_admin/{id}', [AdminController::class, 'update']);
 //Asignement
 Route::post('add_asignment', [AssignmentElevatorController::class, 'store']);
 Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index']);
+Route::delete('delete_asignment/{id}', [AssignmentElevatorController::class, 'destroy']);
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);

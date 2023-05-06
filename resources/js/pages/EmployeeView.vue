@@ -1,22 +1,65 @@
 <script setup>
-import { mdiPlus, mdiLock,
-}
-  from "@mdi/js";
+import { mdiPlus, mdiLock, mdiExportVariant  } from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
-
 import TableEmployee from "@/components/TableEmployee.vue";
-
 import CardBox from "@/components/CardBox.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import axios from 'axios';
 
+const exportData = () => {
+  axios.get('api/export_employees', { responseType: 'blob' })
+    .then(response => {
+      handleFileDownload(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+const handleFileDownload = (fileData) => {
+  const url = window.URL.createObjectURL(new Blob([fileData]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'employees.xlsx');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+const exportToPDF = () => {
+  axios.get('api/export_employees_pdf', { responseType: 'blob' })
+    .then(response => {
+      const fileData = response.data;
+      handlePDFDownload(fileData);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+};
+
+const handlePDFDownload = (fileData) => {
+  const url = window.URL.createObjectURL(new Blob([fileData]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'employees.pdf');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiLock" title="Employees" main>
+        <div class="dropdown dropdown-bottom ml-14">
+  <label tabindex="0" class="btn m-1 text-white">Export</label>
+  <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-white rounded-box w-52">
+    <li><a @click="exportData" class="text-blue-500" >To Excel</a></li>
+    <li><a class="text-blue-500" @click="exportToPDF"  >To Pdf</a></li>
+  </ul>
+</div>
         <router-link to="/add-employee">
           <BaseButton
             target="_blank"
@@ -28,7 +71,7 @@ import BaseButton from "@/components/BaseButton.vue";
           />
         </router-link>
       </SectionTitleLineWithButton>
-
+     
       <CardBox has-table>
         <TableEmployee />
       </CardBox>

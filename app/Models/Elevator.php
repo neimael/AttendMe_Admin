@@ -25,10 +25,7 @@ class Elevator extends Model
     {
         return $this->hasMany(Presence::class,'id_elevator','id_elevator');
     }
-    public function assignments()
-    {
-        return $this->hasMany(AssignmentElevator::class,'id_elevator','id_elevator');
-    }
+   
     public function location()
     {
         return $this->hasOne(Location::class,'id_location','id_location');

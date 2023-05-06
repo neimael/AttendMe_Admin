@@ -14,40 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,17 +29,18 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, employee) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(employee);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === employee.id
     );
   }
 };
 </script>
+
 
 <template>
   <CardBoxModal v-model="isModalActive" title="Sample modal">
@@ -108,44 +78,38 @@ const checked = (isChecked, client) => {
         <th>Employee</th>
         <th>Start Date</th>
         <th>End Date</th>
-        <th>Start Day</th>
-        <th>End Day</th>
-        <th>Created</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        
         <th />
       </tr>
     </thead>
     <tbody>
-      <tr v-for="client in itemsPaginated" :key="client.id">
+      <tr v-for="assignment in paginatedAssignment" :key="assignment.id_assignment_elevator">
         <TableCheckboxCell
           v-if="checkable"
-          @checked="checked($event, client)"
+          @checked="checked($event, assignment)"
         />
-       
-        <td data-label="Name">
-          {{ client.name }}
+       <td data-label="Elevator">
+        {{ assignment.qrcode.elevator.location.ville }}  {{ assignment.qrcode.elevator.location.adress }}  {{ assignment.qrcode.elevator.name }} {{ assignment.qrcode.mission }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Employee">
+          {{ assignment.employee.first_name }} {{ assignment.employee.last_name }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        
+        <td data-label="Start Date">
+          {{ assignment.start_date }}
         </td>
-        <td data-label="Name">
-          {{ client.name }}
+        <td data-label="End Date">
+          {{ assignment.end_date }}
         </td>
-        <td data-label="Company">
-          {{ client.company }}
+        <td data-label="Check in">
+          {{ assignment.time_in }}
         </td>
-        <td data-label="City">
-          {{ client.city }}
+        <td data-label="check out">
+          {{ assignment.time_out }}
         </td>
-        <td data-label="Created" class="lg:w-1 whitespace-nowrap">
-          <small
-            class="text-gray-500 dark:text-slate-400"
-            :title="client.created"
-            >{{ client.created }}</small
-          >
-        </td>
+        
         <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
             <BaseButton
@@ -158,14 +122,14 @@ const checked = (isChecked, client) => {
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + client.id"
+            
            
           />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              @click="confirmDelete(assignment.id_assignment_elevator)"
             />
           </BaseButtons>
         </td>
@@ -189,3 +153,77 @@ const checked = (isChecked, client) => {
     </BaseLevel>
   </div>
 </template>
+<script>
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+export default {
+  name: "AsignmentView",
+  data() {
+    return {
+      assignments: [],
+      Selectedassignment: {},
+      currentPage: 0,
+      pageSize: 10,
+
+    };
+
+  },
+  methods: {
+    async getAssignments() {
+      await axios.get('api/assignmentElevator')
+        .then(response => this.assignments = response.data)
+        .catch(error => console.log(error))
+    },
+    confirmDelete(assignementId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this assignment record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked the "Yes" button, so proceed with delete request
+            axios.delete('api/delete_asignment/' + assignementId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Assignment has been deleted successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+},
+  
+
+    
+  },
+  computed: {
+    paginatedAssignment: function () {
+      const startIndex = this.currentPage * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.assignments.slice(startIndex, endIndex);
+    },
+    numPages: function () {
+      return Math.ceil(this.assignments.length / this.pageSize);
+    },
+    currentPageHuman: function () {
+      return this.currentPage + 1;
+    },
+    pagesList: function () {
+      return Array.from({length: this.numPages}, (v, k) => k);
+    }
+  },
+  mounted() {
+    this.getAssignments();
+  }
+};
+</script>

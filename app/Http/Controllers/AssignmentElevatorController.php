@@ -15,9 +15,8 @@ class AssignmentElevatorController extends Controller
     public function index()
     {
         
-        $assignmentElevator=AssignmentElevator::all();
-        //return $employees[0]-> sanitaryIssues;
-        return  AssignmentElevatorResource::collection($assignmentElevator);
+        $assignmentElevator=AssignmentElevator::with(['employee','qrcode.elevator.location'])->get();
+        return $assignmentElevator;
     }
 
     /**
@@ -50,7 +49,7 @@ class AssignmentElevatorController extends Controller
      */
     public function show(AssignmentElevator $assignmentElevator)
     {
-        //
+        
     }
 
     /**
@@ -72,8 +71,18 @@ class AssignmentElevatorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AssignmentElevator $assignmentElevator)
+    public function destroy($id)
     {
-        //
+        $assignmentElevator=AssignmentElevator::find($id);
+      
+
+    if (!$assignmentElevator) {
+        return response()->json(['message' => 'Asignment not found'], 404);
+    }
+
+    $assignmentElevator->delete();
+
+    return response()->json(['message' => 'Asignment has been deleted successfully']);
+
     }
 }

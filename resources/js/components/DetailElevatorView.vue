@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useMainStore } from "@/stores/main";
-import { mdiEye, mdiTrashCan ,mdiHumanEdit} from "@mdi/js";
+import { mdiEye, mdiTrashCan ,mdiHumanEdit,mdiDownload} from "@mdi/js";
 import CardBoxModal from "@/components/CardBoxModal.vue";
 import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
@@ -70,17 +70,16 @@ defineProps({
           <img v-else src="/storage/EmployeeAvatar/default.png" alt="default" class="w-full h-full object-cover">
           </div>
         </td>
-        
-        
-        <td class="before:hidden lg:w-1 whitespace-nowrap">
+    <td class="before:hidden lg:w-1 whitespace-nowrap">
           <BaseButtons type="justify-start lg:justify-end" no-wrap>
-         
+            <a class="ml-1"  :href="'/storage/' + elevator.qr_code" download>
             <BaseButton
-              color="danger"
-              :icon="mdiTrashCan"
-              small
-              @click="isModalDangerActive = true"
+              color="success"
+              :icon="mdiDownload"
+              small 
+              
             />
+            </a>
           </BaseButtons>
         </td>
       </tr>
