@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use App\Exports\ElevatorExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
+
 
 class ElevatorController extends Controller
 {
@@ -53,8 +58,7 @@ class ElevatorController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-            
+    {   
            // create or retrieve the location
            $location = Location::firstOrCreate([
             'longitude' => $request->longitude,
@@ -114,11 +118,7 @@ public function getOneElevator($id)
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Elevator $elevator)
-    {
-        //
-    }
-
+ 
     /**
      * Update the specified resource in storage.
      */
@@ -185,4 +185,31 @@ public function getOneElevator($id)
 
     return response()->json(['message' => 'Elevator has been deleted successfully']);
 }
+public function export()
+{
+     $filename = 'elevators.xlsx'; // Desired filename
+    $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+
+    return Excel::download(new ElevatorExport(), $filename, $format);
+   
+}
+public function exportToPDF()
+    {
+        $employees =Elevator::with('location')->get();
+    
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        
+        $pdf = PDF::loadView('exports.elevator_pdf', ['employees' => $employees]);
+        $pdf->getDomPDF()->set_option('font_size', 4);
+        $pdf->getDomPDF()->set_option('table_width_auto', false);
+        $pdf->getDomPDF()->set_option('table_width', '100%');
+    
+        $pdf->getDomPDF()->setOptions($options);
+        
+        return $pdf->download('elevators.pdf');
+        
+    }
+
+
 }

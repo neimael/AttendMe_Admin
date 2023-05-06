@@ -53,13 +53,20 @@ const handlePDFDownload = (fileData) => {
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiLock" title="Employees" main>
-        <div class="dropdown dropdown-bottom ml-14">
-  <label tabindex="0" class="btn m-1 text-white">Export</label>
-  <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-white rounded-box w-52">
-    <li><a @click="exportData" class="text-blue-500" >To Excel</a></li>
-    <li><a class="text-blue-500" @click="exportToPDF"  >To Pdf</a></li>
+        <div class="dropdown dropdown-bottom ml-2">
+  <label tabindex="0" class="btn m-1 text-white ml-auto">Export</label>
+  <ul tabindex="0" class="dropdown-content menu p-1 shadow bg-white rounded-box w-40">
+    <li class="flex items-center px-0">
+      <a @click="exportData" class="text-blue-500 px-0">To Excel</a>
+    </li>
+    <li class="flex items-center px-0">
+      <a class="text-blue-500 px-0" @click="exportToPDF">To PDF</a>
+    </li>
   </ul>
 </div>
+
+
+
         <router-link to="/add-employee">
           <BaseButton
             target="_blank"

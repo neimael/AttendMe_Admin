@@ -31,6 +31,8 @@ Route::post('add_admin', [AdminController::class, 'store']);
 Route::delete('delete_admin/{id}', [AdminController::class, 'destroy']);
 Route::get('/get_admin/{id}', [AdminController::class, 'getAdmin']);
 Route::put('/update_admin/{id}', [AdminController::class, 'update']);
+Route::get('export_admins', [AdminController::class, 'export']);
+Route::get('export_admins_pdf', [AdminController::class, 'exportToPDF']);
 //Asignement
 Route::post('add_asignment', [AssignmentElevatorController::class, 'store']);
 Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index']);
@@ -43,6 +45,8 @@ Route::get('get_elevatoor/{id}', [ElevatorController::class, 'getOneElevator']);
 Route::get('get_all', [ElevatorController::class, 'show']);
 Route::delete('delete_elevator/{id}', [ElevatorController::class, 'destroy']);
 Route::put('/update_elevator/{id}', [ElevatorController::class, 'update']);
+Route::get('export_elevators', [ElevatorController::class, 'export']);
+Route::get('export_elevators_pdf', [ElevatorController::class, 'exportToPDF']);
 //Location
 Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
