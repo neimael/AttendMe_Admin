@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
+class ComposerStaticInit618244bfba8222005bec082efd0ea5b7
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -114,6 +114,7 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
         'L' => 
         array (
             'League\\MimeTypeDetection\\' => 25,
+            'League\\Flysystem\\Local\\' => 23,
             'League\\Flysystem\\' => 17,
             'League\\Config\\' => 14,
             'League\\CommonMark\\' => 18,
@@ -375,6 +376,10 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
         array (
             0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
         ),
+        'League\\Flysystem\\Local\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem-local',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -507,9 +512,9 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-        'App\\Http\\Controllers\\API\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AuthController.php',
         'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\AssignmentElevatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/AssignmentElevatorController.php',
+        'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\ElevatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ElevatorController.php',
         'App\\Http\\Controllers\\EmployeeController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmployeeController.php',
@@ -529,6 +534,7 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
         'App\\Http\\Requests\\StoreAdminRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreAdminRequest.php',
         'App\\Http\\Requests\\StoreAsignmentElevator' => __DIR__ . '/../..' . '/app/Http/Requests/StoreAsignmentElevator.php',
         'App\\Http\\Requests\\StoreElevator' => __DIR__ . '/../..' . '/app/Http/Requests/StoreElevator.php',
+        'App\\Http\\Requests\\StoreEmployeeRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreEmployeeRequest.php',
         'App\\Http\\Requests\\StorePresenceRegulationRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StorePresenceRegulationRequest.php',
         'App\\Http\\Requests\\StorePresenceRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StorePresenceRequest.php',
         'App\\Http\\Requests\\StoreSanitaryIssuesRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreSanitaryIssuesRequest.php',
@@ -3084,8 +3090,8 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
         'League\\Flysystem\\FilesystemWriter' => __DIR__ . '/..' . '/league/flysystem/src/FilesystemWriter.php',
         'League\\Flysystem\\InvalidStreamProvided' => __DIR__ . '/..' . '/league/flysystem/src/InvalidStreamProvided.php',
         'League\\Flysystem\\InvalidVisibilityProvided' => __DIR__ . '/..' . '/league/flysystem/src/InvalidVisibilityProvided.php',
-        'League\\Flysystem\\Local\\FallbackMimeTypeDetector' => __DIR__ . '/..' . '/league/flysystem/src/Local/FallbackMimeTypeDetector.php',
-        'League\\Flysystem\\Local\\LocalFilesystemAdapter' => __DIR__ . '/..' . '/league/flysystem/src/Local/LocalFilesystemAdapter.php',
+        'League\\Flysystem\\Local\\FallbackMimeTypeDetector' => __DIR__ . '/..' . '/league/flysystem-local/FallbackMimeTypeDetector.php',
+        'League\\Flysystem\\Local\\LocalFilesystemAdapter' => __DIR__ . '/..' . '/league/flysystem-local/LocalFilesystemAdapter.php',
         'League\\Flysystem\\MountManager' => __DIR__ . '/..' . '/league/flysystem/src/MountManager.php',
         'League\\Flysystem\\PathNormalizer' => __DIR__ . '/..' . '/league/flysystem/src/PathNormalizer.php',
         'League\\Flysystem\\PathPrefixer' => __DIR__ . '/..' . '/league/flysystem/src/PathPrefixer.php',
@@ -6313,10 +6319,10 @@ class ComposerStaticInit454d02a16ec9366459419e4371acbd5d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit454d02a16ec9366459419e4371acbd5d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit454d02a16ec9366459419e4371acbd5d::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit454d02a16ec9366459419e4371acbd5d::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit454d02a16ec9366459419e4371acbd5d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit618244bfba8222005bec082efd0ea5b7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit618244bfba8222005bec082efd0ea5b7::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit618244bfba8222005bec082efd0ea5b7::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit618244bfba8222005bec082efd0ea5b7::$classMap;
 
         }, null, ClassLoader::class);
     }

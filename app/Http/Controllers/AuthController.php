@@ -9,6 +9,13 @@ use App\Models\PresenceRegulation;
 use App\Models\SanitaryIssues;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+// use Infobip\api\client\SendSmsClient;
+// use App\Http\Controllers\Infobip\api\client\SendSmsClient;
+// use Infobip\Api\Client;
+// use Infobip\Api\Configuration\BasicAuthConfiguration;
+// use Infobip\Api\Model\SMSAdvancedTextualRequest;
+use Nexmo\Client;
+use Nexmo\Client\Credentials\Basic;
 
 
 
@@ -208,44 +215,69 @@ public function addSanitary(Request $request){
 
 
     //sendOTP
-    // public function sendOTP(Request $request)
-    // {
-    //     // Validate phone number input
-    //     $this->validate($request, [
-    //         'phone_number' => 'required|regex:/^\+?[1-9]\d{1,14}$/'
-    //     ]);
+public function sendOTP(Request $request)
+{
+    // Validate phone number input
+    $this->validate($request, [
+        'phone_number' => 'required|String'
+    ]);
 
-    //     // Generate a random 4-digit OTP code
-    //     $otp = mt_rand(1000, 9999);
+    // Get the user with the specified phone number from the database
+    $user = User::where('phone_number', $request->phone_number)->first();
 
-    //     // Your Twilio account SID and auth token from https://www.twilio.com/console
-    //     $account_sid = 'YOUR_ACCOUNT_SID';
-    //     $auth_token = 'YOUR_AUTH_TOKEN';
+    if (!$user) {
+        return response()->json(['status' => 'error', 'message' => 'User not found']);
+    }
 
-    //     // Your Twilio phone number from https://www.twilio.com/console/phone-numbers/incoming
-    //     $twilio_number = '+1415XXXXXXX';
+    // Generate a random 4-digit OTP code
+    $otp = mt_rand(1000, 9999);
 
-    //     // Initialize the Twilio client
-    //     $client = new Client($account_sid, $auth_token);
+    // Your Nexmo API key and secret from https://dashboard.nexmo.com/settings
+    // $api_key = 'cc6432cd';
+    // $api_secret = 'lfwtfhxk6gucOCUh';
 
-    //     // Send the message via Twilio
-    //     try {
-    //         $message = $client->messages->create(
-    //             $request->phone_number,
-    //             array(
-    //                 'from' => $twilio_number,
-    //                 'body' => "Your OTP code fir AttendMe Application is: $otp"
-    //             )
-    //         );
+    // Your Nexmo virtual number or alphanumeric sender ID
 
-    //         // Store the OTP code in the session for verification later
-    //         $request->session()->put('otp_code', $otp);
-    //         $request->session()->put('phone_number', $request->phone_number);
+    // Initialize the Nexmo client
+    // $basic = new Basic($api_key, $api_secret);
+    // $client = new Client($basic);
 
-    //         return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
-    //     } catch (\Exception $e) {
-    //         // Handle Twilio exceptions here
-    //         return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
-    //     }
-    // }
+    $basic  = new \Vonage\Client\Credentials\Basic("f7f3a7cd", "F5R4jXGlwmZqFElJ");
+$client = new \Vonage\Client($basic);
+    // Send the message via Nexmo
+    try {
+        $phone_number = '+212' . substr($request->phone_number, 1); // add +212 to the beginning and remove the first character (0)
+
+        // $response = $client->sms()->send([
+        //     'to' => $phone_number,
+        //     'from' => $from,
+        //     'text' => "Your OTP code for AttendMe is: $otp"
+        // ]);
+
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($phone_number, +447867773672, 'Your OTP code for AttendMe is: '.$otp)
+        );
+
+        $message = $response->current();
+
+        if ($message->getStatus() == 0) {
+            echo "The message was sent successfully\n";
+        } else {
+            echo "The message failed with status: " . $message->getStatus() . "\n";
+        }
+
+        // Store the OTP code in the user's session for verification later
+        $user->otp_code = $otp;
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
+    } catch (Exception $e) {
+        // Handle Nexmo exceptions here
+        return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
+    }
+}
+
+
+    
+
 }
