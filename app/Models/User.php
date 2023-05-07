@@ -59,13 +59,15 @@ class User extends Authenticatable
       }
    public function assignments()
    {        return $this->hasMany(AssignmentElevator::class,'id_employee','id');
+
    }    public function sanitaryIssues()
    {
-        return $this->hasMany(SanitaryIssues::class,'id_employee','id');
+        return $this->belongsTo(SanitaryIssues::class,'id_employee','id');
    }
     public function presenceRegulations()
    {
         return $this->belongsTo(PresenceRegulation::class,'id_employee','id');
    }
+  
 
 }

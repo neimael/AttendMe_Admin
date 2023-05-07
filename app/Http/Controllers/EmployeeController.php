@@ -13,7 +13,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\EmployeeCreated;
 use Illuminate\Support\Facades\Mail;
-
+use App\Exports\EmployeeExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
 
 class EmployeeController extends Controller
 {
@@ -56,7 +59,7 @@ class EmployeeController extends Controller
             ], 500);
         }
         return response()->json([
-            'message' => 'Admin added successfully.',
+            'message' => 'Employee added successfully.',
             'password' => $password // Return the generated password
         ]);
 
@@ -108,6 +111,31 @@ public function update(Request $request, $id)
         'message' => 'Admin updated successfully.',
     ]);
 }
+public function export()
+{
+     $filename = 'employees.xlsx'; // Desired filename
+    $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+
+    return Excel::download(new EmployeeExport(), $filename, $format);
+   
+}
+public function exportToPDF()
+    {
+        $employees = User::all();
+    
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        
+        $pdf = PDF::loadView('exports.employee_pdf', ['employees' => $employees]);
+        $pdf->getDomPDF()->set_option('font_size', 4);
+        $pdf->getDomPDF()->set_option('table_width_auto', false);
+    $pdf->getDomPDF()->set_option('table_width', '100%');
+    
+    $pdf->getDomPDF()->setOptions($options);
+        
+        return $pdf->download('employees.pdf');
+        
+    }
 
    
 }

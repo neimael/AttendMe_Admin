@@ -7,6 +7,11 @@ use App\Models\SanitaryIssues;
 use Illuminate\Http\Request;
 use App\Http\Resources\SanitaryIssuesResource;
 use Illuminate\Contracts\Cache\Store;
+use App\Exports\SanitaryExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
+
 
 class SanitaryIssuesController extends Controller
 {
@@ -15,59 +20,33 @@ class SanitaryIssuesController extends Controller
      */
     public function index()
     {
-        //
+        $sanitaryissue= SanitaryIssues::with('employee')->get();
+       return $sanitaryissue;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function export()
     {
-        //
+         $filename = 'sanitary_issues.xlsx'; // Desired filename
+        $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+    
+        return Excel::download(new SanitaryExport(), $filename, $format);
+       
     }
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreSanitaryIssuesRequest $request)
-    {
-        $sanitary_issues=new SanitaryIssues();
-        $sanitary_issues->id_employee=1;
-        $sanitary_issues->regulation_date=$request->regulation_date;
-        $sanitary_issues->certificate=$request->certificate;
-        $sanitary_issues->report=$request->report;
-        $sanitary_issues->save();
-        return new SanitaryIssuesResource($sanitary_issues);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(SanitaryIssues $sanitaryIssues)
-    {
-        //
-    }
+    public function exportToPDF()
+        {
+            $employees =SanitaryIssues::with(['employee'])->get();
+            $options = new Options();
+            $options->set('defaultFont', 'Arial');
+            $pdf = PDF::loadView('exports.sanitary_pdf', ['employees' => $employees]);
+            $pdf->getDomPDF()->set_option('font_size', 4);
+            $pdf->getDomPDF()->set_option('table_width_auto', false);
+            $pdf->getDomPDF()->set_option('table_width', '100%');
+        
+            $pdf->getDomPDF()->setOptions($options);
+            
+            return $pdf->download(' sanitary_issues.pdf');
+            
+        }
+    
+    
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AdminExport;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Resources\AdminResource;
 use App\Models\Admin;
@@ -12,6 +13,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Mail\AdminCreated;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
 
 class AdminController extends Controller
 {
@@ -28,10 +32,6 @@ class AdminController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -69,25 +69,6 @@ class AdminController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Admin $admin)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $admin = Admin::findOrFail($id);
@@ -134,4 +115,30 @@ public function getAdmin($id)
 
     return response()->json($admin);
 }
+public function export()
+{
+     $filename = 'admins.xlsx'; // Desired filename
+    $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+
+    return Excel::download(new AdminExport(), $filename, $format);
+   
+}
+public function exportToPDF()
+    {
+        $employees = Admin::all();
+    
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        
+        $pdf = PDF::loadView('exports.admin_pdf', ['employees' => $employees]);
+        $pdf->getDomPDF()->set_option('font_size', 4);
+        $pdf->getDomPDF()->set_option('table_width_auto', false);
+        $pdf->getDomPDF()->set_option('table_width', '100%');
+    
+        $pdf->getDomPDF()->setOptions($options);
+        
+        return $pdf->download('admins.pdf');
+        
+    }
+
 }

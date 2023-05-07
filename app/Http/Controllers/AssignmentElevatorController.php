@@ -6,6 +6,11 @@ use App\Http\Requests\StoreAsignmentElevator;
 use App\Models\AssignmentElevator;
 use Illuminate\Http\Request;
 use App\Http\Resources\AssignmentElevatorResource;
+use App\Exports\AsignmentExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
+
 
 class AssignmentElevatorController extends Controller
 {
@@ -15,18 +20,11 @@ class AssignmentElevatorController extends Controller
     public function index()
     {
         
-        $assignmentElevator=AssignmentElevator::all();
-        //return $employees[0]-> sanitaryIssues;
-        return  AssignmentElevatorResource::collection($assignmentElevator);
+        $assignmentElevator=AssignmentElevator::with(['employee','qrcode.elevator.location'])->get();
+        return $assignmentElevator;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+  
 
     /**
      * Store a newly created resource in storage.
@@ -45,25 +43,7 @@ class AssignmentElevatorController extends Controller
             return new AssignmentElevatorResource($assignmentElevator);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AssignmentElevator $assignmentElevator)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AssignmentElevator $assignmentElevator)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
+ 
     public function update(Request $request, AssignmentElevator $assignmentElevator)
     {
         //
@@ -72,8 +52,44 @@ class AssignmentElevatorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AssignmentElevator $assignmentElevator)
+    public function destroy($id)
     {
-        //
+        $assignmentElevator=AssignmentElevator::find($id);
+      
+
+    if (!$assignmentElevator) {
+        return response()->json(['message' => 'Asignment not found'], 404);
     }
+
+    $assignmentElevator->delete();
+
+    return response()->json(['message' => 'Asignment has been deleted successfully']);
 }
+
+    public function export()
+{
+     $filename = 'asignments.xlsx'; // Desired filename
+    $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+
+    return Excel::download(new AsignmentExport(), $filename, $format);
+   
+}
+public function exportToPDF()
+    {
+        $employees =AssignmentElevator::with(['employee','qrcode.elevator.location'])->get();
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $pdf = PDF::loadView('exports.asignment_pdf', ['employees' => $employees]);
+        $pdf->getDomPDF()->set_option('font_size', 4);
+        $pdf->getDomPDF()->set_option('table_width_auto', false);
+        $pdf->getDomPDF()->set_option('table_width', '100%');
+    
+        $pdf->getDomPDF()->setOptions($options);
+        
+        return $pdf->download(' asignments.pdf');
+        
+    }
+
+
+}
+

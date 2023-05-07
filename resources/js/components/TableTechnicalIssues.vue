@@ -14,40 +14,9 @@ defineProps({
 });
 
 const mainStore = useMainStore();
-
-const items = computed(() => mainStore.clients);
-
 const isModalActive = ref(false);
-
 const isModalDangerActive = ref(false);
-
-const perPage = ref(5);
-
-const currentPage = ref(0);
-
 const checkedRows = ref([]);
-
-const itemsPaginated = computed(() =>
-  items.value.slice(
-    perPage.value * currentPage.value,
-    perPage.value * (currentPage.value + 1)
-  )
-);
-
-const numPages = computed(() => Math.ceil(items.value.length / perPage.value));
-
-const currentPageHuman = computed(() => currentPage.value + 1);
-
-const pagesList = computed(() => {
-  const pagesList = [];
-
-  for (let i = 0; i < numPages.value; i++) {
-    pagesList.push(i);
-  }
-
-  return pagesList;
-});
-
 const remove = (arr, cb) => {
   const newArr = [];
 
@@ -60,32 +29,37 @@ const remove = (arr, cb) => {
   return newArr;
 };
 
-const checked = (isChecked, client) => {
+const checked = (isChecked, regulation) => {
   if (isChecked) {
-    checkedRows.value.push(client);
+    checkedRows.value.push(regulation);
   } else {
     checkedRows.value = remove(
       checkedRows.value,
-      (row) => row.id === client.id
+      (row) => row.id === regulation.id
     );
   }
 };
 </script>
 
 <template>
- <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Regulation">
-  <div class="mt-4 ml-24">
-
-    <p><b>Check In :</b> {{ Selectedregulation.check_in }}</p>
-    <p><b>Check Out :</b> {{ Selectedregulation.check_out }}</p>
+ <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" >
+ 
+    <h1 class="text-xl ml-24"><b>Detail Regulation</b>  </h1> <div class="mt-4 ml-24">
+    <p><b>Check In : </b> <span style="padding-left: 10px">{{ Selectedregulation.check_in }}</span></p>
+    <p><b>Check Out :</b> <span style="padding-left: 10px">{{ Selectedregulation.check_out }}</span></p>
     <!-- <p><b>Employee's name : </b> {{ Selectedregulation.employee.first_name }} {{ Selectedregulation.employee.last_name }}</p>
     <p><b>Employee's cin :</b>  {{ Selectedregulation.employee.cin }}</p>  -->
-    <p><b>Issue Type:</b> {{ Selectedregulation.issue_type }}</p>
-    <p><b>Status :</b> {{ Selectedregulation.status }}</p>
-    <p><b>Regulation Date :</b> {{ Selectedregulation.regulation_day }}</p>
-    <p><b>Report :</b> {{ Selectedregulation.report }}</p>
-  </div>
+    <p><b>Issue Type:</b> <span style="padding-left: 10px">{{ Selectedregulation.issue_type }}</span></p>
+    <p><b>Status :</b> <span style="padding-left: 10px">{{ Selectedregulation.status }}</span></p>
+    <p><b>Regulation Date :</b> <span style="padding-left: 10px">{{ Selectedregulation.attendance_day }}</span></p>
+  
+  <p><b>Report :</b>
+   
+    <span style="padding-left: 10px">{{ Selectedregulation.report }}</span>
+  </p></div>
 </CardBoxModal>
+
+
 
   <CardBoxModal
     v-model="isModalDangerActive"
