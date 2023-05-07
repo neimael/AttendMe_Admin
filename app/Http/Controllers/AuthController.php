@@ -249,6 +249,35 @@ public function addSanitary(Request $request){
             return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
         }
     }
+
+    //verify the otp code
+    public function verifyOTP(Request $request)
+{
+    // Validate input
+    $this->validate($request, [
+        'email' => 'required|email',
+        'otp_code' => 'required|numeric'
+    ]);
+
+    // Get the user with the specified email from the database
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
+    }
+
+    // Verify the OTP code
+    if ($user->otp_code == $request->otp_code) {
+        // Clear the OTP code from the user's session
+        $user->otp_code = null;
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'OTP code verified successfully']);
+    } else {
+        return response()->json(['status' => 'error', 'message' => 'Invalid OTP code'], 401);
+    }
+}
+
     
 
 

@@ -40,6 +40,7 @@ Route::get('presence_regulations', [PresenceRegulationController::class, 'index'
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
 Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
+Route::post('/verifyOTP', [AuthController::class, 'verifyOTP']);
 
 
 Route::group(['middleware' => ['auth:sanctum']],function(){
