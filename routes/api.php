@@ -25,6 +25,9 @@ Route::get('export_employees', [EmployeeController::class, 'export']);
 Route::get('export_employees_pdf', [EmployeeController::class, 'exportToPDF']);
 //sanitaryIssues
 Route::get('sanitaryIssues', [SanitaryIssuesController::class, 'index']);
+Route::get('export_sanitaries', [SanitaryIssuesController::class, 'export']);
+Route::get('export_sanitaries_pdf', [SanitaryIssuesController::class, 'exportToPDF']);
+
 //admins
 Route::get('admins', [AdminController::class, 'index']);
 Route::post('add_admin', [AdminController::class, 'store']);
