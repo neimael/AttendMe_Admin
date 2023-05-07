@@ -23,6 +23,7 @@ class PresenceRegulation extends Model
         
     ];
 
+
     public function employee()
     {
         return $this->hasOne(User::class,'id','id_employee');

@@ -12,6 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    //save image
     public function saveImage($image, $path = 'public')
     {
         if(!$image)
@@ -27,4 +28,25 @@ class Controller extends BaseController
         // Url is the base url exp: localhost:8000
         return URL::to('/').'/storage/'.$path.'/'.$filename;
     }
+
+    // save file
+    public function saveFile($file, $path = 'public', $extension)
+    {
+        if (!$file) {
+            return null;
+        }
+
+        // $extension = $file->getClientOriginalExtension();
+        $filename = time() .'.'. $extension;
+        // save file
+        \Storage::disk($path)->put($filename, base64_decode($file));
+
+        // $file->storeAs($path, $filename);
+
+        //return the path
+        // Url is the base url exp: localhost:8000
+
+        return URL::to('/').'/storage/'.$path.'/'.$filename;
+    }
+
 }

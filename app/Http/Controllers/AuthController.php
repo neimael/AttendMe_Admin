@@ -5,6 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\PresenceRegulation;
+use App\Models\SanitaryIssues;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Nexmo\Client;
+use Nexmo\Client\Credentials\Basic;
+use Illuminate\Support\Facades\Mail;
+
+
 
 
 
@@ -106,4 +115,202 @@ class AuthController extends Controller
             'user' => auth()->user()
         ], 200);
     }
+
+
+    //Change Password
+    public function changePassword(Request $request)
+    {
+        try {
+            $input = $request -> all();
+            $validator = Validator::make($input, [
+                'old_password' => 'required|min:8',
+                'new_password' => 'required|min:8',
+
+            ]);
+
+            if ($validator->fails()) {
+                return response() -> json([
+                    
+                    'message' => 'Validation Error',
+
+                    
+                ], 422);
+                
+            } 
+
+            if(!Hash::check($input['old_password'], $request -> user() -> password)) {
+                return response() -> json([
+                    'message' => 'Old password is incorrect',
+                ], 401);
+            }
+
+            $input['password'] = Hash::make($input['new_password']);
+            $request -> user() -> update($input);
+            return response() -> json([
+                'message' => "Password updated successfully",
+                'data' => $request->user(),
+            ]);
+        } catch (\Throwable $th) {
+            return response() -> json([
+                'message' => $th -> getMessage(),
+            ], 500);        
+        }
+    }
+
+    //Change Password
+    public function changePassword2(Request $request)
+    {
+
+        $this->validate($request, [
+            'email' => 'required|email',
+            'new_password' => 'required|min:8'
+        ]);
+
+        // Get the user with the specified email from the database
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
+        }
+
+        if (Hash::check($request->new_password, $user -> password)) {
+            return response() -> json([
+                             'message' => 'New password should be different from the previous',
+                        ], 401);
+    
+                    }
+
+            $user -> password = Hash::make($request ->new_password);
+            $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Password updated successfully']);
+            
+    }
+
+    //addAttIssues 
+    public function addAttIssues(Request $request){
+        $attr = $request->validate([
+            'check_in' => 'required|time',
+            'check_out' => 'required|time',
+            'attendance_day' => 'required|date',
+            'issue_type' => 'required|string',
+            'status' => 'required|string',
+            'report' => 'required|String',
+            'id_employee' => 'required|integer|exists:users,id'
+        ]);
+
+        $presence_regulation = PresenceRegulation::create([
+            'check_in' => $attr['check_in'],
+            'check_out' => $attr['check_out'],
+            'attendance_day' => $attr['attendance_day'],
+            'issue_type' => $attr['issue_type'],
+            'status' => $attr['status'],
+            'report' => $attr['report'],
+            'id_employee' => $attr['id_employee'],
+        ]);
+
+        return response([
+            'presence_regulation' => $presence_regulation,
+            'message' => 'Your regulation has been sent successfully',
+        ]);
+    }
+
+    //add Sanitary Issues
+public function addSanitary(Request $request){
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+        'report' => 'required|string',
+        'certificate' => 'required|String',
+        'extension' => 'required|String',
+    ]);
+
+
+    $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
+
+
+    $sanitary_regulation = SanitaryIssues::create([
+        'id_employee' => $attr['id_employee'],
+        'report' => $attr['report'],
+        'certificate' => $file,
+    ]);
+
+    return response([
+        'sanitary_regulation' => $sanitary_regulation,
+        'message' => 'Your certificate has been sent successfully',
+    ]);
+}
+
+
+    //sendOTP
+    public function sendOTP(Request $request)
+    {
+        // Validate email input
+        $this->validate($request, [
+            'email' => 'required|email'
+        ]);
+    
+        // Get the user with the specified email from the database
+        $user = User::where('email', $request->email)->first();
+    
+        // if (!$user) {
+        //     return response()->json(['status' => 'error', 'message' => 'User not found']);
+        // }
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
+        }
+    
+        // Generate a random 4-digit OTP code
+        $otp = mt_rand(1000, 9999);
+    
+        // Send the message via email
+        try {
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($request) {
+                $message->to($request->email);
+                $message->subject('Your OTP code for AttendMe');
+            });
+    
+            // Store the OTP code in the user's session for verification later
+            $user->otp_code = $otp;
+            $user->save();
+    
+            return response()->json(['status' => 'success', 'message' => 'OTP code sent successfully']);
+        } catch (Exception $e) {
+            // Handle email sending exceptions here
+            return response()->json(['status' => 'error', 'message' => 'Failed to send OTP code']);
+        }
+    }
+
+    //verify the otp code
+    public function verifyOTP(Request $request)
+{
+    // Validate input
+    $this->validate($request, [
+        'email' => 'required|email',
+        'otp_code' => 'required|numeric'
+    ]);
+
+    // Get the user with the specified email from the database
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
+    }
+
+    // Verify the OTP code
+    if ($user->otp_code == $request->otp_code) {
+        // Clear the OTP code from the user's session
+        $user->otp_code = null;
+        $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'OTP code verified successfully']);
+    } else {
+        return response()->json(['status' => 'error', 'message' => 'Invalid OTP code'], 401);
+    }
+}
+
+    
+
+
+    
+
 }

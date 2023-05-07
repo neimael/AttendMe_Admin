@@ -69,11 +69,19 @@ Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exp
 
 Route::post('/register',[AuthController::class, 'register']);
 Route::post('/login',[AuthController::class, 'login']);
+Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
+Route::post('/verifyOTP', [AuthController::class, 'verifyOTP']);
+Route::post('/changePassword2', [AuthController::class, 'changePassword2']);
+
+
 
 Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user', [AuthController::class, 'update']);
+    Route::post('/changePassword', [AuthController::class, 'changePassword']);
+    Route::post('/addAttIssues', [AuthController::class, 'addAttIssues']);
+    Route::post('/addSanitary', [AuthController::class, 'addSanitary']);
 
 });
 

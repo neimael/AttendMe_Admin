@@ -2,6 +2,7 @@
     'root' => array(
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
+        'reference' => '00cd57ba65ae49e5fae7e9aba6ac6e66f0af5576',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -512,6 +513,15 @@
             'install_path' => __DIR__ . '/../league/flysystem-local',
             'aliases' => array(),
             'reference' => '543f64c397fefdf9cfeac443ffb6beff602796b3',
+            'dev_requirement' => false,
+        ),
+        'league/flysystem-local' => array(
+            'pretty_version' => '3.15.0',
+            'version' => '3.15.0.0',
+            'reference' => '543f64c397fefdf9cfeac443ffb6beff602796b3',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../league/flysystem-local',
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'league/mime-type-detection' => array(

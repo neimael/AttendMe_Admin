@@ -15,10 +15,11 @@ class SanitaryIssues extends Model
     protected $fillable = [
         
         'id_employee',
+        'report',
         'certificate',
-        'report'
         
     ];
+
 
     public function employee()
     {
