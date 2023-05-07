@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\AssignmentElevator;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -16,36 +17,41 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
 use App\Models\Elevator;
 
-class ElevatorExport implements FromQuery, WithHeadings, ShouldAutoSize, WithStyles
+class AsignmentExport implements FromQuery, WithHeadings, ShouldAutoSize, WithStyles
 {
     public function query()
     {
         // Customize this method to retrieve the data you want to export
        // return Elevator::query()->select('id_elevator', 'name', 'created_at');
-       return Elevator::with('location')->select(
-        'elevator.id_elevator',
-        'elevator.name',
-        'location.ville',
-        'location.adress',
-        'location.longitude',
-        'location.latitude',
-        
-    )
-    ->join('location', 'elevator.id_location', '=', 'location.id_location');
+       return AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+       ->select(
+           'assignment_elevator.id_assignment_elevator',
+           'users.first_name',
+           'users.last_name',
+           'qrcode.mission',
+           'elevator.name as elevator_name',
+           'location.ville',
+           'location.adress'
+       )
+       ->join('users', 'assignment_elevator.id_employee', '=', 'users.id')
+       ->join('qrcode', 'assignment_elevator.id_elevator', '=', 'qrcode.id_qr_code')
+       ->join('elevator', 'qrcode.id_elevator', '=', 'elevator.id_elevator')
+       ->join('location', 'elevator.id_location', '=', 'location.id_location');
 }
-    
+
     
 
     public function headings(): array
     {
         // Define the column headings for the exported Excel file
         return [
-            'Id elevator',
-            'name',
-              'ville', 
-              'adress',
-            'longitude',
-            'latitude',
+            'Id assignment',
+            'first name',
+              'last_name', 
+              'mission',
+            'elevator',
+            'city',
+            'address',
            
           
         
@@ -76,5 +82,4 @@ class ElevatorExport implements FromQuery, WithHeadings, ShouldAutoSize, WithSty
             ],
         ]);
     }
-
 }

@@ -14,7 +14,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import axios from 'axios';
 
 const exportData = () => {
-  axios.get('api/export_issues', { responseType: 'blob' })
+  axios.get('api/export_regulations', { responseType: 'blob' })
     .then(response => {
       handleFileDownload(response.data);
     })
@@ -27,13 +27,13 @@ const handleFileDownload = (fileData) => {
   const url = window.URL.createObjectURL(new Blob([fileData]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'issues.xlsx');
+  link.setAttribute('download', 'regulations.xlsx');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
 const exportToPDF = () => {
-  axios.get('api/export_issues_pdf', { responseType: 'blob' })
+  axios.get('api/export_regulations_pdf', { responseType: 'blob' })
     .then(response => {
       const fileData = response.data;
       handlePDFDownload(fileData);

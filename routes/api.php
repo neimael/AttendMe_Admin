@@ -37,6 +37,8 @@ Route::get('export_admins_pdf', [AdminController::class, 'exportToPDF']);
 Route::post('add_asignment', [AssignmentElevatorController::class, 'store']);
 Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index']);
 Route::delete('delete_asignment/{id}', [AssignmentElevatorController::class, 'destroy']);
+Route::get('export_asignments', [AssignmentElevatorController::class, 'export']);
+Route::get('export_asignments_pdf', [AssignmentElevatorController::class, 'exportToPDF']);
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);
@@ -58,6 +60,8 @@ Route::get('presence_regulations', [PresenceRegulationsController::class, 'index
 Route::put('reject_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToRejected']);
 Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::class, 'updateStatusToApproved']);
 Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
+Route::get('export_regulations', [PresenceRegulationsController::class, 'export']);
+Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
 //Auth
 
 Route::post('/register',[AuthController::class, 'register']);
