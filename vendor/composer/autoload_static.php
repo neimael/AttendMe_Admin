@@ -603,7 +603,12 @@ class ComposerStaticInit618244bfba8222005bec082efd0ea5b7
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Exports\\AdminExport' => __DIR__ . '/../..' . '/app/Exports/AdminExport.php',
+        'App\\Exports\\AsignmentExport' => __DIR__ . '/../..' . '/app/Exports/AsignmentExport.php',
+        'App\\Exports\\ElevatorExport' => __DIR__ . '/../..' . '/app/Exports/ElevatorExport.php',
         'App\\Exports\\EmployeeExport' => __DIR__ . '/../..' . '/app/Exports/EmployeeExport.php',
+        'App\\Exports\\RegulationExport' => __DIR__ . '/../..' . '/app/Exports/RegulationExport.php',
+        'App\\Exports\\SanitaryExport' => __DIR__ . '/../..' . '/app/Exports/SanitaryExport.php',
         'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\AssignmentElevatorController' => __DIR__ . '/../..' . '/app/Http/Controllers/AssignmentElevatorController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
