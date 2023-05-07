@@ -157,6 +157,36 @@ class AuthController extends Controller
         }
     }
 
+    //Change Password
+    public function changePassword2(Request $request)
+    {
+
+        $this->validate($request, [
+            'email' => 'required|email',
+            'new_password' => 'required|min:8'
+        ]);
+
+        // Get the user with the specified email from the database
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['status' => 'error', 'message' => 'User not found'], 401);
+        }
+
+        if (Hash::check($request->new_password, $user -> password)) {
+            return response() -> json([
+                             'message' => 'New password should be different from the previous',
+                        ], 401);
+    
+                    }
+
+            $user -> password = Hash::make($request ->new_password);
+            $user->save();
+
+        return response()->json(['status' => 'success', 'message' => 'Password updated successfully']);
+            
+    }
+
     //addAttIssues 
     public function addAttIssues(Request $request){
         $attr = $request->validate([
