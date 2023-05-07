@@ -2,11 +2,10 @@
     'root' => array(
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '00cd57ba65ae49e5fae7e9aba6ac6e66f0af5576',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '51a45c9bdb401b88a381b6a0fefd3d39191a030a',
+        'reference' => 'db4faa6078d032c15933531d7e74114a773edb7f',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -431,7 +430,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '51a45c9bdb401b88a381b6a0fefd3d39191a030a',
+            'reference' => 'db4faa6078d032c15933531d7e74114a773edb7f',
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
@@ -513,15 +512,6 @@
             'install_path' => __DIR__ . '/../league/flysystem-local',
             'aliases' => array(),
             'reference' => '543f64c397fefdf9cfeac443ffb6beff602796b3',
-            'dev_requirement' => false,
-        ),
-        'league/flysystem-local' => array(
-            'pretty_version' => '3.15.0',
-            'version' => '3.15.0.0',
-            'reference' => '543f64c397fefdf9cfeac443ffb6beff602796b3',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../league/flysystem-local',
-            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'league/mime-type-detection' => array(
@@ -738,12 +728,12 @@
             'dev_requirement' => true,
         ),
         'phpunit/php-file-iterator' => array(
-            'pretty_version' => '4.0.1',
-            'version' => '4.0.1.0',
+            'pretty_version' => '4.0.2',
+            'version' => '4.0.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpunit/php-file-iterator',
             'aliases' => array(),
-            'reference' => 'fd9329ab3368f59fe1fe808a189c51086bd4b6bd',
+            'reference' => '5647d65443818959172645e7ed999217360654b6',
             'dev_requirement' => true,
         ),
         'phpunit/php-invoker' => array(
