@@ -7,9 +7,14 @@ use App\Models\AssignmentElevator;
 use Illuminate\Http\Request;
 use App\Http\Resources\AssignmentElevatorResource;
 use App\Exports\AsignmentExport;
+use App\Models\Elevator;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+
+
 
 
 class AssignmentElevatorController extends Controller
@@ -18,11 +23,41 @@ class AssignmentElevatorController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        
+    { 
         $assignmentElevator=AssignmentElevator::with(['employee','qrcode.elevator.location'])->get();
         return $assignmentElevator;
     }
+    public function missions()
+    {
+        $table_name = 'qrcode';
+        $column_name = 'mission'; // replace with your enum column name
+
+        $query = "SHOW COLUMNS FROM {$table_name} WHERE Field = '{$column_name}'";
+        $result = DB::select($query);
+
+        preg_match('/^enum\((.*)\)$/', $result[0]->Type, $matches);
+        $enum_values = array();
+
+        foreach (explode(',', $matches[1]) as $value) {
+            $v = trim($value, "'");
+            $enum_values[] = $v;
+        }
+
+        return response()->json(['data' => $enum_values]);
+    }
+    public function getNames()
+    {
+        $elevators = Elevator::pluck('name');
+        
+        return response()->json($elevators);
+    }
+    public function getEmployees()
+{
+    $employees = User::select(DB::raw("CONCAT(first_name, ' ', last_name, ' (', cin, ')') AS name"))->get();
+    
+    return response()->json($employees);
+}
+
 
   
 
