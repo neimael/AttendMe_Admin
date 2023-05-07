@@ -17,6 +17,7 @@ use App\Exports\EmployeeExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\URL;
 
 class EmployeeController extends Controller
 {
@@ -46,8 +47,8 @@ class EmployeeController extends Controller
             $file = $request->file('avatar');
             $extension = $file->getClientOriginalExtension();
             $filename = time(). $file->getClientOriginalName();
-            Storage::disk('public')->put('EmployeeAvatar/'.$filename,  File::get($file));
-            $employee->avatar = $filename;;
+            Storage::disk('public')->put('profiles/'.$filename,  File::get($file));
+            $employee->avatar = URL::to('/').'/storage/profiles/'.$filename;
         }
          
         $employee->save();
@@ -102,13 +103,13 @@ public function update(Request $request, $id)
         $file = $request->file('avatar');
         $extension = $file->getClientOriginalExtension();
         $filename = time() . $file->getClientOriginalName();
-        Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
-        $employee->avatar = $filename;
+        Storage::disk('public')->put('profiles/'.$filename,  File::get($file));
+        $employee->avatar = URL::to('/').'/storage/profiles/'.$filename;
     } 
     $employee->save();
 
     return response()->json([
-        'message' => 'Admin updated successfully.',
+        'message' => 'Employee updated successfully.',
     ]);
 }
 public function export()
