@@ -25,7 +25,7 @@ window.Swal = swal;
         title="New Assignment"
         main
       >
-        <router-link to="/assignment">
+        <router-link to="/assignments">
           <BaseButton
 
             target="_blank"

@@ -7,7 +7,7 @@ import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import BaseButton from "@/components/BaseButton.vue";
-import UserAvatar from "@/components/UserAvatar.vue";
+
 
 defineProps({
   checkable: Boolean,
@@ -42,10 +42,19 @@ const checked = (isChecked, admin) => {
 </script>
 
 <template>
-  <CardBoxModal v-model="isModalActive" title="Sample modal">
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
-  </CardBoxModal>
+<CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Admin">
+  <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
+    <img v-if="Selectedadmin.avatar" :src="'/storage/AdminAvatar/' + Selectedadmin.avatar" alt="admin" class="w-full h-full object-cover">
+    <img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">
+  </div>
+  <div class="mt-4 ml-4">
+    <p class="font-bold"><b>Name :</b> {{ Selectedadmin.first_name }} {{ Selectedadmin.last_name }}</p>
+    
+    <p><b>Phone Number:</b> {{ Selectedadmin.phone_number }}</p>
+    <p><b>Email :</b> {{ Selectedadmin.email }}</p>
+  </div>
+
+</CardBoxModal>
 
   <CardBoxModal
     v-model="isModalDangerActive"
@@ -81,15 +90,16 @@ const checked = (isChecked, admin) => {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="admin in paginatedAdmins" :key="admin.id">
+      <tr v-for="admin in paginatedAdmins" :key="admin.id_admin">
         <TableCheckboxCell
           v-if="checkable"
           @checked="checked($event, admin)"
         />
         <td class="border-b-0 lg:w-6 before:hidden">
           <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
-    <img :src="admin.avatar" alt="Avatar" style="width: 100%; height: 100%; display: block;">
-  </div>
+            <img v-if="admin.avatar" :src="'/storage/AdminAvatar/' + admin.avatar" alt="admin" class="w-full h-full object-cover">
+            <img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">
+                     </div>
 </td>
         <td data-label="Name">
           {{ admin.first_name }} {{ admin.last_name }}
@@ -105,25 +115,25 @@ const checked = (isChecked, admin) => {
        
         
         <td class="before:hidden lg:w-1 whitespace-nowrap">
-          <BaseButtons type="justify-start lg:justify-end" no-wrap>
+          <BaseButtons no-wrap>
             <BaseButton
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="isModalActive = true ,getAdmin(admin)"
             />
            <BaseButton
             color="success"
             :icon="mdiHumanEdit" 
             small
-            :to="'/update-admin/' + admin.id"
+            :to="'/update-admin/' + admin.id_admin"
            
           />
             <BaseButton
               color="danger"
               :icon="mdiTrashCan"
               small
-              @click="isModalDangerActive = true"
+              v-if="admin.id_admin !== loggedInAdminId" @click="confirmDelete(admin.id_admin)"
             />
           </BaseButtons>
         </td>
@@ -149,24 +159,66 @@ const checked = (isChecked, admin) => {
 </template>
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 export default {
   name: "AdminView",
   data() {
     return {
       admins: [],
+      Selectedadmin: {},
       currentPage: 0,
-      pageSize: 5,
-      ADMIN_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/admins",
+      pageSize: 10,
+      ADMIN_API_BASE_URL: "api/admins",
+      loggedInAdminId: 1 // set to the ID of the currently logged-in admin
     };
 
   },
   methods: {
-    async getAdmin() {
+    async getAdmins() {
       await axios.get(this.ADMIN_API_BASE_URL)
         .then(response => this.admins = response.data)
         .catch(error => console.log(error))
-    }
+    },
+    async getAdmin(admin) {
+  try {
+    const response = await axios.get(`api/get_admin/${admin.id_admin}`);
+    this.Selectedadmin = response.data;
+    console.log(this.Selectedadmin.id_admin);
+   
+  } catch (error) {
+    console.log(error);
+  }
+},
+    confirmDelete(adminId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this admin record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked the "Yes" button, so proceed with delete request
+            axios.delete('api/delete_admin/' + adminId)
+                .then(response => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Admin has been deleted successfully.',
+                        icon: 'success'
+                    });
+                    // Reload the page to reflect the updated admin list
+                    location.reload();
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
+    });
+}
+
+
   },
   computed: {
     paginatedAdmins: function () {
@@ -182,10 +234,11 @@ export default {
     },
     pagesList: function () {
       return Array.from({length: this.numPages}, (v, k) => k);
-    }
+    },
+    
   },
   mounted() {
-    this.getAdmin();
+    this.getAdmins();
   }
 };
 </script>

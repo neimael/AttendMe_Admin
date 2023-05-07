@@ -45,11 +45,27 @@ const routes = [
   },
   {
     meta: {
+      title: "UpdateAdmin",
+    },
+    path: "/update-admin/:id",
+    name: "update-admin",
+    component: () => import("../pages/UpdateAdminView.vue"),
+  },
+  {
+    meta: {
       title: "Employees",
     },
     path: "/employees",
     name: "employees",
     component: () => import("../pages/EmployeeView.vue"),
+  },
+  {
+    meta: {
+      title: "UpdateEmployee",
+    },
+    path: "/update-employee/:id",
+    name: "update-employee",
+    component: () => import("../pages/UpdateEmployeeView.vue"),
   },
   
   {
@@ -78,6 +94,24 @@ const routes = [
     name: "add-elevator",
     component: () => import("../pages/NewElevatorView.vue"),
   },
+  {
+    meta: {
+      title: "DetailElevators",
+    },
+    path: "/detail-elevator/:id",
+    name: "detail-elevator",
+    component: () => import("../pages/DetailElevator.vue"),
+  },
+  {
+    meta: {
+      title: "UpdateElevators",
+    },
+    path: "/update-elevator/:id",
+    name: "update-elevator",
+    component: () => import("../pages/UpdateElevatorView.vue"),
+  },
+  
+
   //manage attendance
   {
     meta: {

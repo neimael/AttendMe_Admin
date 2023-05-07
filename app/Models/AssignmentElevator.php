@@ -20,15 +20,14 @@ class AssignmentElevator extends Model
         'start_date',
         'time_in',
         'time_out',
-
         
     ];
     public function employee()
     {
-        return $this->belongsTo(User::class,'id_employee','id_employee');
+        return $this->hasOne(User::class,'id','id_employee');
     }
-    public function elevator()
+    public function qrcode()
     {
-        return $this->belongsTo(Elevator::class,'id_elevator','id_elevator');
+        return $this->hasOne(qrcodes::class,'id_qr_code','id_elevator');
     }
 }
