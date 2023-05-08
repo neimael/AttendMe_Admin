@@ -106,7 +106,7 @@ const checked = (isChecked, regulation) => {
           >
         </td>
         <td data-label="certificate">
-  <a class="ml-1"  :href="'/storage/certificates/' + regulation.certificate" download>
+  <a class="ml-1"  :href="regulation.certificate" download>
      <BaseButton
               color="success"
               :icon="mdiDownload"
@@ -115,7 +115,7 @@ const checked = (isChecked, regulation) => {
             />
   </a>
 
-  <a  class="ml-6" :href="'/storage/certificates/' + regulation.certificate" target="_blank">
+  <a  class="ml-6" :href="regulation.certificate" target="_blank">
      <BaseButton
               color="info"
               :icon="mdiEye"

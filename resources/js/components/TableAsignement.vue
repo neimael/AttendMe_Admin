@@ -80,7 +80,7 @@ const checked = (isChecked, employee) => {
         <th>End Date</th>
         <th>Check In</th>
         <th>Check Out</th>
-        
+    
         <th />
       </tr>
     </thead>

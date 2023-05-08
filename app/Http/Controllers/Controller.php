@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\URL;
 
+
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
