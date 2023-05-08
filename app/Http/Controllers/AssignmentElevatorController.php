@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\AssignmentElevatorResource;
 use App\Exports\AsignmentExport;
 use App\Models\Elevator;
+use App\Models\qrcodes;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
@@ -58,13 +59,77 @@ class AssignmentElevatorController extends Controller
     return response()->json($employees);
 }
 
+public function getInformation(Request $request)
+{
+    // Retrieve the selected elevator and mission from the request
+    $selectedElevator = $request->input('elevator');
+    $selectedMission = $request->input('mission');
+
+    // Retrieve the QR code information with the related elevator and location
+    $qrcode = Qrcodes::with(['elevator.location'])
+        ->whereHas('elevator', function ($query) use ($selectedElevator) {
+            $query->where('name', $selectedElevator);
+        })
+        ->where('mission', $selectedMission)
+        ->first();
+
+    // Initialize the location information
+    $locationInformation = null;
+
+    // Check if the QR code and related elevator exist
+    if ($qrcode && $qrcode->elevator && $qrcode->elevator->location) {
+        // Retrieve the location information
+        $location = $qrcode->elevator->location;
+
+        $locationInformation = [
+            'ville' => $location->ville,
+            'adress' => $location->adress,
+            'id' => $qrcode->id_qr_code
+        ];
+    }
+
+    // Return the information as a JSON response
+    return response()->json([
+        'qrcode' => $qrcode,
+        'mission' => $selectedMission,
+        'location' => $locationInformation,
+    ]);
+}
+
+    public function getEmployeeInfo(Request $request)
+    {
+        $selectedEmployee = $request->input('cin');
+
+    // Extract the cin value from the selectedEmployee string
+    preg_match('/\(([^)]+)\)/', $selectedEmployee, $matches);
+    $cin = isset($matches[1]) ? $matches[1] : null;
+        $employee = User::where('cin', $cin)->first();
+        if ($employee) {
+            $employeeInformation = [
+                'first_name' => $employee->first_name,
+                'last_name' => $employee->last_name,
+                'email' => $employee->email,
+                'phone_number' => $employee->phone_number,
+                'cin'=>$employee->cin,
+                'adress'=>$employee->adress,
+
+                
+            ];
+        }
+
+        // Return the information as a JSON response
+        return response()->json([
+            'employee' => $employee,
+            'employeeIn' => $employeeInformation,
+        ]);
+    }
 
   
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAsignmentElevator $request)
+    public function store(Request $request)
     {
             
             $assignmentElevator=new AssignmentElevator();
@@ -75,7 +140,7 @@ class AssignmentElevatorController extends Controller
             $assignmentElevator->time_in=$request->time_in;
             $assignmentElevator->time_out=$request->time_out;
             $assignmentElevator->save();
-            return new AssignmentElevatorResource($assignmentElevator);
+            return response()->json(['message' => 'Asignment has been created successfully']);
     }
 
  

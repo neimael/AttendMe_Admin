@@ -37,7 +37,7 @@ Route::put('/update_admin/{id}', [AdminController::class, 'update']);
 Route::get('export_admins', [AdminController::class, 'export']);
 Route::get('export_admins_pdf', [AdminController::class, 'exportToPDF']);
 //Asignement
-Route::post('add_asignment', [AssignmentElevatorController::class, 'store']);
+Route::post('addAsignment', [AssignmentElevatorController::class, 'store']);
 Route::get('assignmentElevator', [AssignmentElevatorController::class, 'index']);
 Route::delete('delete_asignment/{id}', [AssignmentElevatorController::class, 'destroy']);
 Route::get('export_asignments', [AssignmentElevatorController::class, 'export']);
@@ -45,6 +45,9 @@ Route::get('export_asignments_pdf', [AssignmentElevatorController::class, 'expor
 Route::get('missions', [AssignmentElevatorController::class, 'missions']);
 Route::get('getNames', [AssignmentElevatorController::class, 'getNames']);
 Route::get('getEmployees', [AssignmentElevatorController::class, 'getEmployees']);
+Route::post('information', [AssignmentElevatorController::class, 'getInformation']);
+Route::post('informationEmployee', [AssignmentElevatorController::class, 'getEmployeeInfo']);
+
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
 Route::get('elevators', [ElevatorController::class, 'index']);

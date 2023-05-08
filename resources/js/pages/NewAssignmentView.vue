@@ -43,72 +43,110 @@ window.Swal = swal;
           <br>
             <FormField>
           <FormField label="Elevator">
-            <FormControl type="name" :options="elevators" required/>
+            <FormControl type="name" v-model="selectedElevator" :options="elevators" required/>
           </FormField>
           <FormField label="Area">
-            <FormControl type="name" :options="missions" required/>
+            <FormControl type="name" v-model="selectedMission"    :options="missions" required/>
           </FormField>
             </FormField>
-            <FormField>
+            <FormField v-if="information">
           <FormField label="City">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="name" v-model="information.qrcode.elevator.location.ville" required/>
           </FormField>
           <FormField label="Adress">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="name" v-model="information.qrcode.elevator.location.adress" required/>
+          </FormField>
+            </FormField>
+            <FormField v-else>
+          <FormField label="City">
+            <FormControl type="name"  required/>
+          </FormField>
+          <FormField label="Adress">
+            <FormControl type="name" required/>
           </FormField>
             </FormField>
             <BaseDivider/>
            
             <h2 class="text-2xl font-semibold text-center text-blue-300">Employee Section</h2>
           <br>
-          <FormField    class="flex flex flex-row items-center justify-center" label="Employee CIN :">
-            <FormControl type="name" v-model="name"  :options="employees" class="ml-7 w-80" required/>
+          <FormField   label="Employee CIN :">
+            <FormControl type="name" v-model="selectedEmployee"  :options="employees" required/>
           </FormField> 
-        
+        <FormField v-if="informationEmp">
           <FormField>
           <FormField label="First Name">
-            <FormControl type="name" v-model="name" required/>
+            <FormControl type="name" v-model="informationEmp.employee.first_name" required/>
           </FormField>
             
           <FormField label="Last Name">
-            <FormControl type="name" v-model="email" required/>
+            <FormControl type="name" v-model="informationEmp.employee.last_name" required/>
           </FormField>
         </FormField> 
         <FormField>
           <FormField label="Email">
-            <FormControl type="name" v-model="email" required/>
+            <FormControl type="name" v-model="informationEmp.employee.email" required/>
           </FormField>
        
        
           <FormField label="Phone Number">
-            <FormControl type="name" v-model="password" required/>
+            <FormControl type="name" v-model="informationEmp.employee.phone_number" required/>
           </FormField>
           </FormField>
           <FormField>
           <FormField label="CIN">
-            <FormControl type="name" v-model="password" required/>
+            <FormControl type="name" v-model="informationEmp.employee.cin" required/>
           </FormField>
           <FormField label="Adress">
-            <FormControl type="name" v-model="password" required/>
+            <FormControl type="name" v-model="informationEmp.employee.adress" required/>
           </FormField>
+       </FormField>
+       </FormField>
+       <FormField v-else>
+          <FormField>
+          <FormField label="First Name">
+            <FormControl type="name"  required/>
+          </FormField>
+            
+          <FormField label="Last Name">
+            <FormControl type="name"  required/>
+          </FormField>
+        </FormField> 
+        <FormField>
+          <FormField label="Email">
+            <FormControl type="name" required/>
+          </FormField>
+       
+       
+          <FormField label="Phone Number">
+            <FormControl type="name"  required/>
+          </FormField>
+          </FormField>
+          <FormField>
+          <FormField label="CIN">
+            <FormControl type="name"  required/>
+          </FormField>
+          <FormField label="Adress">
+            <FormControl type="name"  required/>
+          </FormField>
+       </FormField>
        </FormField>
        <BaseDivider/>
        <h2 class="text-2xl font-semibold text-center text-blue-300">Assignment Section</h2>
           <br>
        <FormField>
           <FormField label="Start Day">
-            <FormControl type="date" v-model="password" required/>
+            <FormControl type="date" v-model="this.form.start_date" required/>
           </FormField>
           <FormField label="End Date">
-            <FormControl type="date" v-model="password" required/>
+            <FormControl type="date" v-model="this.form.end_date" required/>
           </FormField>
        </FormField>
        <FormField>
           <FormField label="Check In">
-            <FormControl type="time" v-model="password" required/>
+            <FormControl type="time" v-model="this.form.time_in" required/>
           </FormField>
           <FormField label="Check Out">
-            <FormControl type="time" v-model="password" required/>
+            <FormControl type="time" v-model="this.form.time_out" required/>
           </FormField>
        </FormField>
 
@@ -117,7 +155,7 @@ window.Swal = swal;
              <div class="flex justify-center">
             <BaseButtons > 
                 <BaseButton  type="reset" color="info" outline label="Reset"/>
-              <BaseButton  type="submit" color="info" label="Add" @click="addAdmin"/>
+              <BaseButton  type="submit" color="info" label="Add" @click="addAssignments"/>
              
             </BaseButtons>
         </div>
@@ -131,18 +169,46 @@ window.Swal = swal;
 </template>
 <script>
 import axios from 'axios';
+import Form from "@/form.js";
 
 
 export default {
   data() {
     return {
-      
+      form: new Form({
+        id_elevator: "",
+        id_employee: "",
+        time_in: "",
+        time_out: "",
+        start_date: "",
+        end_date: "",
+     
+      }),
    
       missions: [],
       elevators: [],
       employees:[],
+      selectedElevator: '',
+      selectedMission: '',
+      information: null,
+      selectedEmployee: '',
+      informationEmp:null,
     }
   
+  },
+  watch: {
+   
+    selectedMission: {
+   
+      handler() {
+        this.fetchInformation();
+      },
+    },
+    selectedEmployee: {
+      handler() {
+        this.fetchInformation2();
+      },
+    },
   },
   methods:{
 getMissions(){
@@ -172,6 +238,60 @@ getEmployees(){
         console.log(error);
       });
 },
+fetchInformation() {
+      // Make the API call
+      axios.post('/api/information', {
+        elevator: this.selectedElevator,
+        mission: this.selectedMission,
+      })
+        .then(response => {
+          // Handle the API response
+          this.information = response.data;
+        })
+        .catch(error => {
+          // Handle errors
+          console.error(error);
+        });
+    },
+    fetchInformation2() {
+      // Make the API call
+      axios.post('/api/informationEmployee', {
+        cin: this.selectedEmployee,
+      
+      })
+        .then(response => {
+          // Handle the API response
+          this.informationEmp= response.data;
+        })
+        .catch(error => {
+          // Handle errors
+          console.error(error);
+        });
+    },
+    addAssignments() {
+      this.form.id_elevator= this.information.qrcode.id_qr_code;
+      this.form.id_employee= this.informationEmp.employee.id;
+      console.log(this.form.id_elevator);
+      console.log(this.form.id_employee);
+      let data = new FormData();
+        data.append('time_in', this.form.time_in);
+        data.append('time_out', this.form.time_out);
+        data.append('start_date', this.form.start_date);
+        data.append('end_date', this.form.end_date);
+        data.append('id_elevator', this.form.id_elevator);
+        data.append('id_employee', this.form.id_employee);
+      // Make the API call
+      axios.post('/api/addAsignment',this.form).then(() => {
+          swal({
+            text: "Assigment Added Successfully!",
+            icon: "success",
+            closeOnClickOutside: false,
+          });
+          this.$router.go();
+        }).catch(error => {
+          console.log(error);
+        });
+      },
 
 },
 mounted() {
