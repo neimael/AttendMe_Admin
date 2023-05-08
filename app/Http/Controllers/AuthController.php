@@ -216,29 +216,29 @@ class AuthController extends Controller
     }
 
     //add Sanitary Issues
-public function addSanitary(Request $request){
-    $attr = $request->validate([
-        'id_employee' => 'required|integer|exists:users,id',
-        'report' => 'required|string',
-        'certificate' => 'required|String',
-        'extension' => 'required|String',
-    ]);
+    public function addSanitary(Request $request){
+        $attr = $request->validate([
+            'id_employee' => 'required|integer|exists:users,id',
+            'report' => 'required|string',
+            'certificate' => 'required|String',
+            'extension' => 'required|String',
+        ]);
 
 
-    $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
+        $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
 
 
-    $sanitary_regulation = SanitaryIssues::create([
-        'id_employee' => $attr['id_employee'],
-        'report' => $attr['report'],
-        'certificate' => $file,
-    ]);
+        $sanitary_regulation = SanitaryIssues::create([
+            'id_employee' => $attr['id_employee'],
+            'report' => $attr['report'],
+            'certificate' => $file,
+        ]);
 
-    return response([
-        'sanitary_regulation' => $sanitary_regulation,
-        'message' => 'Your certificate has been sent successfully',
-    ]);
-}
+        return response([
+            'sanitary_regulation' => $sanitary_regulation,
+            'message' => 'Your certificate has been sent successfully',
+        ]);
+    }
 
 
     //sendOTP
