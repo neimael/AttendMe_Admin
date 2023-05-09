@@ -57,7 +57,7 @@ Route::get('get_elevator/{id}', [ElevatorController::class, 'getElevator']);
 Route::get('get_elevatoor/{id}', [ElevatorController::class, 'getOneElevator']);
 Route::get('get_all', [ElevatorController::class, 'show']);
 Route::delete('delete_elevator/{id}', [ElevatorController::class, 'destroy']);
-Route::put('/update_elevator/{id}', [ElevatorController::class, 'update']);
+Route::put('update_elevator/{id}', [ElevatorController::class, 'update']);
 Route::get('export_elevators', [ElevatorController::class, 'export']);
 Route::get('export_elevators_pdf', [ElevatorController::class, 'exportToPDF']);
 //Location

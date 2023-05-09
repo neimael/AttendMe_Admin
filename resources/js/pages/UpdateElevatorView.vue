@@ -47,10 +47,10 @@ window.Swal = swal;
             </FormField>
             <FormField >
             <FormField label="City">
-              <FormControl type="text" :options="cities"   />
+              <FormControl type="text" :options="cities" v-model="ville"  />
             </FormField>
             <FormField label="Address">
-              <FormControl type="text"  />
+              <FormControl type="text" v-model="adress"  />
             </FormField>
           </FormField>
             <div id="map"></div>
@@ -59,7 +59,7 @@ window.Swal = swal;
               <div class="flex justify-center">
                 <BaseButtons> 
                   <BaseButton type="reset" color="warning" outline label="Reset"/>
-                  <BaseButton type="submit" color="warning" label="Update" />
+                  <BaseButton type="submit" color="warning" label="Update" @click="UpdateElevator"/>
                 </BaseButtons>
               </div>
             </template>
@@ -89,6 +89,10 @@ export default {
     return {
       elevators : [],
       cities: [],
+      ville: '',
+      adress: '',
+      longitude: '',
+      latitude: '',
       
     };
   
@@ -108,11 +112,13 @@ getElevatorById(){
     const id = this.$route.params.id;
     axios.get(`api/get_elevatoor/${id}`).then((response) => {
         console.log('Response:', response.data);
-    this.elevators= response.data;
-    //this.elevators.adress = response.data.location.adress;
-    // this.elevators.ville = response.data.location.ville;
-    // this.elevators.longitude = response.data.location.longitude;
-    //this.elevators.location = response.data.location;
+    this.elevators= response.data[0];
+    this.adress = response.data[0].location.adress;
+    this.ville = response.data[0].location.ville;
+    this.longitude = response.data[0].location.longitude;
+    this.latitude = response.data[0].location.latitude;
+   // this.elevators.longitude = response.data[0].location.longitude;
+
     console.log('Elevator:', this.elevators);
    
    // this.initMap();
@@ -121,17 +127,23 @@ getElevatorById(){
   })  
 },
 async UpdateElevator(){
+  const id = this.$route.params.id;
 // Create a new object that only contains the fields you want to update
-const formData = new FormData();
-formData.append("elevators", JSON.stringify(this.elevators));
-axios.put(`/api/update_elevator/${this.elevators.id}`, this.elevators)
+const updateData = {
+    name: this.elevators.name,
+    longitude: this.longitude,
+    latitude: this.latitude,
+    adress: this.adress,
+    ville: this.ville
+  };
+axios.put(`/api/update_elevator/${id}`, updateData)
   .then(() => {
           swal({
-            text: "Elevator Updated Successfully! And qrCodes are regenerated successfully!",
+            text: "Elevator Updated Successfully! \n And qrCodes are regenerated successfully!",
             icon: "success",
             closeOnClickOutside: false,
           });
-          this.$router.go(-1);
+          this.$router.go();
         }).catch(error => {
           console.log(error);
         });
