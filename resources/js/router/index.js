@@ -138,6 +138,15 @@ const routes = [
     name: "add-assignment",
     component: () => import("../pages/NewAssignmentView.vue"),
   },
+  {
+    meta: {
+      title: "UpdateAssignments",
+    },
+    path: "/update-assignment/:id",
+    name: "update-assigment",
+    component: () => import("../pages/UpdateAssignmentView.vue"),
+  },
+  
   //manage regulations
   {
     meta: {

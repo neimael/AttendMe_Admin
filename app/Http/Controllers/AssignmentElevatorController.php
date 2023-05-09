@@ -143,12 +143,30 @@ public function getInformation(Request $request)
             return response()->json(['message' => 'Asignment has been created successfully']);
     }
 
- 
-    public function update(Request $request, AssignmentElevator $assignmentElevator)
+ //get assignment by id
+    public function getAssignment($id)
     {
-        //
+        $assignmentElevator = AssignmentElevator::with(['employee','qrcode.elevator.location'])->where('id_assignment_elevator', $id)->get();
+        if (!$assignmentElevator) {
+            return response()->json(['message' => 'Asignment not found'], 404);
+        }
+        return $assignmentElevator;
     }
-
+    public function update(Request $request, $id)
+{
+    $assignmentElevator = AssignmentElevator::findOrFail($id);
+    
+    $assignmentElevator->id_employee = $request->id_employee;
+    $assignmentElevator->id_elevator = $request->id_elevator;
+    $assignmentElevator->start_date = $request->start_date;
+    $assignmentElevator->end_date = $request->end_date;
+    $assignmentElevator->time_in = $request->time_in;
+    $assignmentElevator->time_out = $request->time_out;
+    
+    $assignmentElevator->save();
+    
+    return response()->json(['message' => 'Assignment has been updated successfully']);
+}
     /**
      * Remove the specified resource from storage.
      */

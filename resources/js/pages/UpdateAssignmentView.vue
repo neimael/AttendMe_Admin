@@ -1,6 +1,6 @@
 <script setup>
 
-import {mdiPlus, mdiLock,mdiOrderBoolAscendingVariant} from "@mdi/js";
+import {mdiPlus, mdiLock,mdiOrderBoolAscendingVariant,mdiHumanEdit} from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
 
@@ -21,8 +21,8 @@ window.Swal = swal;
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton
-        :icon="mdiPlus"
-        title="New Assignment"
+        :icon="mdiHumanEdit"
+        title="Update Assignment"
         main
       >
         <router-link to="/assignments">
@@ -155,7 +155,7 @@ window.Swal = swal;
              <div class="flex justify-center">
             <BaseButtons > 
                 <BaseButton  type="reset" color="info" outline label="Reset"/>
-              <BaseButton  type="submit" color="info" label="Add" @click="addAssignments"/>
+              <BaseButton  type="submit" color="info" label="Update" @click="updateAssignments"/>
              
             </BaseButtons>
         </div>
@@ -268,7 +268,27 @@ fetchInformation() {
           console.error(error);
         });
     },
-    addAssignments() {
+    getAssignmentById(){
+    const id = this.$route.params.id;
+    axios.get(`api/getAssignment/${id}`).then((response) => {
+    console.log('Response:', response.data);
+    this.form= response.data[0];
+   this.selectedElevator = response.data[0].qrcode.elevator.name;
+    this.selectedMission = response.data[0].qrcode.mission;
+    this.selectedEmployee = response.data[0].employee.first_name + " " + response.data[0].employee.last_name + " (" + response.data[0].employee.cin + ")";
+    console.log('Assignment:', this.form);
+    console.log('selectedElevator', this.selectedElevator);
+    console.log('selectedMission', this.selectedMission);
+    console.log('selectedEmployee', this.selectedEmployee);
+
+   
+   // this.initMap();
+  }).catch((error) => {
+    console.log(error);
+  })  
+},
+    async updateAssignments() {
+        const id = this.$route.params.id;
       this.form.id_elevator= this.information.qrcode.id_qr_code;
       this.form.id_employee= this.informationEmp.employee.id;
       console.log(this.form.id_elevator);
@@ -281,9 +301,9 @@ fetchInformation() {
         data.append('id_elevator', this.form.id_elevator);
         data.append('id_employee', this.form.id_employee);
       // Make the API call
-      axios.post('/api/addAsignment',this.form).then(() => {
+      axios.put(`/api/update_asignment/${id}`,this.form).then(() => {
           swal({
-            text: "Assigment Added Successfully!",
+            text: "Assigment Updated Successfully!",
             icon: "success",
             closeOnClickOutside: false,
           });
@@ -297,6 +317,7 @@ mounted() {
     this.getMissions();
     this.getElevators();
     this.getEmployees();
+    this.getAssignmentById();
   },
 
 }

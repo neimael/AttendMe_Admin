@@ -47,6 +47,8 @@ Route::get('getNames', [AssignmentElevatorController::class, 'getNames']);
 Route::get('getEmployees', [AssignmentElevatorController::class, 'getEmployees']);
 Route::post('information', [AssignmentElevatorController::class, 'getInformation']);
 Route::post('informationEmployee', [AssignmentElevatorController::class, 'getEmployeeInfo']);
+Route::get('getAssignment/{id}', [AssignmentElevatorController::class, 'getAssignment']);
+Route::put('/update_asignment/{id}', [AssignmentElevatorController::class, 'update']);
 
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
