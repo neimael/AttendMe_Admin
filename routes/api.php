@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/changePassword', [AuthController::class, 'changePassword']);
     Route::post('/addAttIssues', [AuthController::class, 'addAttIssues']);
     Route::post('/addSanitary', [AuthController::class, 'addSanitary']);
+    Route::post('/getAssignmentElevator', [AuthController::class, 'getAssignmentElevator']);
 
 });
 
