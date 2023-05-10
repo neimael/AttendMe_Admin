@@ -25,4 +25,8 @@ class qrcodes extends Model
     {
         return $this->belongsTo(AssignmentElevator::class,'id_elevator','id_qr_code');
     }
+    public function presences()
+    {
+        return $this->belongsTo(Presence::class,'id_elevator','id_qr_code');
+    }
 }

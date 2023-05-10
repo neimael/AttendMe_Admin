@@ -78,6 +78,8 @@ Route::post('/login',[AuthController::class, 'login']);
 Route::post('/sendOTP', [AuthController::class, 'sendOTP']);
 Route::post('/verifyOTP', [AuthController::class, 'verifyOTP']);
 Route::post('/changePassword2', [AuthController::class, 'changePassword2']);
+// Route::post('/getPresence', [AuthController::class, 'getPresence']);
+
 
 
 
@@ -89,6 +91,7 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/addAttIssues', [AuthController::class, 'addAttIssues']);
     Route::post('/addSanitary', [AuthController::class, 'addSanitary']);
     Route::post('/getAssignmentElevator', [AuthController::class, 'getAssignmentElevator']);
+    Route::post('/getPresence', [AuthController::class, 'getPresence']);
 
 });
 
