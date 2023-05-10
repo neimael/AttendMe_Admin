@@ -49,10 +49,10 @@ window.Swal = swal;
           </FormField>
           <FormField >
           <FormField label="City">
-            <FormControl type="text" :options="cities"  v-model="form.ville" />
+            <FormControl type="text" :options="cities"  v-model="form.ville" required />
           </FormField>
           <FormField label="Address">
-            <FormControl type="text" v-model="form.adress" />
+            <FormControl type="text" v-model="form.adress" required />
           </FormField>
         </FormField>
           <div id="map"></div>
@@ -118,29 +118,37 @@ getCities(){
         console.log(error);
       });
 },
-async addElevator(){
+async addElevator() {
+  let data = new FormData();
+  data.append('name', this.form.name);
+  data.append('adress', this.form.adress);
+  data.append('longitude', this.form.longitude);
+  data.append('latitude', this.form.latitude);
 
-let data = new FormData();
-        data.append('name', this.form.name);
-        data.append('adress', this.form.adress);
-        data.append('longitude', this.form.longitude);
-        data.append('latitude',  this.form.latitude);
+  axios
+    .post('/api/add_elevator', this.form)
+    .then(() => {
+      swal({
+        text: 'Elevator Added Successfully! \n And qrCodes are generated',
+        icon: 'success',
+        closeOnClickOutside: false,
+      });
 
-axios.post('/api/add_elevator', this.form)
-.then(() => {
-          swal({
-            text: "Elevator Added Successfully! And qrCodes are generated",
-            icon: "success",
-            closeOnClickOutside: false,
-          });
-          this.$router.go();
-        }).catch(error => {
-          console.log(error);
+      this.$router.go();
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 422 && error.response.data.errors.name) {
+        swal({
+          text: 'Elevator name already exists. Please choose a different name.',
+          icon: 'error',
+          closeOnClickOutside: false,
         });
-      },
-   
+      } else {
+        console.log(error);
+      }
+    });
+},
 
-  },
    
   mounted() {
     this.getCities();
