@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Presence;
+use App\Models\AssignmentElevator;
 use App\Models\PresenceRegulation;
 use App\Models\SanitaryIssues;
 use Illuminate\Support\Facades\Validator;
@@ -216,29 +218,29 @@ class AuthController extends Controller
     }
 
     //add Sanitary Issues
-public function addSanitary(Request $request){
-    $attr = $request->validate([
-        'id_employee' => 'required|integer|exists:users,id',
-        'report' => 'required|string',
-        'certificate' => 'required|String',
-        'extension' => 'required|String',
-    ]);
+    public function addSanitary(Request $request){
+        $attr = $request->validate([
+            'id_employee' => 'required|integer|exists:users,id',
+            'report' => 'required|string',
+            'certificate' => 'required|String',
+            'extension' => 'required|String',
+        ]);
 
 
-    $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
+        $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
 
 
-    $sanitary_regulation = SanitaryIssues::create([
-        'id_employee' => $attr['id_employee'],
-        'report' => $attr['report'],
-        'certificate' => $file,
-    ]);
+        $sanitary_regulation = SanitaryIssues::create([
+            'id_employee' => $attr['id_employee'],
+            'report' => $attr['report'],
+            'certificate' => $file,
+        ]);
 
-    return response([
-        'sanitary_regulation' => $sanitary_regulation,
-        'message' => 'Your certificate has been sent successfully',
-    ]);
-}
+        return response([
+            'sanitary_regulation' => $sanitary_regulation,
+            'message' => 'Your certificate has been sent successfully',
+        ]);
+    }
 
 
     //sendOTP
@@ -305,6 +307,46 @@ public function addSanitary(Request $request){
         return response()->json(['status' => 'success', 'message' => 'OTP code verified successfully']);
     } else {
         return response()->json(['status' => 'error', 'message' => 'Invalid OTP code'], 401);
+    }
+}
+
+ // Get assignmentElevator
+public function getAssignmentElevator(Request $request) {
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+    ]);
+    
+    $assignments = AssignmentElevator::where('id_employee', $attr['id_employee'])->get();
+
+    if ($assignments->isEmpty()) {
+        return response()->json([
+            'message' => 'No assignments found for the provided employee ID',
+        ], 200);
+    } else {
+        return response()->json([
+            'assignments' => $assignments,
+            'message' => 'Assignments have been fetched successfully',
+        ], 200);
+    }
+}
+
+ // Get Presence
+public function getPresence(Request $request) {
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+    ]);
+    
+    $presence = Presence::where('id_employee', $attr['id_employee'])->get();
+
+    if ($presence->isEmpty()) {
+        return response()->json([
+            'message' => 'No Presence found for the provided employee ID',
+        ], 200);
+    } else {
+        return response()->json([
+            'presence' => $presence,
+            'message' => 'Presence have been fetched successfully',
+        ], 200);
     }
 }
 

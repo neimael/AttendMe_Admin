@@ -20,7 +20,6 @@ class Presence extends Model
         'check_out',
         'attendance_day',
         'qrcode',
-        'status',
         'selfie',
     ];
     public function employee()
@@ -29,7 +28,7 @@ class Presence extends Model
     }
     public function elevator()
     {
-        return $this->belongsTo(Elevator::class,'id_elevator','id_elevator');
+        return $this->hasOne(qrcodes::class,'id_qr_code','id_elevator');
     }
 
 }
