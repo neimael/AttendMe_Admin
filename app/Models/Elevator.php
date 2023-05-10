@@ -21,10 +21,7 @@ class Elevator extends Model
         
        
     ];
-    public function presences()
-    {
-        return $this->hasMany(Presence::class,'id_elevator','id_elevator');
-    }
+ 
    
     public function location()
     {

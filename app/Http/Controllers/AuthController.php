@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Presence;
 use App\Models\AssignmentElevator;
 use App\Models\PresenceRegulation;
 use App\Models\SanitaryIssues;
@@ -325,6 +326,26 @@ public function getAssignmentElevator(Request $request) {
         return response()->json([
             'assignments' => $assignments,
             'message' => 'Assignments have been fetched successfully',
+        ], 200);
+    }
+}
+
+ // Get Presence
+public function getPresence(Request $request) {
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+    ]);
+    
+    $presence = Presence::where('id_employee', $attr['id_employee'])->get();
+
+    if ($presence->isEmpty()) {
+        return response()->json([
+            'message' => 'No Presence found for the provided employee ID',
+        ], 200);
+    } else {
+        return response()->json([
+            'presence' => $presence,
+            'message' => 'Presence have been fetched successfully',
         ], 200);
     }
 }
