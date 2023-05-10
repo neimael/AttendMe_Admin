@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -140,5 +141,46 @@ public function exportToPDF()
         return $pdf->download('admins.pdf');
         
     }
+    public function loginAdmin(Request $request){
+      
+    $attr = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:8'
+    ]);
+
+    $admin = Admin::where('email', $attr['email'])->first();
+
+    if (!$admin || !Hash::check($attr['password'], $admin->password)) {
+        return response([
+            'errors' => 'Invalid credentials'
+        ], 403);
+    }
+
+    // Log in the admin user
+    Auth::guard('admin')->login($admin);
+
+    return response([
+        'admin' => $admin,
+    ], 200);
+    }
+    public function user(){
+        if (!auth()->guard('admin')->check()) {
+            return response([
+                'errors' => 'Unauthorized'
+            ], 401);
+        }
+    
+        $admin = auth()->guard('admin')->user();
+    
+        return response([
+            'user' => $admin
+        ], 200);
+    }
+    // public function logout(){
+    //     auth()->user()->tokens()->delete();
+    //     return response([
+    //         'message' => 'Logged out'
+    //     ],200);
+    // }
 
 }

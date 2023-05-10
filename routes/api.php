@@ -73,6 +73,8 @@ Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::cl
 Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
 Route::get('export_regulations', [PresenceRegulationsController::class, 'export']);
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
+//login admin
+Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
 //Auth
 
 Route::post('/register',[AuthController::class, 'register']);

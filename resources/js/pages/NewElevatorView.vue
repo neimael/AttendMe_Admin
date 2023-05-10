@@ -209,7 +209,7 @@ async addElevator() {
       //console.log("location", this.property.location);
       marker.setGeometry(new Point(event.coordinate));
     });
-  },
+  },},
 
 };
 </script>
