@@ -11,7 +11,7 @@ const routes = [
     meta: {
       title: "Dashboard",
     },
-    path: "/",
+    path: "/dashboard",
     name: "dashboard",
     component: Home,
   },
@@ -21,7 +21,7 @@ const routes = [
     meta: {
       title: "Login",
     },
-    path: "/login",
+    path: "/",
     name: "login",
     component: import("../pages/LoginView.vue"),
   },
@@ -174,14 +174,7 @@ const routes = [
   },
  
  
-  {
-    meta: {
-      title: "Login",
-    },
-    path: "/login",
-    name: "login",
-    component: () => import("../pages/LoginView.vue"),
-  },
+  
   {
     meta: {
       title: "Error",

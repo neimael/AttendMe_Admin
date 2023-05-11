@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 
+
 //employees
 Route::get('employees', [EmployeeController::class,'index']);
 Route::post('add_employee', [EmployeeController::class, 'store']);
@@ -73,6 +74,10 @@ Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::cl
 Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
 Route::get('export_regulations', [PresenceRegulationsController::class, 'export']);
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
+//Auth 
+Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
+Route::get('/admin', [AdminController::class, 'admin']);
+
 //login admin
 Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
 //Auth

@@ -56,6 +56,8 @@ class AdminController extends Controller
             $add_admin->avatar = $filename;
         } 
         $add_admin->save();
+            // Generate a token for the admin
+    $token = $add_admin->createToken('admin_token')->plainTextToken;
         try {
             Mail::to($request->input('email'))->send(new AdminCreated($request->input('email'), $password));
         } catch (\Exception $e) {
@@ -65,7 +67,9 @@ class AdminController extends Controller
         }
         return response()->json([
             'message' => 'Admin added successfully.',
-            'password' => $password // Return the generated password
+            'password' => $password ,// Return the generated password
+            'token' => $token
+           
         ]);
 
     }
@@ -141,29 +145,35 @@ public function exportToPDF()
         return $pdf->download('admins.pdf');
         
     }
-    public function loginAdmin(Request $request){
-      
-    $attr = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|min:8'
-    ]);
-
-    $admin = Admin::where('email', $attr['email'])->first();
-
-    if (!$admin || !Hash::check($attr['password'], $admin->password)) {
+    public function loginAdmin(Request $request)
+    {
+        $attr = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ]);
+    
+        $admin = Admin::where('email', $attr['email'])->first();
+    
+        if (!$admin || !Hash::check($attr['password'], $admin->password)) {
+            return response([
+                'errors' => 'Invalid credentials'
+            ], 403);
+        }
+    
+        // Log in the admin user
+        Auth::guard('admin')->login($admin);
+    
+        // Generate a token for token-based authentication
+        $token = $admin->createToken('admin_token')->plainTextToken;
+    
         return response([
-            'errors' => 'Invalid credentials'
-        ], 403);
+            'admin' => $admin,
+            'token' => $token
+        ], 200);
     }
-
-    // Log in the admin user
-    Auth::guard('admin')->login($admin);
-
-    return response([
-        'admin' => $admin,
-    ], 200);
-    }
-    public function user(){
+    
+    public function admin()
+    {
         if (!auth()->guard('admin')->check()) {
             return response([
                 'errors' => 'Unauthorized'
@@ -176,11 +186,21 @@ public function exportToPDF()
             'user' => $admin
         ], 200);
     }
-    // public function logout(){
-    //     auth()->user()->tokens()->delete();
-    //     return response([
-    //         'message' => 'Logged out'
-    //     ],200);
-    // }
+     
+    
+   public function logoutAdmin(Request $request)
+{
+    $user = $request->user('admin');
+
+    if ($user) {
+        $user->tokens()->delete();
+    }
+
+    Auth::guard('admin')->logout();
+
+    return response([
+        'message' => 'Logout Success'
+    ], 200);
+}
 
 }

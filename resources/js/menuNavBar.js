@@ -6,9 +6,6 @@ import {
 } from "@mdi/js";
 
 export default [
-
-
-
   {
     isCurrentUser: true,
     menu: [
@@ -16,16 +13,6 @@ export default [
         icon: mdiAccount,
         label: "My Profile",
         to: "/profile",
-      },
-
-
-      {
-        icon: mdiEmail,
-        label: "Messages",
-      },
-
-      {
-        isDivider: true,
       },
       {
         icon: mdiLogout,
@@ -41,10 +28,5 @@ export default [
     isToggleLightDark: true,
   },
 
-  {
-    icon: mdiLogout,
-    label: "Log out",
-    isDesktopNoLabel: true,
-    isLogout: true,
-  },
+ 
 ];

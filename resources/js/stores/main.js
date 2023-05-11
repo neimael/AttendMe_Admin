@@ -1,16 +1,10 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-
 export const useMainStore = defineStore("main", {
   state: () => ({
     /* User */
-    userName: null,
-    userEmail: null,
-    userAvatar: null,
-
     /* Field focus with ctrl+k (to register only once) */
     isFieldFocusRegistered: false,
-
     /* Sample data (commonly used) */
     clients: [],
     history: [],
@@ -20,12 +14,7 @@ export const useMainStore = defineStore("main", {
       if (payload.name) {
         this.userName = payload.name;
       }
-      if (payload.email) {
-        this.userEmail = payload.email;
-      }
-      if (payload.avatar) {
-        this.userAvatar = payload.avatar;
-      }
+    
     },
 
     fetch(sampleDataKey) {
@@ -35,6 +24,21 @@ export const useMainStore = defineStore("main", {
           if (r.data && r.data.data) {
             this[sampleDataKey] = r.data.data;
           }
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    },
+
+    fetchAdminData() {
+      axios
+        .get("/api/admin") // Replace with your API endpoint for fetching admin data
+        .then((response) => {
+          const adminData = response.data.admin;
+          this.setUser({
+            name: adminData.first_name + " " + adminData.last_name,
+           
+          });
         })
         .catch((error) => {
           alert(error.message);

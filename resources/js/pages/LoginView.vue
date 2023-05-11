@@ -21,7 +21,10 @@ const styleStore = useStyleStore();
 styleStore.setDarkMode(false);
 
 const router = useRouter();
-
+const click = (slug) => {
+ 
+ router.push("/dashboard");
+};
 const form = reactive({
   login: "",
   pass: "",
@@ -40,7 +43,7 @@ const submit = async () => {
     // You can store the admin data in your Vue.js component's data or Vuex store
 
     // Redirect to the desired route after successful login
-    router.push("/");
+    router.push("/dashboard");
   } catch (error) {
     //add swal 
     swal({

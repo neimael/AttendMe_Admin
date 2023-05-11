@@ -73,8 +73,32 @@ const asideLgCloseClick = (event) => {
       </div>
 
       <ul>
-        <AsideMenuItem class="bg-blue-400" :item="logoutItem" @menu-click="menuClick" />
+        <AsideMenuItem class="bg-blue-400" :item="logoutItem" @menu-click="logout" />
       </ul>
     </div>
   </aside>
 </template>
+
+<script>
+
+import axios from 'axios';
+
+export default {
+  methods: {
+    logout() {
+       axios.post('api/logoutAdmin')
+         .then(response => {
+             // Logout successful
+             console.log('Logged out successfully');
+            window.location.href = '/login';
+            // Perform any additional actions or redirect to a different page
+            //console.error(response.data.errors);
+          
+        })
+        .catch(error => {
+          console.error('An error occurred:', error);
+        });
+    },
+  },
+};
+</script>
