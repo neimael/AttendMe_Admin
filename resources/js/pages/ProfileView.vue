@@ -1,6 +1,5 @@
 <script setup>
-import { reactive } from "vue";
-import { useMainStore } from "@/stores/main";
+
 import {
   mdiAccount,
   mdiMail,
@@ -19,46 +18,28 @@ import BaseButtons from "@/components/BaseButtons.vue";
 import UserCard from "@/components/UserCard.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
-
-const mainStore = useMainStore();
-
-const profileForm = reactive({
-  name: mainStore.userName,
-  email: mainStore.userEmail,
-});
-
-const passwordForm = reactive({
-  password_current: "",
-  password: "",
-  password_confirmation: "",
-});
-
-const submitProfile = () => {
-  mainStore.setUser(profileForm);
-};
-
-const submitPass = () => {
-  //
-};
+import UserAvatarCurrentUser from "@/components/UserAvatarCurrentUser.vue";
+import BaseLevel from "@/components/BaseLevel.vue";
 </script>
 
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiAccount" title="Profile" main>
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
-      </SectionTitleLineWithButton>
+     
 
-      <UserCard class="mb-6" />
-
+      <CardBox class="mb-6" >
+    <BaseLevel type="justify-around lg:justify-center">
+      <UserAvatarCurrentUser class="lg:mx-12" />
+      <div class="space-y-3 text-center md:text-left lg:mx-12">
+      
+        <h1 class="text-2xl">
+          Hello, <b>Naima</b>!
+        </h1>
+        
+       
+      </div>
+    </BaseLevel>
+  </CardBox>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <CardBox is-form @submit.prevent="submitProfile">
           <FormField label="Avatar" help="Max 500kb">
@@ -67,7 +48,7 @@ const submitPass = () => {
 
           <FormField label="Name" help="Required. Your name">
             <FormControl
-              v-model="profileForm.name"
+              v-model="form.first_name"
               :icon="mdiAccount"
               name="username"
               required
@@ -76,7 +57,7 @@ const submitPass = () => {
           </FormField>
           <FormField label="E-mail" help="Required. Your e-mail">
             <FormControl
-              v-model="profileForm.email"
+              v-model="form.email"
               :icon="mdiMail"
               type="email"
               name="email"
@@ -99,7 +80,7 @@ const submitPass = () => {
             help="Required. Your current password"
           >
             <FormControl
-              v-model="passwordForm.password_current"
+              
               :icon="mdiAsterisk"
               name="password_current"
               type="password"
@@ -112,7 +93,7 @@ const submitPass = () => {
 
           <FormField label="New password" help="Required. New password">
             <FormControl
-              v-model="passwordForm.password"
+             
               :icon="mdiFormTextboxPassword"
               name="password"
               type="password"
@@ -126,7 +107,7 @@ const submitPass = () => {
             help="Required. New password one more time"
           >
             <FormControl
-              v-model="passwordForm.password_confirmation"
+           
               :icon="mdiFormTextboxPassword"
               name="password_confirmation"
               type="password"
@@ -146,3 +127,45 @@ const submitPass = () => {
     </SectionMain>
   </LayoutAuthenticated>
 </template>
+<script>
+import axios from "axios";
+import Form from "@/form.js";
+
+export default {
+  data() {
+    return {
+      form: new Form({
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        email: "",
+       
+      })
+    }
+    },
+  
+  props: [],
+  methods: {
+    getAdmin() {
+    axios
+      .get("/api/admin")
+      .then((response) => {
+        this.form.fill(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
+
+  submitProfile() {
+    console.log('submitProfile')
+  },
+  submitPass() {
+    console.log('submitPass')
+  },
+},
+  mounted() {
+    this.getAdmin();
+  },
+}
+</script>

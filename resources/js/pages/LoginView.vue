@@ -1,12 +1,13 @@
 <script setup>
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { mdiAccount, mdiAsterisk } from "@mdi/js";
+import { mdiAccount, mdiLock } from "@mdi/js";
 import SectionFullScreen from "@/components/SectionFullScreen.vue";
 import CardBox from "@/components/CardBox.vue";
 import FormCheckRadio from "@/components/FormCheckRadio.vue";
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
+import FormControlPass from "@/components/FormControlPass.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
 import LayoutGuest from "@/auth/LayoutGuest.vue";
@@ -47,7 +48,7 @@ const submit = async () => {
   } catch (error) {
     //add swal 
     swal({
-            text: "Your Credentials are incorrect \n Please Try again!",
+            text: "Your Credentials are incorrect Please Try again!",
             icon: "error",
             closeOnClickOutside: false,
           });
@@ -62,37 +63,34 @@ const submit = async () => {
   <LayoutGuest>
     <SectionFullScreen v-slot="{ cardClass }" class="custom-section">
       <CardBox :class="[cardClass, 'custom-card']" is-form @submit.prevent="submit" >
-        <FormField label="Login" help="Please enter your login">
+        <FormField label="Login" >
           <FormControl
             v-model="form.login"
             :icon="mdiAccount"
             name="login"
             autocomplete="username"
+            required
           />
         </FormField>
 
-        <FormField label="Password" help="Please enter your password">
-          <FormControl
+        <FormField label="Password" >
+          <FormControlPass
             v-model="form.pass"
-            :icon="mdiAsterisk"
+            :icon="mdiLock"
             type="password"
             name="password"
             autocomplete="current-password"
+            
           />
         </FormField>
 
-        <FormCheckRadio
-          v-model="form.remember"
-          name="remember"
-          label="Remember"
-          :input-value="true"
-        />
+      
 
         <template #footer>
           <div class="flex justify-center mt-6">
             <BaseButtons>
               <BaseButton type="submit"  label="Login" class="mr-2" :style="{ backgroundColor: '#87CEFA' }"/>
-              <BaseButton  outline label="Back"  />
+             
       
             </BaseButtons>
           </div>
