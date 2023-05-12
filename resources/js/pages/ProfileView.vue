@@ -22,7 +22,7 @@ import UserAvatarCurrentUser from "@/components/UserAvatarCurrentUser.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
 </script>
 
-<template>
+<template >
   <LayoutAuthenticated>
     <SectionMain>
      
@@ -32,8 +32,8 @@ import BaseLevel from "@/components/BaseLevel.vue";
       <UserAvatarCurrentUser class="lg:mx-12" />
       <div class="space-y-3 text-center md:text-left lg:mx-12">
       
-        <h1 class="text-2xl">
-          Hello, <b>Naima</b>!
+        <h1 class="text-2xl" v-if="form">
+          Hello,{{form.first_name }} {{ form.last_name }}<b> </b>!
         </h1>
         
        
@@ -46,21 +46,42 @@ import BaseLevel from "@/components/BaseLevel.vue";
             <FormFilePicker label="Upload" />
           </FormField>
 
-          <FormField label="Name" help="Required. Your name">
+          <FormField label="First Name" v-if="form">
             <FormControl
-              v-model="form.first_name"
+            v-model="form.first_name"
               :icon="mdiAccount"
               name="username"
               required
               autocomplete="username"
             />
           </FormField>
-          <FormField label="E-mail" help="Required. Your e-mail">
+          <FormField label="Last Name" v-if="form" >
             <FormControl
+              v-model="form.last_name"
+              :icon="mdiAccount"
+              name="username"
+              required
+              autocomplete="username"
+            />
+          </FormField>
+          <FormField label="E-mail" v-if="form" >
+
+            <FormControl 
               v-model="form.email"
               :icon="mdiMail"
               type="email"
               name="email"
+              required
+              autocomplete="email"
+            />
+
+          </FormField>
+          <FormField label="Phone Number" v-if="form" >
+            <FormControl
+             v-model="form.phone_number"
+              :icon="mdiMail"
+              
+              name="phone_number"
               required
               autocomplete="email"
             />
@@ -134,38 +155,53 @@ import Form from "@/form.js";
 export default {
   data() {
     return {
-      form: new Form({
-        first_name: "",
-        last_name: "",
-        phone_number: "",
-        email: "",
-       
-      })
-    }
-    },
-  
-  props: [],
+      form: null, // Initialize the form object as null
+      userInformation: null,
+      token: "", // Initialize the token as empty
+    };
+  },
   methods: {
-    getAdmin() {
-    axios
-      .get("/api/admin")
-      .then((response) => {
-        this.form.fill(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
+    getAdmin(csrfToken) {
+      // Retrieve the token from the session
+      this.token = "{{ session('admin_token') }}";
 
-  submitProfile() {
-    console.log('submitProfile')
+      if (!this.token) {
+        // Handle the case when the token is missing
+        console.log("Authentication token is missing.");
+        return;
+      }
+
+      axios
+        .get("api/getAuthenticatedAdmin", {
+          headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          // Handle the response data
+          this.userInformation = response.data.admin;
+          this.form = new Form(response.data.admin);
+          console.log(this.userInformation);
+          console.log(response.data.admin);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    submitProfile() {
+      console.log("submitProfile");
+    },
+    submitPass() {
+      console.log("submitPass");
+    },
   },
-  submitPass() {
-    console.log('submitPass')
-  },
-},
   mounted() {
-    this.getAdmin();
+    // Initialize the form object
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    this.getAdmin(csrfToken);
   },
-}
+};
 </script>
+
+

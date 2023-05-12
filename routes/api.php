@@ -76,7 +76,8 @@ Route::get('export_regulations', [PresenceRegulationsController::class, 'export'
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
 //Auth 
 Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
-Route::get('/admin', [AdminController::class, 'admin']);
+Route::middleware('auth:admin')->get('/getAuthenticatedAdmin', [AdminController::class, 'getAuthenticatedAdmin']);
+
 
 //login admin
 Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
