@@ -6,7 +6,7 @@ import SectionFullScreen from "@/components/SectionFullScreen.vue";
 import CardBox from "@/components/CardBox.vue";
 import FormCheckRadio from "@/components/FormCheckRadio.vue";
 import FormField from "@/components/FormField.vue";
-import FormControl from "@/components/FormControl.vue";
+import FormControlLogin from "@/components/FormControlLogin.vue";
 import FormControlPass from "@/components/FormControlPass.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import BaseButtons from "@/components/BaseButtons.vue";
@@ -28,15 +28,15 @@ const click = (slug) => {
 };
 const form = reactive({
   login: "",
-  pass: "",
-  remember: true,
+  password: "",
+ 
 });
 
 const submit = async () => {
   try {
     const response = await axios.post("/api/loginAdmin", {
       email: form.login,
-      password: form.pass,
+      password: form.password,
     });
 
     // Handle the response
@@ -63,36 +63,40 @@ const submit = async () => {
   <LayoutGuest>
     <SectionFullScreen v-slot="{ cardClass }" class="custom-section">
       <CardBox :class="[cardClass, 'custom-card']" is-form @submit.prevent="submit" >
-        <FormField label="Login" >
-          <FormControl
+        <FormField label="Username" style="color:white" >
+          <FormControlLogin
             v-model="form.login"
             :icon="mdiAccount"
             name="login"
             autocomplete="username"
+            placeholder="Enter your username"
             required
           />
         </FormField>
 
-        <FormField label="Password" >
+          <FormField label="Password" style="color:white">
           <FormControlPass
-            v-model="form.pass"
-            :icon="mdiLock"
+            v-model="form.password"
             type="password"
+            :icon="mdiLock"
             name="password"
+            placeholder="Enter your password"
             autocomplete="current-password"
-            
+            required
           />
         </FormField>
-
+      
       
 
         <template #footer>
           <div class="flex justify-center mt-6">
-            <BaseButtons>
-              <BaseButton type="submit"  label="Login" class="mr-2" :style="{ backgroundColor: '#87CEFA' }"/>
-             
-      
-            </BaseButtons>
+            <BaseButton
+  type="submit"
+  label="Login"
+  class="buttonStyle"
+  
+/>
+
           </div>
         </template>
       </CardBox>
@@ -110,10 +114,29 @@ const submit = async () => {
   /* Adjust the width value as per your requirements */
 }
 .custom-section {
-  background-image: url('/view-lift.jpg');
- /* Replace with the path to your image */
-  background-size: cover;
-  background-position: center;
+  background-image: linear-gradient(to right, #eea2a2 0%, #bbc1bf 19%, #57c6e1 42%, #b49fda 79%, #7ac5d8 100%);  background-position: center;
   opacity: 1;
+}
+.buttonStyle{
+  background-color: #8778a3;
+  color: white;
+  border-radius: 5px;
+  width: 50%;
+  font-size: 20px;
+  font-weight: 500;
+
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #605574;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
 }
 </style>

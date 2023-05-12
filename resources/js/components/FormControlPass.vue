@@ -1,10 +1,45 @@
-<script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from "vue";
-import { useMainStore } from "@/stores/main";
-import FormControlIcon from "@/components/FormControlIcon.vue";
+<template>
+  <div class="password-input">
+    <div class="icon left">
+      <i class="fas fa-lock"></i>
+    </div>
+    <input class="h-14"
+    :type="inputType" 
+    :placeholder="placeholder" 
+   
+    v-model="computedValue"
+      :name="name"
+      :maxlength="maxlength"
+      :inputmode="inputmode"
+      :autocomplete="autocomplete"
+      :required="required"
+      
+      >
+    <div class="icon right" @click="toggleShowPassword">
+      <i :class="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+    </div>
+  </div>
+</template>
 
-const props = defineProps({
-  name: {
+<script>
+import Form from "@/form.js";
+export default {
+  data() {
+    return {
+      form: new Form({
+      
+        password: "",
+      }),
+    
+      showPassword: false
+    }
+  },
+  props: {
+    placeholder: {
+      type: String,
+      default: 'Enter your password'
+    },
+    name: {
     type: String,
     default: null,
   },
@@ -44,131 +79,109 @@ const props = defineProps({
     type: [String, Number, Boolean, Array, Object],
     default: "",
   },
-  required: Boolean,
-  borderless: Boolean,
-  transparent: Boolean,
-  ctrlKFocus: Boolean,
-});
 
-const emit = defineEmits(["update:modelValue", "setRef"]);
-
-const computedValue = computed({
-  get: () => props.modelValue,
-  set: (value) => {
-    emit("update:modelValue", value);
   },
-});
+  computed: {
+    inputType() {
+      return this.showPassword ? 'text' : 'password';
+    },
+    computedValue: {
+      get() {
+        return this.modelValue;
+      },
+      set(value) {
+        this.$emit('update:modelValue', value);
+      }
+    }
+    },
+  methods: {
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
 
-const inputElClass = computed(() => {
-  const base = [
-    "px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full",
-    "dark:placeholder-gray-400",
-    computedType.value === "textarea" ? "h-24" : "h-12",
-    props.borderless ? "border-0" : "border",
-    props.transparent ? "bg-transparent" : "bg-white dark:bg-slate-800",
-  ];
-  if (props.icon) {
-    base.push("pl-10");
+      // When the eye icon is clicked, replace the password input field with a new field
+      // that has its type attribute set to 'text' to reveal the password.
+      // if (this.showPassword) {
+      //   const $passwordInput = this.$el.querySelector('input[type="password"]');
+      //   const $newInput = document.createElement('input');
+      //   $newInput.type = 'text';
+      //   $newInput.value = this.password;
+      //   $newInput.placeholder = this.placeholder;
+      //   $newInput.classList = $passwordInput.classList;
+      //   $passwordInput.parentNode.replaceChild($newInput, $passwordInput);
+      // }
+      // // When the eye icon is clicked again, replace the new input field with a new
+      // // password input field to hide the password again.
+      // else {
+      //   const $textInput = this.$el.querySelector('input[type="text"]');
+      //   const $newInput = document.createElement('input');
+      //   $newInput.type = 'password';
+      //   $newInput.value = this.password;
+      //   $newInput.placeholder = this.placeholder;
+      //   $newInput.classList = $textInput.classList;
+      //   $textInput.parentNode.replaceChild($newInput, $textInput);
+      // }
+    },
+    updateValue(value) {
+      this.computedValue = value;
+    }
   }
-  return base;
-});
-
-const computedType = computed(() => (props.options ? "select" : props.type));
-
-const controlIconH = computed(() =>
-  props.type === "textarea" ? "h-full" : "h-12"
-);
-
-const mainStore = useMainStore();
-
-const selectEl = ref(null);
-
-const textareaEl = ref(null);
-
-const inputEl = ref(null);
-const showPassword = ref(false);  // Added line
-
-const toggleShowPassword = () => {  // Added function
-  showPassword.value = !showPassword.value;
 };
-
-onMounted(() => {
-  if (selectEl.value) {
-    emit("setRef", selectEl.value);
-  } else if (textareaEl.value) {
-    emit("setRef", textareaEl.value);
-  } else {
-    emit("setRef", inputEl.value);
-  }
-});
-
-if (props.ctrlKFocus) {
-  const fieldFocusHook = (e) => {
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault();
-      inputEl.value.focus();
-    } else if (e.key === "Escape") {
-      inputEl.value.blur();
-    }
-  };
-
-  onMounted(() => {
-    if (!mainStore.isFieldFocusRegistered) {
-      window.addEventListener("keydown", fieldFocusHook);
-      mainStore.isFieldFocusRegistered = true;
-    } else {
-      // console.error('Duplicate field focus event')
-    }
-  });
-
-  onBeforeUnmount(() => {
-    window.removeEventListener("keydown", fieldFocusHook);
-    mainStore.isFieldFocusRegistered = false;
-  });
-}
 </script>
 
-<template>
-  <div class="relative">
-    <select
-      v-if="computedType === 'select'"
-      :id="id"
-      v-model="computedValue"
-      :name="name"
-      :class="inputElClass"
-    >
-      <option
-        v-for="option in options"
-        :key="option.id ?? option"
-        :value="option"
-      >
-        {{ option.label ?? option }}
-      </option>
-    </select>
-    <textarea
-      v-else-if="computedType === 'textarea'"
-      :id="id"
-      v-model="computedValue"
-      :class="inputElClass"
-      :name="name"
-      :maxlength="maxlength"
-      :placeholder="placeholder"
-      :required="required"
-    />
-    <input
-      v-else
-      :id="id"
-      ref="inputEl"
-      v-model="computedValue"
-      :name="name"
-      :maxlength="maxlength"
-      :inputmode="inputmode"
-      :autocomplete="autocomplete"
-      :required="required"
-      :placeholder="placeholder"
-      :type="showPassword ? 'text' : computedType" 
-      :class="inputElClass"
-    />
-    <FormControlIcon v-if="icon" :icon="icon" :h="controlIconH" @click="toggleShowPassword" />  <!-- Modified line -->
-  </div>
-</template>
+<style scoped>
+.password-input {
+  position: relative;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  
+}
+
+.password-input .icon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.password-input .icon.left {
+  left: 13px;
+    top: -1%;
+    color: rgb(255, 255, 255);
+    font-size: 13px;
+    
+
+}
+
+.password-input .icon.right {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+    font-size: 17px;
+}
+
+
+.password-input input::placeholder {
+  color: #ffffff;
+}
+
+
+.password-input input {
+  padding-left: 40px;
+  padding-right: 30px;
+  width: 100%;
+  background-color: transparent;
+  border: none  ;
+ 
+}
+
+.password-input input:focus {
+  outline: none;
+  box-shadow: none;
+  border : none;
+}
+
+</style>

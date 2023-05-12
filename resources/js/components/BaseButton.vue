@@ -79,7 +79,7 @@ const labelClass = computed(() =>
 
 const componentClass = computed(() => {
   const base = [
-    "inline-flex",
+   "relative",
     "justify-center",
     "items-center",
     "whitespace-nowrap",
