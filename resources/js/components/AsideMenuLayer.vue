@@ -90,10 +90,10 @@ export default {
          .then(response => {
              // Logout successful
              console.log('Logged out successfully');
-            window.location.href = '/login';
+            window.location.href = '/';
             // Perform any additional actions or redirect to a different page
             //console.error(response.data.errors);
-          
+
         })
         .catch(error => {
           console.error('An error occurred:', error);

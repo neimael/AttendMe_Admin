@@ -145,48 +145,106 @@ public function exportToPDF()
         return $pdf->download('admins.pdf');
         
     }
-    public function loginAdmin(Request $request)
+
+
+
+   public function loginAdmin(Request $request)
+{
+    $attr = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|min:8'
+    ]);
+
+    $admin = Admin::where('email', $attr['email'])->first();
+
+    if (!$admin || !Hash::check($attr['password'], $admin->password)) {
+        return response([
+            'errors' => 'Invalid credentials'
+        ], 403);
+    }
+
+    // Log in the admin user
+    Auth::guard('admin')->login($admin);
+
+    // Generate a token for token-based authentication
+    $token = $admin->createToken('admin_token')->plainTextToken;
+
+    // Store session data
+    $request->session()->put('admin_token', $token);
+    $request->session()->put('admin_info', [
+        'first_name' => $admin->first_name,
+        'last_name' => $admin->last_name,
+        'email' => $admin->email,
+        'phone_number' => $admin->phone_number,
+        'avatar' => $admin->avatar,
+    ]);
+
+    // Return only necessary admin information
+    $adminInfo = [
+        'first_name' => $admin->first_name,
+        'last_name' => $admin->last_name,
+        'email' => $admin->email,
+        'phone_number' => $admin->phone_number,
+        'avatar' => $admin->avatar,
+    ];
+
+    return response([
+        'admin' => $adminInfo,
+        'token' => $token
+    ], 200);
+}
+
+    public function getAuthenticatedAdmin(Request $request)
     {
-        $attr = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-        ]);
+        $admin = $request->user('admin');
     
-        $admin = Admin::where('email', $attr['email'])->first();
-    
-        if (!$admin || !Hash::check($attr['password'], $admin->password)) {
-            return response([
-                'errors' => 'Invalid credentials'
-            ], 403);
+        if (!$admin) {
+            // Admin user is not authenticated
+            return response(['error' => 'Unauthorized'], 401);
         }
     
-        // Log in the admin user
-        Auth::guard('admin')->login($admin);
+        // Admin user is authenticated
+        $adminInfo = [
+            'first_name' => $admin->first_name,
+            'last_name' => $admin->last_name,
+            'email' => $admin->email,
+            'phone_number' => $admin->phone_number,
+            'avatar' => $admin->avatar,
+        ];
     
-        // Generate a token for token-based authentication
-        $token = $admin->createToken('admin_token')->plainTextToken;
-    
-        return response([
-            'admin' => $admin,
-            'token' => $token
-        ], 200);
+        return response(['admin' => $adminInfo], 200);
     }
+        
+
+   // public function admin()
+    // {
+    //     if (!auth()->guard('admin')->check()) {
+    //         return response([
+    //             'errors' => 'Unauthorized'
+    //         ], 401);
+    //     }
     
-    public function admin()
-    {
-        if (!auth()->guard('admin')->check()) {
-            return response([
-                'errors' => 'Unauthorized'
-            ], 401);
-        }
+    //     $admin = auth()->guard('admin')->user();
     
-        $admin = auth()->guard('admin')->user();
+    //     return response([
+    //         'user' => $admin
+    //     ], 200);
+    // }
+
     
-        return response([
-            'user' => $admin
-        ], 200);
-    }
-     
+
+    // Function to retrieve user information
+// public function getUserInformation(Request $request)
+// {
+//      $admin = $request->session()->get('admin');
+  
+        
+//             return response([
+//                 $admin
+//             ], 200);
+           
+// }
+  
     
    public function logoutAdmin(Request $request)
 {
