@@ -9,6 +9,7 @@ use App\Models\Presence;
 use App\Models\AssignmentElevator;
 use App\Models\PresenceRegulation;
 use App\Models\SanitaryIssues;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Nexmo\Client;

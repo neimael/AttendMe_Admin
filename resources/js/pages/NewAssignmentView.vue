@@ -292,7 +292,6 @@ fetchInformation() {
           console.log(error);
         });
       },
-
 },
 mounted() {
     this.getMissions();

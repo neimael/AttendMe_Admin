@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -55,6 +56,8 @@ class AdminController extends Controller
             $add_admin->avatar = $filename;
         } 
         $add_admin->save();
+            // Generate a token for the admin
+    $token = $add_admin->createToken('admin_token')->plainTextToken;
         try {
             Mail::to($request->input('email'))->send(new AdminCreated($request->input('email'), $password));
         } catch (\Exception $e) {
@@ -64,7 +67,9 @@ class AdminController extends Controller
         }
         return response()->json([
             'message' => 'Admin added successfully.',
-            'password' => $password // Return the generated password
+            'password' => $password ,// Return the generated password
+            'token' => $token
+           
         ]);
 
     }
@@ -140,5 +145,62 @@ public function exportToPDF()
         return $pdf->download('admins.pdf');
         
     }
+    public function loginAdmin(Request $request)
+    {
+        $attr = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8'
+        ]);
+    
+        $admin = Admin::where('email', $attr['email'])->first();
+    
+        if (!$admin || !Hash::check($attr['password'], $admin->password)) {
+            return response([
+                'errors' => 'Invalid credentials'
+            ], 403);
+        }
+    
+        // Log in the admin user
+        Auth::guard('admin')->login($admin);
+    
+        // Generate a token for token-based authentication
+        $token = $admin->createToken('admin_token')->plainTextToken;
+    
+        return response([
+            'admin' => $admin,
+            'token' => $token
+        ], 200);
+    }
+    
+    public function admin()
+    {
+        if (!auth()->guard('admin')->check()) {
+            return response([
+                'errors' => 'Unauthorized'
+            ], 401);
+        }
+    
+        $admin = auth()->guard('admin')->user();
+    
+        return response([
+            'user' => $admin
+        ], 200);
+    }
+     
+    
+   public function logoutAdmin(Request $request)
+{
+    $user = $request->user('admin');
+
+    if ($user) {
+        $user->tokens()->delete();
+    }
+
+    Auth::guard('admin')->logout();
+
+    return response([
+        'message' => 'Logout Success'
+    ], 200);
+}
 
 }

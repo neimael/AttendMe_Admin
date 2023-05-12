@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 
+
 //employees
 Route::get('employees', [EmployeeController::class,'index']);
 Route::post('add_employee', [EmployeeController::class, 'store']);
@@ -47,6 +48,8 @@ Route::get('getNames', [AssignmentElevatorController::class, 'getNames']);
 Route::get('getEmployees', [AssignmentElevatorController::class, 'getEmployees']);
 Route::post('information', [AssignmentElevatorController::class, 'getInformation']);
 Route::post('informationEmployee', [AssignmentElevatorController::class, 'getEmployeeInfo']);
+Route::get('getAssignment/{id}', [AssignmentElevatorController::class, 'getAssignment']);
+Route::put('/update_asignment/{id}', [AssignmentElevatorController::class, 'update']);
 
 //Elevator
 Route::post('add_elevator', [ElevatorController::class, 'store']);
@@ -55,7 +58,7 @@ Route::get('get_elevator/{id}', [ElevatorController::class, 'getElevator']);
 Route::get('get_elevatoor/{id}', [ElevatorController::class, 'getOneElevator']);
 Route::get('get_all', [ElevatorController::class, 'show']);
 Route::delete('delete_elevator/{id}', [ElevatorController::class, 'destroy']);
-Route::put('/update_elevator/{id}', [ElevatorController::class, 'update']);
+Route::put('update_elevator/{id}', [ElevatorController::class, 'update']);
 Route::get('export_elevators', [ElevatorController::class, 'export']);
 Route::get('export_elevators_pdf', [ElevatorController::class, 'exportToPDF']);
 //Location
@@ -71,6 +74,12 @@ Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::cl
 Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
 Route::get('export_regulations', [PresenceRegulationsController::class, 'export']);
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
+//Auth 
+Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
+Route::get('/admin', [AdminController::class, 'admin']);
+
+//login admin
+Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
 //Auth
 
 Route::post('/register',[AuthController::class, 'register']);

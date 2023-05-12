@@ -14,7 +14,7 @@ import AsideMenu from "@/components/AsideMenu.vue";
 import FooterBar from "@/components/FooterBar.vue";
 
 useMainStore().setUser({
-  name: "Naima ADARDOR",
+  name: "Naima Adardor",
   email: "naima@gmail.com",
   avatar:
     "https://avatars.dicebear.com/api/avataaars/example.svg?options[top][]=shortHair&options[accessoriesChance]=93",
@@ -40,7 +40,7 @@ const menuClick = (event, item) => {
   }
 
   if (item.isLogout) {
-    //
+    router.push("/login");  
   }
 };
 </script>
@@ -96,6 +96,8 @@ const menuClick = (event, item) => {
         @aside-lg-close-click="isAsideLgActive = false"
       />
       <slot />
+    
+
       
     </div>
   </div>

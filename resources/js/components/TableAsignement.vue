@@ -122,6 +122,7 @@ const checked = (isChecked, employee) => {
             color="success"
             :icon="mdiHumanEdit" 
             small
+            :to="'/update-assignment/' + assignment.id_assignment_elevator"
             
            
           />

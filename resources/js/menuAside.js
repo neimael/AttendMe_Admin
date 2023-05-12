@@ -34,7 +34,7 @@ export default [
       spacer: true,
     },
   {
-    to: "/",
+    to: "/dashboard",
     icon: mdiMonitor,
     label: "Dashboard",
   },
