@@ -13,8 +13,9 @@ use App\Http\Controllers\PresenceRegulationsController;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Row;
 
-
+    // Your restricted routes go here
 
 //employees
 Route::get('employees', [EmployeeController::class,'index']);
@@ -76,6 +77,8 @@ Route::get('export_regulations', [PresenceRegulationsController::class, 'export'
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
 //Auth 
 Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
+Route::put('update_profile/{id}', [AdminController::class, 'updateProfile']);
+Route::put('update_password/{id}', [AdminController::class, 'updatePassword']);
 Route::middleware('auth:admin')->get('/getAuthenticatedAdmin', [AdminController::class, 'getAuthenticatedAdmin']);
 
 

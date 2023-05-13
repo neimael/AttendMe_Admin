@@ -13,6 +13,7 @@ export const useMainStore = defineStore("main", {
     setUser(payload) {
       if (payload.name) {
         this.userName = payload.name;
+        
       }
     
     },
@@ -30,19 +31,6 @@ export const useMainStore = defineStore("main", {
         });
     },
 
-    fetchAdminData() {
-      axios
-        .get("/api/admin") // Replace with your API endpoint for fetching admin data
-        .then((response) => {
-          const adminData = response.data.admin;
-          this.setUser({
-            name: adminData.first_name + " " + adminData.last_name,
-           
-          });
-        })
-        .catch((error) => {
-          alert(error.message);
-        });
-    },
+    
   },
 });
