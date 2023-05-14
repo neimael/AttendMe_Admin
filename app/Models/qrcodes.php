@@ -14,8 +14,6 @@ class qrcodes extends Model
         'mission',
         'qr_code',
         'id_elevator',
-        
-    
     ];
     public function elevator()
     {

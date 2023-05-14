@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Nexmo\Client;
 use Nexmo\Client\Credentials\Basic;
 use Illuminate\Support\Facades\Mail;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 
@@ -119,7 +120,53 @@ class AuthController extends Controller
         ], 200);
     }
 
+    //add presence 
+    public function addPresence(Request $request)
+    {
+        $attr = $request->validate([
+            'id_elevator' => 'required|integer|exists:qrcode,id_qr_code',
+            'id_employee' => 'required|integer|exists:users,id',
+            'check_in' => 'required|time',
+            'attendance_day' => 'required|date',
+            'selfie' => 'String',
+        ]);
 
+        $image = $this->saveImage($request->selfie, 'Selfies');
+
+        $presence = Presence::create([
+            'id_elevator' => $attr['id_elevator'],
+            'id_employee' => $attr['id_employee'],
+            'check_in' => $attr['check_in'],
+            'attendance_day' => $attr['attendance_day'],
+            'selfie' =>  $image,
+        ]);
+
+        return response([
+            'presence' => $presence,
+            'message' => 'Your presence has been saved successfully',
+        ]);
+    }
+    public function updatePresence(Request $request, $id)
+    {
+        $presence = Presence::with('employee')->findOrFail($id);
+        $attr = $request->validate([
+          'check_out' => 'required|time',
+        ]);
+         $qrCode =QrCode::format('png')->size(200)->generate("Employee :" . $presence->employee->first_name." ".$presence->employee->last_name);
+         $qrCodePath = URL::to('/').'/storage/QrCodesPresence/' . time()  . '.png';
+         Storage::disk('public')->put($qrCodePath, $qrCode);
+         $presence = Presence::update([
+                    'check_out' => $attr['check_out'], 
+                    'qrcode'=> $qrCodePath
+                    // $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
+                    // Storage::disk('public')->put($qrCodePath, $qrCode);
+    
+        ]);
+        return response([
+            'presence' => $presence,
+            'message' => 'Your presence has been modified successfully',
+        ]);
+    }
     //Change Password
     public function changePassword(Request $request)
     {
@@ -226,11 +273,7 @@ class AuthController extends Controller
             'certificate' => 'required|String',
             'extension' => 'required|String',
         ]);
-
-
         $file = $this->saveFile($request->certificate, 'certificates', $request->extension);
-
-
         $sanitary_regulation = SanitaryIssues::create([
             'id_employee' => $attr['id_employee'],
             'report' => $attr['report'],

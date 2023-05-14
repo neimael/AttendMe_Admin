@@ -24,7 +24,7 @@ class Presence extends Model
     ];
     public function employee()
     {
-        return $this->belongsTo(User::class,'id','id_employee');
+        return $this->hasOne(User::class,'id','id_employee');
     }
     public function elevator()
     {
