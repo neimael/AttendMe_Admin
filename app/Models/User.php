@@ -55,7 +55,7 @@ class User extends Authenticatable
     ];
     public function presences()
    {
-       return $this->hasMany(Presence::class,'id_employee','id'); 
+       return $this->belongsTo(Presence::class,'id_employee','id'); 
       }
    public function assignments()
    {        return $this->hasMany(AssignmentElevator::class,'id_employee','id');
