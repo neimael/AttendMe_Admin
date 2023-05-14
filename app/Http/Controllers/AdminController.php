@@ -168,7 +168,6 @@ public function exportToPDF()
 
     // Generate a token for token-based authentication
     $token = $admin->createToken('admin_token')->plainTextToken;
-
     // Store session data
     $request->session()->put('admin_token', $token);
     $request->session()->put('admin_info', [
@@ -177,6 +176,7 @@ public function exportToPDF()
         'email' => $admin->email,
         'phone_number' => $admin->phone_number,
         'avatar' => $admin->avatar,
+        'password' => $admin->password,
     ]);
 
     // Return only necessary admin information
@@ -186,6 +186,7 @@ public function exportToPDF()
         'email' => $admin->email,
         'phone_number' => $admin->phone_number,
         'avatar' => $admin->avatar,
+        'password' => $admin->password,
     ];
 
     return response([
@@ -210,10 +211,48 @@ public function exportToPDF()
             'email' => $admin->email,
             'phone_number' => $admin->phone_number,
             'avatar' => $admin->avatar,
+            'password' => $admin->password,
         ];
     
         return response(['admin' => $adminInfo], 200);
     }
+    public function UpdateProfile(Request $request)
+{
+    $admin = $request->user('admin');
+    $admin->first_name = $request->input('first_name');
+    $admin->last_name = $request->input('last_name');
+    $admin->email = $request->input('email');
+    $admin->phone_number = $request->input('phone_number');
+
+    if ($request->hasFile('avatar')) {
+        $file = $request->file('avatar');
+        $filename = time() . '.' . $file->getClientOriginalExtension(); // Use only the extension for the filename
+        $filePath = 'AdminAvatar/' . $filename;
+        Storage::disk('public')->put($filePath, File::get($file));
+        
+        // Delete the previous avatar if it exists
+        if ($admin->avatar) {
+            Storage::disk('public')->delete('AdminAvatar/' . $admin->avatar);
+        }
+
+        $admin->avatar = $filename;
+    }
+    
+    $admin->save();
+
+    return response()->json([
+        'message' => 'Profile updated successfully.',
+    ]);
+}
+public function updatePassword(Request $request){
+    $admin = $request->user('admin');
+    $admin->password = Hash::make($request->input('password'));
+    $admin->save();
+
+    return response()->json([
+        'message' => 'Password updated successfully.',
+    ]);
+}
         
 
    // public function admin()
@@ -255,6 +294,8 @@ public function exportToPDF()
     }
 
     Auth::guard('admin')->logout();
+    $request->session()->forget('admin_token');
+    $request->session()->forget('admin_info');
 
     return response([
         'message' => 'Logout Success'
