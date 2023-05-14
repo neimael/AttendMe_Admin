@@ -75,14 +75,25 @@ class ElevatorController extends Controller
         $elevator->save();
         $areas = ['area1', 'area2', 'area3'];
        foreach ($areas as $area) {
-        $qrCode = QrCode::format('png')->size(200)->generate("Location : ". $location-> ville.' '.$location->adress.' '.$location->longitude. '-' .$location->latitude ."\n".'Name : '.$elevator-> name ."\n" .'Mission : ' .$area);
-        $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
-        Storage::disk('public')->put($qrCodePath, $qrCode);
-        qrcodes::create([
+          // Create a record in the qrcodes table
+          $qrCodeRecord = Qrcodes::create([
             'mission' => $area,
-            'qr_code' => $qrCodePath,
             'id_elevator' => $elevator->id_elevator,
         ]);
+
+         // Generate the QR code content
+         $qrCodeContent = "Location: " . $location->ville . ' ' . $location->adress . ' ' . $location->longitude . '-' . $location->latitude . "\n"
+         . 'Name: ' . $elevator->name . "\n"
+         . 'Mission: ' . $area . "\n"
+         . 'QR Code ID: ' . $qrCodeRecord->id_qr_code;
+
+     // Generate the QR code image
+     $qrCode = QrCode::format('png')->size(200)->generate($qrCodeContent);
+     $qrCodePath = 'qrcodes/' . $area . '_' . $qrCodeRecord->id_qr_code . '.png'; 
+     Storage::disk('public')->put($qrCodePath, $qrCode);
+     // Update the qrcodes table with the QR code path
+     $qrCodeRecord->qr_code = $qrCodePath;
+     $qrCodeRecord->save();
     }
     
         return $elevator;

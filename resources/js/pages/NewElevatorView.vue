@@ -55,7 +55,7 @@ window.Swal = swal;
             <FormControl type="text" v-model="form.adress" required />
           </FormField>
         </FormField>
-          <div id="map"></div>
+        <div id="map"></div>
 
 
 
@@ -149,7 +149,7 @@ async addElevator() {
     });
 },
 
-   
+},
   mounted() {
     this.getCities();
     // Define the map view
@@ -209,7 +209,7 @@ async addElevator() {
       //console.log("location", this.property.location);
       marker.setGeometry(new Point(event.coordinate));
     });
-  },},
+  },
 
 };
 </script>
