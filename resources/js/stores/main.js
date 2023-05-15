@@ -18,6 +18,21 @@ export const useMainStore = defineStore("main", {
     
     },
 
+    fetchAdminData() {
+      axios
+        .get("/api/admin") // Replace with your API endpoint for fetching admin data
+        .then((response) => {
+          const adminData = response.data.admin;
+          this.setUser({
+            name: adminData.first_name + " " + adminData.last_name,
+
+          });
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    },
+
     fetch(sampleDataKey) {
       axios
         .get(`data-sources/${sampleDataKey}.json`)

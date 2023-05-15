@@ -109,8 +109,11 @@ export default {
     getAdminById(){
       const id = this.$route.params.id;
       axios.get(`api/get_admin/${id}`).then((response) => {
-  this.form = response.data
-})
+  this.form = response.data;
+  console.log(this.form);
+  console.log(response.data);
+});
+
     },
     async updateAdmin() {
   const id = this.$route.params.id;
