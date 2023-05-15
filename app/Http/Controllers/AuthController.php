@@ -16,6 +16,10 @@ use Nexmo\Client;
 use Nexmo\Client\Credentials\Basic;
 use Illuminate\Support\Facades\Mail;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+
 
 
 
@@ -148,19 +152,25 @@ class AuthController extends Controller
     }
     public function updatePresence(Request $request, $id)
     {
-        $presence = Presence::with('employee')->findOrFail($id);
+        $presence = Presence::with(['employee','qrcodes.elevator'])->findOrFail($id);
         $attr = $request->validate([
           'check_out' => 'required|time',
         ]);
-         $qrCode =QrCode::format('png')->size(200)->generate("Employee :" . $presence->employee->first_name." ".$presence->employee->last_name);
-         $qrCodePath = URL::to('/').'/storage/QrCodesPresence/' . time()  . '.png';
-         Storage::disk('public')->put($qrCodePath, $qrCode);
-         $presence = Presence::update([
-                    'check_out' => $attr['check_out'], 
-                    'qrcode'=> $qrCodePath
+         $presence->update([
+                    'check_out' => $attr['check_out'],  
                     // $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
                     // Storage::disk('public')->put($qrCodePath, $qrCode);
-    
+        ]);
+        $qrCode =QrCode::format('png')->size(200)->generate("Employee :" . $presence->employee->first_name." ".$presence->employee->last_name ."\n". 
+        "Check in :".$presence->check_in."\n".
+        "Check out :".$presence->check_out."\n".
+        "Attendance day :".$presence->attendance_day."\n".
+        "Elevator :".$presence->qrcodes->elevator->name. " at " .$presence->qrcodes->mission);
+        $qrCodePath = URL::to('/').'/storage/QrCodesPresence/' . time()  . '.png';
+        $store = 'QrCodesPresence/' . time()  . '.png';
+        Storage::disk('public')->put($store, $qrCode);
+        $presence->update([
+        'qrcode' => $qrCodePath,
         ]);
         return response([
             'presence' => $presence,

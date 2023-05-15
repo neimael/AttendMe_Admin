@@ -109,8 +109,10 @@ export default {
     getAdminById(){
       const id = this.$route.params.id;
       axios.get(`api/get_admin/${id}`).then((response) => {
-  this.form = response.data
-})
+  this.form = response.data;
+  console.log(response.data);
+  console.log(this.form);
+});
     },
     async updateAdmin() {
   const id = this.$route.params.id;
@@ -163,7 +165,7 @@ OnFileChange(e) {
     this.previewImage = null;
   }
 },
-
+  
     },
    mounted() {
 
