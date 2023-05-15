@@ -45,8 +45,8 @@ const checked = (isChecked, employee) => {
   
   <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Employee">
   <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
-    <img v-if="Selectedemployee.avatar" :src="'/storage/EmployeeAvatar/' + Selectedemployee.avatar" alt="employee" class="w-full h-full object-cover">
-    <img v-else src="/storage/EmployeeAvatar/default.png" alt="default" class="w-full h-full object-cover">
+    <img v-if="Selectedemployee.avatar" :src=" Selectedemployee.avatar" alt="employee" class="w-full h-full object-cover">
+    <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
   </div>
   <div class="mt-4 ml-4">
     <p class="font-bold"><b>Name :</b> {{ Selectedemployee.first_name }} {{ Selectedemployee.last_name }}</p>
@@ -104,7 +104,7 @@ const checked = (isChecked, employee) => {
         <td class="border-b-0 lg:w-6 before:hidden">
           <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
             <img v-if="employee.avatar" :src="employee.avatar" alt="employee" class="w-full h-full object-cover">
-            <img v-else src="/storage/profiles/default.png" alt="default" class="w-full h-full object-cover">
+            <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
             </div>
 </td>
         <td data-label="Name">

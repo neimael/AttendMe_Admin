@@ -86,7 +86,7 @@ import axios from 'axios';
 export default {
   methods: {
     logout() {
-       axios.post('api/logoutAdmin')
+       axios.post('/api/logoutAdmin')
          .then(response => {
              // Logout successful
              console.log('Logged out successfully');

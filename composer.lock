@@ -4098,6 +4098,10 @@
                 "url": "https://github.com/symfony/console.git",
                 "reference": "12288d9f4500f84a4d02254d4aa968b15488476f"
             },
+
+
+
+    
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/console/zipball/12288d9f4500f84a4d02254d4aa968b15488476f",
