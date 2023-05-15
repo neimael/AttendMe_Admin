@@ -270,7 +270,7 @@ fetchInformation() {
     },
     getAssignmentById(){
     const id = this.$route.params.id;
-    axios.get(`api/getAssignment/${id}`).then((response) => {
+    axios.get(`/api/getAssignment/${id}`).then((response) => {
     console.log('Response:', response.data);
     this.form= response.data[0];
    this.selectedElevator = response.data[0].qrcode.elevator.name;

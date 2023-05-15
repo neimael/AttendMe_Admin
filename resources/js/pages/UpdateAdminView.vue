@@ -64,11 +64,11 @@ window.Swal = swal;
                 
                  />
         </FormField>
+        
         <div style="width: 130px; height: 130px; border-radius: 40%; overflow: hidden;">
-           <!--<img v-if="form.avatar" :src="'/storage/AdminAvatar/' + form.avatar" alt="admin" class="w-full h-full object-cover">--> 
-            <!--<img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover">-->
-        <img v-bind:src="previewImage==null ?  '/storage/AdminAvatar/' + form.avatar :previewImage" class="w-full h-full object-cover" />
-          </div>
+        <img v-bind:src="previewImage==null ? form.avatar ? '/storage/AdminAvatar/' + form.avatar :'/user.png' : previewImage" class="w-full h-full object-cover" />
+        </div>
+
         </FormField>
           <template #footer>
             <div class="flex justify-center">
@@ -106,13 +106,16 @@ export default {
   
   props: [],
   methods: {
-    getAdminById(){
+    async getAdminById() {
       const id = this.$route.params.id;
-      axios.get(`api/get_admin/${id}`).then((response) => {
-  this.form = response.data;
-  console.log(response.data);
-  console.log(this.form);
-});
+      try {
+        const response = await axios.get(`/api/get_admin/${id}`);
+        this.form = response.data;
+        console.log("Response Data:", response.data);
+        console.log("Form Data:", this.form);
+      } catch (error) {
+        console.log("Error:", error);
+      }
     },
     async updateAdmin() {
   const id = this.$route.params.id;
@@ -168,8 +171,8 @@ OnFileChange(e) {
   
     },
    mounted() {
-
-this.getAdminById();
+    console.log("Component mounted");
+    this.getAdminById();
 
 },
  
