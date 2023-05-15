@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
-use App\Models\Elevator;
+use App\Models\qrcodes;
 
 
 class Presence extends Model
@@ -26,9 +26,10 @@ class Presence extends Model
     {
         return $this->hasOne(User::class,'id','id_employee');
     }
-    public function elevator()
+    public function qrcodes()
     {
         return $this->hasOne(qrcodes::class,'id_qr_code','id_elevator');
     }
-
 }
+
+
