@@ -33,18 +33,14 @@ import BaseLevel from "@/components/BaseLevel.vue";
     <BaseLevel type="justify-around lg:justify-center">
       <!-- <UserAvatarCurrentUser class="lg:mx-12" /> -->
       <div style="width: 300px; height: 300px; border-radius: 50%; overflow: hidden;" v-if="form">
-            <!-- <img v-if="form.avatar" :src="'/storage/AdminAvatar/' + form.avatar" alt="admin" class="w-full h-full object-cover">
-            <img v-else src="/storage/AdminAvatar/default.png" alt="default" class="w-full h-full object-cover"> -->
-            <img v-bind:src="previewImage==null ?  form.avatar ? '/storage/AdminAvatar/' + form.avatar : '/storage/AdminAvatar/default.png' : previewImage"  class="w-full h-full object-cover" />
-     
+            <img v-bind:src="previewImage==null ?  form.avatar ? '/storage/AdminAvatar/' + form.avatar : '/user.png' : previewImage"  class="w-full h-full object-cover" />
             </div>
       <div class="space-y-3 text-center md:text-left lg:mx-12">
-      
+    
         <h1 class="text-2xl" v-if="form">
           Hello, {{form.first_name }} {{ form.last_name }} <b> </b> !
         </h1>
-        
-       
+          
       </div>
     </BaseLevel>
   </CardBox>

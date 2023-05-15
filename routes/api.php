@@ -34,8 +34,8 @@ Route::get('export_sanitaries_pdf', [SanitaryIssuesController::class, 'exportToP
 Route::get('admins', [AdminController::class, 'index']);
 Route::post('add_admin', [AdminController::class, 'store']);
 Route::delete('delete_admin/{id}', [AdminController::class, 'destroy']);
-Route::get('/get_admin/{id}', [AdminController::class, 'getAdmin']);
-Route::put('/update_admin/{id}', [AdminController::class, 'update']);
+Route::get('get_admin/{id}', [AdminController::class, 'getAdmin']);
+Route::put('update_admin/{id}', [AdminController::class, 'update']);
 Route::get('export_admins', [AdminController::class, 'export']);
 Route::get('export_admins_pdf', [AdminController::class, 'exportToPDF']);
 //Asignement

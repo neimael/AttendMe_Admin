@@ -110,7 +110,7 @@ getCities(){
 },
 getElevatorById(){
     const id = this.$route.params.id;
-    axios.get(`api/get_elevatoor/${id}`).then((response) => {
+    axios.get(`/api/get_elevatoor/${id}`).then((response) => {
         console.log('Response:', response.data);
     this.elevators= response.data[0];
     this.adress = response.data[0].location.adress;

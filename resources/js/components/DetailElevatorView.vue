@@ -126,7 +126,7 @@ export default {
     async getElevator() {
     const id = this.$route.params.id;
   try {
-    const response = await axios.get(`api/get_elevator/${id}`);
+    const response = await axios.get(`/api/get_elevator/${id}`);
     this.elevators = response.data;
     console.log(this.elevators.id_elevator);
    
@@ -145,7 +145,7 @@ export default {
     }).then((result) => {
         if (result.isConfirmed) {
             // User clicked the "Yes" button, so proceed with delete request
-            axios.delete('api/delete_elevator/' + elevatorId)
+            axios.delete('/api/delete_elevator/' + elevatorId)
                 .then(response => {
                     Swal.fire({
                         title: 'Success!',
