@@ -128,10 +128,10 @@ class AuthController extends Controller
     public function addPresence(Request $request)
     {
         $attr = $request->validate([
-            'id_elevator' => 'required|integer|exists:qrcode,id_qr_code',
-            'id_employee' => 'required|integer|exists:users,id',
-            'check_in' => 'required|time',
-            'attendance_day' => 'required|date',
+            'id_elevator' => 'required',
+            'id_employee' => 'required',
+            'check_in' => 'required',
+            'attendance_day' => 'required',
             'selfie' => 'String',
         ]);
 
@@ -151,12 +151,16 @@ class AuthController extends Controller
             'message' => 'Your presence has been saved successfully',
         ]);
     }
-    public function updatePresence(Request $request, $id)
+    public function updatePresence(Request $request)
     {
-        $presence = Presence::with(['employee','qrcodes.elevator'])->findOrFail($id);
+        // $presence = Presence::with(['employee','qrcodes.elevator'])->findOrFail($id);
         $attr = $request->validate([
           'check_out' => 'required|time',
+          'id_presence' => 'required'
         ]);
+
+        $presence = Presence::with(['employee','qrcodes.elevator'])->where('id_presence', $attr['id_presence'])->first();
+
          $presence->update([
                     'check_out' => $attr['check_out'],  
                     // $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
@@ -177,6 +181,28 @@ class AuthController extends Controller
             'presence' => $presence,
             'message' => 'Your presence has been modified successfully',
         ]);
+    }
+    //get presnece_id 
+    public function getIdPresence(Request $request)
+{
+
+    $attr = $request->validate([
+        'id_employee' => 'required',
+        'id_elevator' => 'required',
+        'check_in' => 'required',
+        'attendance_day' => 'required',
+    ]);
+
+
+
+    $presence = Presence::where('id_employee', $attr["id_employee"])
+        ->where('id_elevator', $attr["id_elevator"])
+        ->where('check_in', $attr["check_in"])
+        ->where('attendance_day', $attr["attendance_day"])
+        ->first();
+
+        return response($presence);
+
     }
     //Change Password
     public function changePassword(Request $request)
