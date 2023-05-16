@@ -10,7 +10,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
 use App\Exports\PresenceExport;
-
+use App\Models\AssignmentElevator;
+use DateInterval;
+use DateTime;
 
 class PresenceController extends Controller
 {
@@ -19,7 +21,7 @@ class PresenceController extends Controller
      */
     public function index()
     {
-        $presence=Presence::with(['employee','qrcodes.elevator.location'])->whereDate('created_at', today())
+        $presence=Presence::with(['employee','qrcodes.elevator.location'])->whereDate('attendance_day', today())
         ->get();
         return $presence;
     }
@@ -78,5 +80,79 @@ class PresenceController extends Controller
             return $pdf->download(' presences.pdf');
             
         }
+        //getPresenceByIdEmployee
+        public function getPresenceByIdEmployee($id)
+        {
+            $presence = Presence::with(['employee','qrcodes.elevator.location'])
+                ->where('id_employee', $id)
+                ->get();
+        
+            $assignment = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+                ->where('id_employee', $id)
+                ->get(); 
+        
+            $result = [];
+        
+            foreach ($assignment as $assign) {
+                $days = [];
+                $startDate = new DateTime($assign->start_date); // Convert to DateTime object
+                $endDate = new DateTime($assign->end_date); // Convert to DateTime object
+        
+                $currentDate = clone $startDate; // Create a copy to avoid modifying the original DateTime object
+        
+                while ($currentDate <= $endDate) {
+                    $days[] = $currentDate->format('Y-m-d');
+                    $currentDate->add(new DateInterval('P1D')); // Add one day to the current date
+                }
+    
+                $status = 'Absent';
+        
+                foreach ($days as $day) {
+                    $found = false;
+        
+                    $checkIn = null; // Initialize check-in time
+    $checkOut = null; // Initialize check-out time
+    $selfie=null;
+    $qrcode=null;
+    $elevator=null;
+    
+    foreach ($presence as $p) {
+        if ($p->attendance_day == $day) {
+            $found = true; // Set the flag to true to indicate a match
+            $checkIn = $p->check_in;
+            $checkOut = $p->check_out;
+            $selfie=$p->selfie;
+            $qrcode=$p->qrcode;
+            $elevator=$p->qrcodes->elevator->name ." at ".$p->qrcodes->mission ." in ".$p->qrcodes->elevator->location->ville;
+                            if ($p->check_in == $assign->time_in) {
+                                $status = 'On Time';
+                            } else {
+                                $status = 'Late';
+                            }
+        
+                            break;
+                        }
+                    }
+        
+                    if (!$found) {
+                        $status = 'Absent';
+                    }
+                    $result[] = [
+                        'day' => $day,
+                        'status' => $status,
+                        'employee'=> $assign->employee->first_name ." ". $assign->employee->last_name,
+                        'check_in'=>$checkIn,
+                        'check_out'=>$checkOut,
+                        'selfie'=>$selfie,
+                        'qrcode'=>$qrcode,
+                        'elevator'=>$elevator
+                    ];
+                }
+            }
+        
+            return $result;
+        }
+        
+
  
 }

@@ -70,6 +70,7 @@ Route::get('presences', [PresenceController::class, 'index']);
 Route::get('get_presence/{id}', [PresenceController::class, 'getPresence']);
 Route::get('export_presences', [PresenceController::class, 'export']);
 Route::get('export_presences_pdf', [PresenceController::class, 'exportToPDF']);
+Route::get('get_employee_presence/{id}', [PresenceController::class, 'getPresenceByIdEmployee']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
 Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);

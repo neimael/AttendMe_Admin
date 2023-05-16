@@ -76,6 +76,14 @@ const routes = [
     name: "add-employee",
     component: () => import("../pages/NewEmployeeView.vue"),
   },
+  {
+    meta: {
+      title: "EmployeePresence",
+    },
+    path: "/employee-presence/:id",
+    name: "employee-presence",
+    component: () => import("../pages/EmployeePresence.vue"),
+  },
   //manage elevators
   {
     meta: {
@@ -110,8 +118,6 @@ const routes = [
     name: "update-elevator",
     component: () => import("../pages/UpdateElevatorView.vue"),
   },
-  
-
   //manage attendance
   {
     meta: {
