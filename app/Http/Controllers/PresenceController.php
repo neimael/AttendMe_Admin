@@ -6,6 +6,11 @@ use App\Http\Requests\StorePresenceRequest;
 use App\Http\Resources\PresenceResource;
 use App\Models\Presence;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Options;
+use App\Exports\PresenceExport;
+
 
 class PresenceController extends Controller
 {
@@ -19,13 +24,6 @@ class PresenceController extends Controller
         return $presence;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
     public function getPresence($id)
     {
         $presence = Presence::with(['employee','qrcodes.elevator.location'])->find($id);
@@ -57,36 +55,28 @@ class PresenceController extends Controller
             $presence->save();
             return new PresenceResource($presence);
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Presence $presence)
+    public function export()
     {
-        //
+         $filename = 'presences.xlsx'; // Desired filename
+        $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+    
+        return Excel::download(new PresenceExport(), $filename, $format);
+       
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Presence $presence)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Presence $presence)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Presence $presence)
-    {
-        //
-    }
+    public function exportToPDF()
+        {
+            $employees =Presence::with(['employee','qrcodes.elevator.location'])->get();
+            $options = new Options();
+            $options->set('defaultFont', 'Arial');
+            $pdf = PDF::loadView('exports.presence_pdf', ['employees' => $employees]);
+            $pdf->getDomPDF()->set_option('font_size', 4);
+            $pdf->getDomPDF()->set_option('table_width_auto', false);
+            $pdf->getDomPDF()->set_option('table_width', '100%');
+        
+            $pdf->getDomPDF()->setOptions($options);
+            
+            return $pdf->download(' presences.pdf');
+            
+        }
+ 
 }

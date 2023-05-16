@@ -68,6 +68,8 @@ Route::get('cities', [ElevatorController::class, 'cities']);
 Route::post('add_presence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);
 Route::get('get_presence/{id}', [PresenceController::class, 'getPresence']);
+Route::get('export_presences', [PresenceController::class, 'export']);
+Route::get('export_presences_pdf', [PresenceController::class, 'exportToPDF']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
 Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);

@@ -43,15 +43,19 @@ const checked = (isChecked, presence) => {
 </script>
 
 <template>
-  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Attendance">
+  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Attendance" v-if="Selectedpresence">
   <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
     <img v-if="Selectedpresence.selfie" :src=" Selectedpresence.selfie" alt="employee" class="w-full h-full object-cover">
     <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
   </div>
   <div class="mt-4 ml-4">
-     <p ><b>Elevator :</b>    {{ Selectedpresence.qrcodes.elevator.name}} at  {{ Selectedpresence.qrcodes.mission}} in {{ Selectedpresence.qrcodes.elevator.location.ville}}
- </p>
-    <p><b>Employee :</b>     {{ Selectedpresence.employee.first_name }} {{ Selectedpresence.employee.last_name}}</p>
+    <p>
+  <b>Elevator:</b>
+  {{ this.Selectedpresence.qrcodes?.elevator?.name }} at
+  {{ this.Selectedpresence.qrcodes?.mission }} in
+  {{ this.Selectedpresence.qrcodes?.elevator?.location?.ville }}
+</p>
+    <p><b>Employee :</b>     {{ this.Selectedpresence.employee?.first_name }} {{ this.Selectedpresence.employee?.last_name}}</p> 
     <p><b>CheckIn :</b> {{ Selectedpresence.check_in }}</p> 
     <p><b>CheckOut :</b> {{ Selectedpresence.check_out }}</p>
     <p><b>Attendance Day:</b> {{ Selectedpresence.attendance_day }}</p>
@@ -224,7 +228,7 @@ export default {
       .then(response => {
         this.Selectedpresence = response.data
         console.log(response.data.qrcodes)
-        console.log(this.Selectedpresence)
+        console.log(this.Selectedpresence.qrcodes.elevator.name)
       })
       .catch(error => console.log(error))
     },

@@ -14,7 +14,7 @@ import BaseButton from "@/components/BaseButton.vue";
 import axios from 'axios';
 
 const exportData = () => {
-  axios.get('api/export_attendances', { responseType: 'blob' })
+  axios.get('api/export_presences', { responseType: 'blob' })
     .then(response => {
       handleFileDownload(response.data);
     })
@@ -27,13 +27,13 @@ const handleFileDownload = (fileData) => {
   const url = window.URL.createObjectURL(new Blob([fileData]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'attendances.xlsx');
+  link.setAttribute('download', 'presences.xlsx');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
 const exportToPDF = () => {
-  axios.get('api/export_attendances_pdf', { responseType: 'blob' })
+  axios.get('api/export_presences_pdf', { responseType: 'blob' })
     .then(response => {
       const fileData = response.data;
       handlePDFDownload(fileData);
@@ -46,7 +46,7 @@ const handlePDFDownload = (fileData) => {
   const url = window.URL.createObjectURL(new Blob([fileData]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'attendances.pdf');
+  link.setAttribute('download', 'presences.pdf');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
