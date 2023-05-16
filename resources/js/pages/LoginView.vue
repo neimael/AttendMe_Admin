@@ -63,13 +63,13 @@ const submit = async () => {
   <LayoutGuest>
     <SectionFullScreen v-slot="{ cardClass }" class="custom-section">
       <CardBox :class="[cardClass, 'custom-card']" is-form @submit.prevent="submit" >
-        <FormField label="Username" style="color:white" >
+        <FormField label="Email" style="color:white" >
           <FormControlLogin
             v-model="form.login"
             :icon="mdiAccount"
             name="login"
-            autocomplete="username"
-            placeholder="Enter your username"
+            autocomplete="email"
+            placeholder="Enter your email"
             required
           />
         </FormField>
