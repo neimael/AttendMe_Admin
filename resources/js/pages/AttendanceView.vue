@@ -59,7 +59,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Attendance" main>
+      <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Today's Attendance" main>
        <!-- <router-link to="/add-manual-attendance">
           <BaseButton
             target="_blank"

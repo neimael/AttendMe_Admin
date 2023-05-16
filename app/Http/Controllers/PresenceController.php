@@ -14,8 +14,9 @@ class PresenceController extends Controller
      */
     public function index()
     {
-        $presences=Presence::all();
-        return PresenceResource::collection($presences);
+        $presence=Presence::with(['employee','qrcodes.elevator.location'])->whereDate('created_at', today())
+        ->get();
+        return $presence;
     }
 
     /**
