@@ -26,6 +26,16 @@ class PresenceController extends Controller
     {
         //
     }
+    public function getPresence($id)
+    {
+        $presence = Presence::with(['employee','qrcodes.elevator.location'])->find($id);
+
+        if (!$presence) {
+            return response()->json(['error' => 'presence not found.'], 404);
+        }
+    
+        return response()->json($presence);
+    }
 
     /**
      * Store a newly created resource in storage.

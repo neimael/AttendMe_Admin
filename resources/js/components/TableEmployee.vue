@@ -200,7 +200,7 @@ export default {
     },
     async getEmployee(employee) {
   try {
-    const response = await axios.get(`api/get_employee/${employee.id}`);
+    const response = await axios.get(`/api/get_employee/${employee.id}`);
     this.Selectedemployee = response.data;
     console.log(this.Selectedemployee.cin);
    

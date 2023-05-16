@@ -45,16 +45,20 @@ const checked = (isChecked, presence) => {
 <template>
   <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Attendance">
   <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
-    <img v-if="Selectedemployee.avatar" :src=" Selectedemployee.avatar" alt="employee" class="w-full h-full object-cover">
+    <img v-if="Selectedpresence.selfie" :src=" Selectedpresence.selfie" alt="employee" class="w-full h-full object-cover">
     <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
   </div>
   <div class="mt-4 ml-4">
-    <p class="font-bold"><b>Name :</b> {{ Selectedemployee.first_name }} {{ Selectedemployee.last_name }}</p>
-    <p><b>CIN :</b>  {{ Selectedemployee.cin }}</p>
-    <p><b>Address :</b> {{ Selectedemployee.adress }}</p>
-    <p><b>Birthday :</b> {{ Selectedemployee.birthday }}</p>
-    <p><b>Phone Number:</b> {{ Selectedemployee.phone_number }}</p>
-    <p><b>Email :</b> {{ Selectedemployee.email }}</p>
+     <p ><b>Elevator :</b>    {{ Selectedpresence.qrcodes.elevator.name}} at  {{ Selectedpresence.qrcodes.mission}} in {{ Selectedpresence.qrcodes.elevator.location.ville}}
+ </p>
+    <p><b>Employee :</b>     {{ Selectedpresence.employee.first_name }} {{ Selectedpresence.employee.last_name}}</p>
+    <p><b>CheckIn :</b> {{ Selectedpresence.check_in }}</p> 
+    <p><b>CheckOut :</b> {{ Selectedpresence.check_out }}</p>
+    <p><b>Attendance Day:</b> {{ Selectedpresence.attendance_day }}</p>
+    <div class="w-32 h-32  ml-28 overflow-hidden">
+    <img v-if="Selectedpresence.qrcode" :src=" Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
+    <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
+  </div>
   </div>
 
 </CardBoxModal>
@@ -147,7 +151,7 @@ const checked = (isChecked, presence) => {
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="isModalActive = true ,getPresence(presence)" 
             />
             <a  :href="presence.qrcode" download>
      <BaseButton
@@ -214,6 +218,15 @@ export default {
       
         )
         .catch(error => console.log(error))
+    },
+    async getPresence(presence){
+      await axios.get(`/api/get_presence/${presence.id_presence}`)
+      .then(response => {
+        this.Selectedpresence = response.data
+        console.log(response.data.qrcodes)
+        console.log(this.Selectedpresence)
+      })
+      .catch(error => console.log(error))
     },
   
   },

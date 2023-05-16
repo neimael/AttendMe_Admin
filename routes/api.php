@@ -67,6 +67,7 @@ Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
 Route::post('add_presence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);
+Route::get('get_presence/{id}', [PresenceController::class, 'getPresence']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
 Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);
