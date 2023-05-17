@@ -13,6 +13,10 @@ use App\Exports\PresenceExport;
 use App\Models\AssignmentElevator;
 use DateInterval;
 use DateTime;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class PresenceController extends Controller
 {
@@ -42,20 +46,40 @@ class PresenceController extends Controller
      */
     public function store(StorePresenceRequest $request)
     {
-            $presence=new Presence();
-            $presence->id_employee=$request->id_employee;
-            $presence->id_elevator=$request->id_elevator;
-            $presence->check_in=$request->check_in;
-            $presence->check_out=$request->check_out;
-            $presence->attendance_day=$request->attendance_day;
-            $presence->qrcode=$request->qrcode;
-            if ($request->has('selfie')) {
-                $image = $request->file('selfie');
-                $base64Image = base64_encode(file_get_contents($image->getPathname()));
-                $presence->selfie = $base64Image;
-            }
-            $presence->save();
-            return new PresenceResource($presence);
+        $attr = $request->validate([
+            'id_elevator' => 'required',
+            'id_employee' => 'required',
+            'check_in' => 'required',
+            'attendance_day' => 'required',
+            'check_out'=>'required'
+           
+        ]);
+        $presence = Presence::create([
+            'id_elevator' => $attr['id_elevator'],
+            'id_employee' => $attr['id_employee'],
+            'check_in' => $attr['check_in'],
+            'check_out' => $attr['check_out'],
+            'attendance_day' => $attr['attendance_day'],
+            
+        ]);
+        $presence = Presence::with(['employee','qrcodes.elevator'])->where('id_presence', $presence->id_presence)->first();
+
+            
+        $qrCode =QrCode::format('png')->size(200)->generate("Employee :" . $presence->employee->first_name." ".$presence->employee->last_name ."\n". 
+        "Check in :".$presence->check_in."\n".
+        "Check out :".$presence->check_out."\n".
+        "Attendance day :".$presence->attendance_day."\n".
+        "Elevator :".$presence->qrcodes->elevator->name. " at " .$presence->qrcodes->mission);
+        $qrCodePath = URL::to('/').'/storage/QrCodesPresence/' . time()  . '.png';
+        $store = 'QrCodesPresence/' . time()  . '.png';
+        Storage::disk('public')->put($store, $qrCode);
+        $presence->update([
+        'qrcode' => $qrCodePath,
+        ]);
+        return response([
+            'presence' => $presence,
+            'message' => 'Your presence has been modified successfully',
+        ]);
     }
     public function export()
     {
@@ -131,7 +155,7 @@ class PresenceController extends Controller
             $timeDifference = $checkIin->diff($assignTimeIn);
             $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
             
-            if ($checkIn <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
+            if ($checkIin <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
                                 $status = 'On Time';
                             } else {
                                 $status = 'Late';
@@ -148,6 +172,7 @@ class PresenceController extends Controller
                         'day' => $day,
                         'status' => $status,
                         'employee'=> $assign->employee->first_name ." ". $assign->employee->last_name,
+                        'id_employee'=>$assign->employee->id,
                         'check_in'=>$checkIn,
                         'check_out'=>$checkOut,
                         'selfie'=>$selfie,

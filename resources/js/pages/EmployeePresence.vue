@@ -1,5 +1,5 @@
 <script setup>
-import { mdiPlus, mdiLock, mdiElevatorDown, mdiElevatorPassenger, mdiListBox,mdiBadgeAccount
+import { mdiPlus, mdiLock, mdiElevatorDown, mdiElevatorPassenger, mdiListBox,mdiBadgeAccount,mdiCalendarAccountOutline
 }
 from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
@@ -15,25 +15,28 @@ import EmployeePresenceTable from "@/components/EmployeePresenceTable.vue"
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiBadgeAccount" title="Detail Presence" main>
         <div class="space-x-3">
-        <router-link to="/add-manual-presence">
+          <router-link :to="`/add-manual-presence/${$route.params.id}`">
           <BaseButton
             target="_blank"
-            :icon="mdiListBox"
+            :icon="mdiCalendarAccountOutline"
             label="Add Manual Presence"
             color="contrast"
             rounded-full
             small
+            class="font-bold"
            /> 
           </router-link>
            <router-link to="/employees">
           <BaseButton
-        
+
             target="_blank"
             :icon="mdiListBox"
             label="show Employees"
             color="contrast"
             rounded-full
+            
             small
+            class="font-bold"
            />
         </router-link>
       </div>
