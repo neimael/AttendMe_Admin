@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useMainStore } from "@/stores/main";
-import { mdiEye, mdiTrashCan ,mdiHumanEdit, mdiQrcodeScan} from "@mdi/js";
+import { mdiEye, mdiTrashCan ,mdiHumanEdit, mdiQrcodeScan,mdiTextAccount} from "@mdi/js";
 import CardBoxModal from "@/components/CardBoxModal.vue";
 import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
@@ -156,7 +156,7 @@ const checked = (isChecked, employee) => {
             />
             <BaseButton
               color="warning"
-              :icon="mdiQrcodeScan"
+              :icon="mdiTextAccount"
               small
               :to="'/employee-presence/' +employee.id"
             />

@@ -86,24 +86,25 @@ class PresenceController extends Controller
             $presence = Presence::with(['employee','qrcodes.elevator.location'])
                 ->where('id_employee', $id)
                 ->get();
-        
             $assignment = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
                 ->where('id_employee', $id)
                 ->get(); 
-        
             $result = [];
-        
+              // Sort assignments by start date in ascending order
+    $assignment = $assignment->sortBy('start_date');
             foreach ($assignment as $assign) {
                 $days = [];
-                $startDate = new DateTime($assign->start_date); // Convert to DateTime object
-                $endDate = new DateTime($assign->end_date); // Convert to DateTime object
-        
-                $currentDate = clone $startDate; // Create a copy to avoid modifying the original DateTime object
-        
-                while ($currentDate <= $endDate) {
+                $startDate = new DateTime($assign->start_date);
+                $endDate = new DateTime(min($assign->end_date, date('Y-m-d')));
+                $currentDate = clone $startDate;
+                
+                $today = new DateTime(); // Get the current date
+                
+                while ($currentDate <= $endDate && $currentDate <= $today) {
                     $days[] = $currentDate->format('Y-m-d');
-                    $currentDate->add(new DateInterval('P1D')); // Add one day to the current date
+                    $currentDate->add(new DateInterval('P1D'));
                 }
+                
     
                 $status = 'Absent';
         
@@ -124,7 +125,13 @@ class PresenceController extends Controller
             $selfie=$p->selfie;
             $qrcode=$p->qrcode;
             $elevator=$p->qrcodes->elevator->name ." at ".$p->qrcodes->mission ." in ".$p->qrcodes->elevator->location->ville;
-                            if ($p->check_in == $assign->time_in) {
+            $assignTimeIn = DateTime::createFromFormat('H:i:s', $assign->time_in);
+            $checkIin = DateTime::createFromFormat('H:i:s', $p->check_in);
+            
+            $timeDifference = $checkIin->diff($assignTimeIn);
+            $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
+            
+            if ($checkIn <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
                                 $status = 'On Time';
                             } else {
                                 $status = 'Late';

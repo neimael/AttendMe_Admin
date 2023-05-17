@@ -98,14 +98,9 @@ defineProps({
         
       </td> 
         <td class="before:hidden lg:w-1 ">
-          <BaseButtons type="justify-between " no-wrap>
-            <BaseButton
-              color="info"
-              :icon="mdiEye"
-              small
-              @click="isModalActive = true ,getPresence(presence)" 
-            />
-            <a  :href="presence.qrcode" download>
+          <BaseButtons type="justify-between " no-wrap v-if="presence.qrcode">
+          
+            <a  :href="presence.qrcode" download  v-if="presence.qrcode">
      <BaseButton
               color="success"
               :icon="mdiDownload"
@@ -113,7 +108,7 @@ defineProps({
             
             />
   </a> 
-             <a class="ml-3 "  :href="presence.qrcode" target="_blank">
+             <a class="ml-3 "  :href="presence.qrcode" target="_blank" v-if="presence.qrcode">
      <BaseButton
               color="warning"
               :icon="mdiQrcodeScan"
@@ -171,6 +166,7 @@ export default {
           console.error(error);
         });
     },
+
   },
   computed: {
     paginatedPresences: function () {

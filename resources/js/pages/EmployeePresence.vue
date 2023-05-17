@@ -1,5 +1,5 @@
 <script setup>
-import { mdiPlus, mdiLock, mdiElevatorDown, mdiElevatorPassenger, mdiListBox,
+import { mdiPlus, mdiLock, mdiElevatorDown, mdiElevatorPassenger, mdiListBox,mdiBadgeAccount
 }
 from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
@@ -13,9 +13,21 @@ import EmployeePresenceTable from "@/components/EmployeePresenceTable.vue"
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiElevatorPassenger" title="Detail Presence" main>
-        <router-link to="/employees">
+      <SectionTitleLineWithButton :icon="mdiBadgeAccount" title="Detail Presence" main>
+        <div class="space-x-3">
+        <router-link to="/add-manual-presence">
           <BaseButton
+            target="_blank"
+            :icon="mdiListBox"
+            label="Add Manual Presence"
+            color="contrast"
+            rounded-full
+            small
+           /> 
+          </router-link>
+           <router-link to="/employees">
+          <BaseButton
+        
             target="_blank"
             :icon="mdiListBox"
             label="show Employees"
@@ -24,6 +36,7 @@ import EmployeePresenceTable from "@/components/EmployeePresenceTable.vue"
             small
            />
         </router-link>
+      </div>
       </SectionTitleLineWithButton>
       <CardBox has-table>
      <EmployeePresenceTable />
