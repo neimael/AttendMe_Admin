@@ -115,7 +115,7 @@ class PresenceController extends Controller
                 ->get(); 
             $result = [];
               // Sort assignments by start date in ascending order
-    $assignment = $assignment->sortBy('start_date');
+            $assignment = $assignment->sortBy('start_date');
             foreach ($assignment as $assign) {
                 $days = [];
                 $startDate = new DateTime($assign->start_date);
@@ -140,7 +140,6 @@ class PresenceController extends Controller
     $selfie=null;
     $qrcode=null;
     $elevator=null;
-    
     foreach ($presence as $p) {
         if ($p->attendance_day == $day) {
             $found = true; // Set the flag to true to indicate a match
@@ -183,6 +182,21 @@ class PresenceController extends Controller
             }
         
             return $result;
+        }
+        public function singleexportToPDF($id)
+        {
+            $employees =$this->getPresenceByIdEmployee($id);
+            $options = new Options();
+            $options->set('defaultFont', 'Arial');
+            $pdf = PDF::loadView('exports.presence-employee_pdf', ['employees' => $employees]);
+            $pdf->getDomPDF()->set_option('font_size', 4);
+            $pdf->getDomPDF()->set_option('table_width_auto', false);
+            $pdf->getDomPDF()->set_option('table_width', '100%');
+        
+            $pdf->getDomPDF()->setOptions($options);
+            
+            return $pdf->download('presences.pdf');
+            
         }
         
 

@@ -280,6 +280,22 @@ fetchInformation() {
         data.append('end_date', this.form.end_date);
         data.append('id_elevator', this.form.id_elevator);
         data.append('id_employee', this.form.id_employee);
+        if (this.form.time_in >= this.form.time_out) {
+    swal({
+      text: "Time-in time must be before time-out time.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return; // Exit the method if the condition is not met
+  }else if (this.form.time_in == this.form.time_out) {
+    swal({
+        text: "Time-in time must be before time-out time.",
+        icon: "error",
+        closeOnClickOutside: false,
+        });
+        return; // Exit the method if the condition is not met
+    }
+    else{
       // Make the API call
       axios.post('/api/addAsignment',this.form).then(() => {
           swal({
@@ -290,7 +306,7 @@ fetchInformation() {
           this.$router.go();
         }).catch(error => {
           console.log(error);
-        });
+        });}
       },
 },
 mounted() {

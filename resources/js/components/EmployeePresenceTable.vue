@@ -92,9 +92,9 @@ defineProps({
             >{{ presence.day }}</small>
         </td>
          <td data-label="Status">
-        <div v-if="presence.status == 'Absent'" class="badge badge-error">Absent</div>
-        <div v-if="presence.status == 'On Time'" class="badge badge-success">On Time</div>
-        <div v-if="presence.status == 'Late'" class="badge badge-warning">Late</div>
+        <div v-if="presence.status == 'Absent'" class="badge badge-error font-bold text-white">Absent</div>
+        <div v-if="presence.status == 'On Time'" class="badge badge-success font-bold text-white">On Time</div>
+        <div v-if="presence.status == 'Late'" class="badge badge-warning font-bold text-white">Late</div>
         
       </td> 
         <td class="before:hidden lg:w-1 ">
