@@ -212,6 +212,7 @@ public function exportToPDF()
             'phone_number' => $admin->phone_number,
             'avatar' => $admin->avatar,
             'password' => $admin->password,
+            'id_admin' => $admin->id_admin,
         ];
     
         return response(['admin' => $adminInfo], 200);
