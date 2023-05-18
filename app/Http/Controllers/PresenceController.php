@@ -192,6 +192,90 @@ class PresenceController extends Controller
             return Excel::download(new SinglePresenceExport($id), $filename, $format);
            
         }
+
+        // fetch presence //getPresenceByIdEmployee
+        public function getPresenceByIdEmp(Request $request)
+        {
+            $attr = $request->validate([
+                'id_employee' => 'required|integer|exists:users,id',
+            ]);
+            $presence = Presence::with(['employee','qrcodes.elevator.location'])
+                ->where('id_employee', $attr['id_employee'])
+                ->get();
+            $assignment = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+                ->where('id_employee', $attr['id_employee'])
+                ->get(); 
+            $result = [];
+              // Sort assignments by start date in ascending order
+            $assignment = $assignment->sortBy('start_date');
+            foreach ($assignment as $assign) {
+                $days = [];
+                $startDate = new DateTime($assign->start_date);
+                $endDate = new DateTime(min($assign->end_date, date('Y-m-d')));
+                $currentDate = clone $startDate;
+                
+                $today = new DateTime(); // Get the current date
+                
+                while ($currentDate <= $endDate && $currentDate <= $today) {
+                    $days[] = $currentDate->format('Y-m-d');
+                    $currentDate->add(new DateInterval('P1D'));
+                }
+                
+    
+                $status = 'Absent';
+        
+                foreach ($days as $day) {
+                    $found = false;
+        
+                    $checkIn = null; // Initialize check-in time
+    $checkOut = null; // Initialize check-out time
+    $selfie=null;
+    $qrcode=null;
+    $elevator=null;
+    foreach ($presence as $p) {
+        if ($p->attendance_day == $day) {
+            $found = true; // Set the flag to true to indicate a match
+            $checkIn = $p->check_in;
+            $checkOut = $p->check_out;
+            $selfie=$p->selfie;
+            $qrcode=$p->qrcode;
+            $elevator=$p->qrcodes->elevator->name ." at ".$p->qrcodes->mission ." in ".$p->qrcodes->elevator->location->ville;
+            $assignTimeIn = DateTime::createFromFormat('H:i:s', $assign->time_in);
+            $checkIin = DateTime::createFromFormat('H:i:s', $p->check_in);
+            
+            $timeDifference = $checkIin->diff($assignTimeIn);
+            $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
+            
+            if ($checkIin <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
+                                $status = 'On Time';
+                            } else {
+                                $status = 'Late';
+                            }
+        
+                            break;
+                        }
+                    }
+        
+                    if (!$found) {
+                        $status = 'Absent';
+                    }
+                    $result[] = [
+                        'day' => $day,
+                        'status' => $status,
+                        'employee'=> $assign->employee->first_name ." ". $assign->employee->last_name,
+                        'id_employee'=>$assign->employee->id,
+                        'check_in'=>$checkIn,
+                        'check_out'=>$checkOut,
+                        'selfie'=>$selfie,
+                        'qrcode'=>$qrcode,
+                        'elevator'=>$elevator
+                    ];
+                }
+            }
+        
+            return $result;
+        }
+
         public function singleexportToPDF($id)
         {
             $employees =$this->getPresenceByIdEmployee($id);

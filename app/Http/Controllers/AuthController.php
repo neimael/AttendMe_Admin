@@ -431,6 +431,18 @@ public function getPresence(Request $request) {
     }
 }
 
+public function getPresenceById(Request $request)
+{
+    $attr = $request->validate([
+        'id_presence' => 'required',
+    ]);
+    
+    $presence = Presence::where('id_presence', $attr['id_presence'])->first();
+
+    return response($presence);
+
+}
+
     
 
 
