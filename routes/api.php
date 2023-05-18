@@ -115,6 +115,7 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/addPresence',[AuthController::class, 'addPresence']);
     Route::post('/getIdPresence',[AuthController::class,'getIdPresence']);    
     Route::put('/updatePresence',[AuthController::class,'updatePresence']);    
+    Route::post('/getPresenceByIdEmp',[PresenceController::class,'getPresenceByIdEmp']);    
 
 });
 
