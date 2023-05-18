@@ -144,6 +144,7 @@ class AuthController extends Controller
             'attendance_day' => $attr['attendance_day'],
             'selfie' =>  $image,
         ]);
+        
 
         return response([
             'presence' => $presence,

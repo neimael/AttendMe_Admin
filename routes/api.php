@@ -65,8 +65,13 @@ Route::get('export_elevators_pdf', [ElevatorController::class, 'exportToPDF']);
 //Location
 Route::get('cities', [ElevatorController::class, 'cities']);
 //Presence
-Route::post('add_presence', [PresenceController::class, 'store']);
+Route::post('addManualPresence', [PresenceController::class, 'store']);
 Route::get('presences', [PresenceController::class, 'index']);
+Route::get('get_presence/{id}', [PresenceController::class, 'getPresence']);
+Route::get('export_presences', [PresenceController::class, 'export']);
+Route::get('export_presences_pdf', [PresenceController::class, 'exportToPDF']);
+Route::get('get_employee_presence/{id}', [PresenceController::class, 'getPresenceByIdEmployee']);
+Route::get('export_employee_presence_pdf/{id}', [PresenceController::class, 'singleexportToPDF']);
 //PresenceRegulation
 Route::post('add_presence_regulation', [PresenceRegulationController::class, 'store']);
 Route::get('presence_regulations', [PresenceRegulationsController::class, 'index']);
@@ -80,8 +85,6 @@ Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
 Route::put('update_profile/{id}', [AdminController::class, 'updateProfile']);
 Route::put('update_password/{id}', [AdminController::class, 'updatePassword']);
 Route::middleware('auth:admin')->get('/getAuthenticatedAdmin', [AdminController::class, 'getAuthenticatedAdmin']);
-
-
 //login admin
 Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
 //Auth

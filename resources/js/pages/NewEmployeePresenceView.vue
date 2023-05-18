@@ -1,9 +1,7 @@
 <script setup>
-
-import {mdiPlus, mdiLock,mdiOrderBoolAscendingVariant} from "@mdi/js";
+import {mdiPlus, mdiLock,mdiOrderBoolAscendingVariant,mdiTextAccount} from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
-
 import FormField from "@/components/FormField.vue";
 import FormControl from "@/components/FormControl.vue";
 import BaseDivider from "@/components/BaseDivider.vue";
@@ -22,24 +20,24 @@ window.Swal = swal;
     <SectionMain>
       <SectionTitleLineWithButton
         :icon="mdiPlus"
-        title="New Assignment"
+        title="New Manual Presence"
         main
       >
-        <router-link to="/assignments">
-          <BaseButton
-
+        <router-link :to="`/employee-presence/${$route.params.id}`">
+            <BaseButton
             target="_blank"
-            :icon="mdiOrderBoolAscendingVariant"
-            label="Show Assignment"
+            :icon="mdiTextAccount"
+            label="Employee's Presence"
             color="contrast"
             rounded-full
+class="font-bold"
             small
           />
         </router-link>
       </SectionTitleLineWithButton>
       <div class="container w-20/20 mx-auto">
         <CardBox form @submit.prevent="submit">
-          <h2 class="text-2xl font-semibold text-center text-blue-300">Elevator Section</h2>
+          <h2 class="text-2xl font-semibold text-center text-blue-300">Employee Section</h2>
           <br>
             <FormField>
           <FormField label="Elevator">
@@ -69,35 +67,33 @@ window.Swal = swal;
            
             <h2 class="text-2xl font-semibold text-center text-blue-300">Employee Section</h2>
           <br>
-          <FormField   label="Employee CIN :">
-            <FormControl type="name" v-model="selectedEmployee"  :options="employees" required/>
-          </FormField> 
+       
         <FormField v-if="informationEmp">
           <FormField>
           <FormField label="First Name">
-            <FormControl type="name" v-model="informationEmp.employee.first_name" required/>
+            <FormControl type="name" v-model="informationEmp.first_name" required/>
           </FormField>
             
           <FormField label="Last Name">
-            <FormControl type="name" v-model="informationEmp.employee.last_name" required/>
+            <FormControl type="name" v-model="informationEmp.last_name" required/>
           </FormField>
         </FormField> 
         <FormField>
           <FormField label="Email">
-            <FormControl type="name" v-model="informationEmp.employee.email" required/>
+            <FormControl type="name" v-model="informationEmp.email" required/>
           </FormField>
        
        
           <FormField label="Phone Number">
-            <FormControl type="name" v-model="informationEmp.employee.phone_number" required/>
+            <FormControl type="name" v-model="informationEmp.phone_number" required/>
           </FormField>
           </FormField>
           <FormField>
           <FormField label="CIN">
-            <FormControl type="name" v-model="informationEmp.employee.cin" required/>
+            <FormControl type="name" v-model="informationEmp.cin" required/>
           </FormField>
           <FormField label="Adress">
-            <FormControl type="name" v-model="informationEmp.employee.adress" required/>
+            <FormControl type="name" v-model="informationEmp.adress" required/>
           </FormField>
        </FormField>
        </FormField>
@@ -131,22 +127,20 @@ window.Swal = swal;
        </FormField>
        </FormField>
        <BaseDivider/>
-       <h2 class="text-2xl font-semibold text-center text-blue-300">Assignment Section</h2>
+       <h2 class="text-2xl font-semibold text-center text-blue-300">Presence Section</h2>
           <br>
        <FormField>
-          <FormField label="Start Day">
-            <FormControl type="date" v-model="this.form.start_date" required/>
+          <FormField label="Attendance day Day">
+            <FormControl type="date" v-model="this.form.attendance_day" required/>
           </FormField>
-          <FormField label="End Date">
-            <FormControl type="date" v-model="this.form.end_date" required/>
-          </FormField>
+        
        </FormField>
        <FormField>
           <FormField label="Check In">
-            <FormControl type="time" v-model="this.form.time_in" required/>
+            <FormControl type="time" v-model="this.form.check_in" required/>
           </FormField>
           <FormField label="Check Out">
-            <FormControl type="time" v-model="this.form.time_out" required/>
+            <FormControl type="time" v-model="this.form.check_out" required/>
           </FormField>
        </FormField>
 
@@ -154,8 +148,8 @@ window.Swal = swal;
           <template #footer>
              <div class="flex justify-center">
             <BaseButtons > 
-                <BaseButton  type="reset" color="info" outline label="Reset"/>
-              <BaseButton  type="submit" color="info" label="Add" @click="addAssignments"/>
+               
+              <BaseButton  type="submit" color="info" label="Add Presence" @click="addPresence"/>
              
             </BaseButtons>
         </div>
@@ -178,13 +172,10 @@ export default {
       form: new Form({
         id_elevator: "",
         id_employee: "",
-        time_in: "",
-        time_out: "",
-        start_date: "",
-        end_date: "",
-     
+        check_in: "",
+        check_out: "",
+        attendance_day: "",
       }),
-   
       missions: [],
       elevators: [],
       employees:[],
@@ -229,15 +220,6 @@ getElevators(){
         console.log(error);
       });
 },
-getEmployees(){
-  axios.get('/api/getEmployees')
-      .then(response => {
-        this.employees = response.data.map(item => item.name);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-},
 fetchInformation() {
       // Make the API call
       axios.post('/api/information', {
@@ -255,10 +237,8 @@ fetchInformation() {
     },
     fetchInformation2() {
       // Make the API call
-      axios.post('/api/informationEmployee', {
-        cin: this.selectedEmployee,
-      
-      })
+      const id = this.$route.params.id;
+      axios.get(`/api/get_employee/${id}`)
         .then(response => {
           // Handle the API response
           this.informationEmp= response.data;
@@ -267,29 +247,28 @@ fetchInformation() {
           // Handle errors
           console.error(error);
         });
-    },
-    addAssignments() {
+    }, 
+    addPresence() {
       this.form.id_elevator= this.information.qrcode.id_qr_code;
-      this.form.id_employee= this.informationEmp.employee.id;
+      this.form.id_employee= this.informationEmp.id;
       console.log(this.form.id_elevator);
       console.log(this.form.id_employee);
       let data = new FormData();
-        data.append('time_in', this.form.time_in);
-        data.append('time_out', this.form.time_out);
-        data.append('start_date', this.form.start_date);
-        data.append('end_date', this.form.end_date);
+        data.append('check_in', this.form.check_in);
+        data.append('check_out', this.form.check_out);
+        data.append('attendance_day', this.form.attendance_day);
         data.append('id_elevator', this.form.id_elevator);
         data.append('id_employee', this.form.id_employee);
-        if (this.form.time_in >= this.form.time_out) {
+        if (this.form.check_in >= this.form.check_out) {
     swal({
-      text: "Time-in time must be before time-out time.",
+      text: "Check-in time must be before check-out time.",
       icon: "error",
       closeOnClickOutside: false,
     });
     return; // Exit the method if the condition is not met
-  }else if (this.form.time_in == this.form.time_out) {
+  }else if (this.form.check_in == this.form.check_out) {
     swal({
-        text: "Time-in time must be before time-out time.",
+        text: "Check-in time must be before check-out time.",
         icon: "error",
         closeOnClickOutside: false,
         });
@@ -297,22 +276,23 @@ fetchInformation() {
     }
     else{
       // Make the API call
-      axios.post('/api/addAsignment',this.form).then(() => {
+      axios.post('/api/addManualPresence',this.form).then(() => {
           swal({
-            text: "Assigment Added Successfully!",
+            text: "Presence Added Successfully!",
             icon: "success",
             closeOnClickOutside: false,
           });
           this.$router.go();
         }).catch(error => {
           console.log(error);
-        });}
+        });
+    }
       },
 },
 mounted() {
     this.getMissions();
     this.getElevators();
-    this.getEmployees();
+    this.fetchInformation2()
   },
 
 }

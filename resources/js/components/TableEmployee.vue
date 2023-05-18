@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useMainStore } from "@/stores/main";
-import { mdiEye, mdiTrashCan ,mdiHumanEdit} from "@mdi/js";
+import { mdiEye, mdiTrashCan ,mdiHumanEdit, mdiQrcodeScan,mdiTextAccount} from "@mdi/js";
 import CardBoxModal from "@/components/CardBoxModal.vue";
 import TableCheckboxCell from "@/components/TableCheckboxCell.vue";
 import BaseLevel from "@/components/BaseLevel.vue";
@@ -154,6 +154,13 @@ const checked = (isChecked, employee) => {
               small
               @click="confirmDelete(employee.id)"
             />
+            <BaseButton
+              color="warning"
+              :icon="mdiTextAccount"
+              small
+              :to="'/employee-presence/' +employee.id"
+            />
+
           </BaseButtons>
         </td>
       </tr>
@@ -200,7 +207,7 @@ export default {
     },
     async getEmployee(employee) {
   try {
-    const response = await axios.get(`api/get_employee/${employee.id}`);
+    const response = await axios.get(`/api/get_employee/${employee.id}`);
     this.Selectedemployee = response.data;
     console.log(this.Selectedemployee.cin);
    
@@ -271,3 +278,8 @@ showAllInfo() {
   }
 };
 </script>
+<style>
+.yellow-button {
+  background-color: yellow;
+}
+</style>

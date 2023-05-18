@@ -1,20 +1,21 @@
 <script setup>
-import { mdiPlus, mdiLock,mdiElevatorPassengerOutline,mdiListBoxOutline
+import { mdiPlus, mdiLock, mdiElevatorDown, mdiElevatorPassenger, mdiListBox,mdiBadgeAccount,mdiCalendarAccountOutline
 }
-  from "@mdi/js";
+from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
-
-import TableAttendance from "@/components/TableAttendance.vue";
-
-
+import DetailElevatorView from "@/components/DetailElevatorView.vue";
 import CardBox from "@/components/CardBox.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import BaseButton from "@/components/BaseButton.vue";
+import EmployeePresenceTable from "@/components/EmployeePresenceTable.vue";
 import axios from 'axios';
+import { getCurrentInstance } from 'vue';
+
+const instance = getCurrentInstance();
 
 const exportData = () => {
-  axios.get('api/export_presences', { responseType: 'blob' })
+  axios.get('api/export_employee_presence', { responseType: 'blob' })
     .then(response => {
       handleFileDownload(response.data);
     })
@@ -33,7 +34,8 @@ const handleFileDownload = (fileData) => {
   document.body.removeChild(link);
 };
 const exportToPDF = () => {
-  axios.get('api/export_presences_pdf', { responseType: 'blob' })
+  const id = instance.proxy.$route.params.id;
+  axios.get(`/api/export_employee_presence_pdf/${id}`, { responseType: 'blob' })
     .then(response => {
       const fileData = response.data;
       handlePDFDownload(fileData);
@@ -46,31 +48,19 @@ const handlePDFDownload = (fileData) => {
   const url = window.URL.createObjectURL(new Blob([fileData]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'presences.pdf');
+  link.setAttribute('download','presences.pdf');
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 };
 
-
-
 </script>
-
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Today's Attendance" main>
-       <!-- <router-link to="/add-manual-attendance">
-          <BaseButton
-            target="_blank"
-            :icon="mdiElevatorPassengerOutline"
-            label="Add new elevator"
-            color="contrast"
-            rounded-full
-            small
-          />
-        </router-link>-->
-        <div class="dropdown dropdown-bottom ml-2">
+      <SectionTitleLineWithButton :icon="mdiBadgeAccount" title="Detail Presence" main>
+        <div class="space-x-3">
+          <div class="dropdown dropdown-bottom ml-2">
   <label tabindex="0" class="btn m-1 text-white ml-auto">  <i class="fas fa-download mr-1"></i>Export</label>
   <ul tabindex="0" class="dropdown-content menu p-1 shadow bg-white rounded-box w-40">
     <li class="flex items-center px-0">
@@ -82,11 +72,35 @@ const handlePDFDownload = (fileData) => {
     </li>
   </ul>
 </div>
-      </SectionTitleLineWithButton>
+          <router-link :to="`/add-manual-presence/${$route.params.id}`">
+          <BaseButton
+            target="_blank"
+            :icon="mdiCalendarAccountOutline"
+            label="Add Manual Presence"
+            color="contrast"
+            rounded-full
+            small
+            class="font-bold"
+           /> 
+          </router-link>
+           <router-link to="/employees">
+          <BaseButton
 
+            target="_blank"
+            :icon="mdiListBox"
+            label="show Employees"
+            color="contrast"
+            rounded-full
+            
+            small
+            class="font-bold"
+           />
+        </router-link>
+      </div>
+      </SectionTitleLineWithButton>
       <CardBox has-table>
-        <TableAttendance />
-      </CardBox>
-    </SectionMain>
+     <EmployeePresenceTable />
+     </CardBox>
+     </SectionMain>
   </LayoutAuthenticated>
 </template>
