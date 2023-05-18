@@ -20,15 +20,11 @@
     <table>
         <thead>
             <tr> 
-            
                 <th>Elevator</th>
                 <th>CheckIn</th>
                 <th>CheckOut</th>
                 <th>Attendance Day</th>
                 <th>Status</th>
-                
-                
-
             </tr>
         </thead>
         <tbody>
@@ -49,6 +45,8 @@
                 @endif">
                 {{ $employee['status'] }}
             </td>
+          
+
             
 
             </tr>

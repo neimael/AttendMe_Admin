@@ -199,6 +199,14 @@ class PresenceController extends Controller
             
         }
         
+        public function singleexport()
+        {
+             $filename = 'presences.xlsx'; // Desired filename
+            $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+    
+            return Excel::download(new PresenceExport(), $filename, $format);
+           
+        }
 
  
 }
