@@ -82,7 +82,6 @@ const handlePDFDownload = (fileData) => {
           />
         </router-link>
       </SectionTitleLineWithButton>
-
       <CardBox has-table>
         <TableAsignement />
       </CardBox>

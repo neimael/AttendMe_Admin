@@ -17,6 +17,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use App\Exports\SinglePresenceExport; 
 
 class PresenceController extends Controller
 {
@@ -183,6 +184,14 @@ class PresenceController extends Controller
         
             return $result;
         }
+        public function singleexport($id)
+        {
+             $filename = 'presences.xlsx'; // Desired filename
+             $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+    
+            return Excel::download(new SinglePresenceExport($id), $filename, $format);
+           
+        }
         public function singleexportToPDF($id)
         {
             $employees =$this->getPresenceByIdEmployee($id);
@@ -199,14 +208,7 @@ class PresenceController extends Controller
             
         }
         
-        public function singleexport()
-        {
-             $filename = 'presences.xlsx'; // Desired filename
-            $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
-    
-            return Excel::download(new PresenceExport(), $filename, $format);
-           
-        }
+       
 
  
 }
