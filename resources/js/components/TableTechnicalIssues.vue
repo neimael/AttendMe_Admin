@@ -45,6 +45,7 @@ const checked = (isChecked, regulation) => {
  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" >
  
     <h1 class="text-xl ml-24"><b>Detail Regulation</b>  </h1> <div class="mt-4 ml-24">
+    <p><b>Employee's name :</b> <span style="padding-left: 10px">{{ Selectedregulation.employee?.first_name }} {{ Selectedregulation.employee?.last_name }}</span></p>
     <p><b>Check In : </b> <span style="padding-left: 10px">{{ Selectedregulation.check_in }}</span></p>
     <p><b>Check Out :</b> <span style="padding-left: 10px">{{ Selectedregulation.check_out }}</span></p>
     <!-- <p><b>Employee's name : </b> {{ Selectedregulation.employee.first_name }} {{ Selectedregulation.employee.last_name }}</p>
@@ -237,7 +238,7 @@ RejectRegulation(regulationId){
 
   async getRegulation(regulation) {
   try {
-    const response = await axios.get(`api/get_presence_regulation/${regulation.id_presence_regulation}`);
+    const response = await axios.get(`/api/get_presence_regulation/${regulation.id_presence_regulation}`);
     this.Selectedregulation = response.data;
   } catch (error) {
     console.log(error);

@@ -51,6 +51,7 @@ const routes = [
     name: "update-admin",
     component: () => import("../pages/UpdateAdminView.vue"),
   },
+  //manage employees
   {
     meta: {
       title: "Employees",
@@ -76,6 +77,23 @@ const routes = [
     name: "add-employee",
     component: () => import("../pages/NewEmployeeView.vue"),
   },
+  {
+    meta: {
+      title: "EmployeePresence",
+    },
+    path: "/employee-presence/:id",
+    name: "employee-presence",
+    component: () => import("../pages/EmployeePresence.vue"),
+  },
+  {
+    meta: {
+      title: "AddManualPresence",
+    },
+    path: "/add-manual-presence/:id",
+    name: "add-manual-presence",
+    component: () => import("../pages/NewEmployeePresenceView.vue"),
+  },
+
   //manage elevators
   {
     meta: {
@@ -110,7 +128,6 @@ const routes = [
     name: "update-elevator",
     component: () => import("../pages/UpdateElevatorView.vue"),
   },
-  
 
   //manage attendance
   {
@@ -121,6 +138,7 @@ const routes = [
     name: "attendances",
     component: () => import("../pages/AttendanceView.vue"),
   },
+
   //manage Asignements
   {
     meta: {
@@ -173,8 +191,6 @@ const routes = [
     component: () => import("../pages/ProfileView.vue"),
   },
  
- 
-  
   {
     meta: {
       title: "Error",
