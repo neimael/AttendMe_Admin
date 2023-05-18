@@ -170,17 +170,44 @@ export default {
       currentPage: 0,
       pageSize: 10,
       ADMIN_API_BASE_URL: "api/admins",
-      loggedInAdminId: 1 // set to the ID of the currently logged-in admin
+      loggedInAdminId: '' // set to the ID of the currently logged-in admin
     };
 
   },
   methods: {
+    getAdmin1(csrfToken) {
+      // Retrieve the token from the session
+      this.token = "{{ session('admin_token') }}";
+
+      if (!this.token) {
+        // Handle the case when the token is missing
+        console.log("Authentication token is missing.");
+        return;
+      }
+
+      axios
+        .get("api/getAuthenticatedAdmin", {
+          headers: {
+            "X-CSRF-TOKEN": csrfToken,
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          // Handle the response data
+          this.loggedInAdminId = response.data.admin.id_admin;
+          
+        
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     async getAdmins() {
       await axios.get(this.ADMIN_API_BASE_URL)
         .then(response => this.admins = response.data)
         .catch(error => console.log(error))
     },
-    async getAdmin(admin) {
+  async getAdmin(admin) {
   try {
     const response = await axios.get(`api/get_admin/${admin.id_admin}`);
     this.Selectedadmin = response.data;
@@ -239,6 +266,8 @@ export default {
   },
   mounted() {
     this.getAdmins();
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    this.getAdmin1(csrfToken);
   }
 };
 </script>
