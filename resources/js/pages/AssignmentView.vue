@@ -71,11 +71,11 @@ const handlePDFDownload = (fileData) => {
     </li>
   </ul>
 </div>
-        <router-link to="/add-assignments">
+        <router-link to="/add-assignment">
           <BaseButton
             target="_blank"
             :icon="mdiPlus"
-            label="Add new assignments"
+            label="Add new assignment"
             color="contrast"
             rounded-full
             small
