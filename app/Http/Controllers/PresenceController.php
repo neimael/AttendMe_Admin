@@ -208,7 +208,15 @@ class PresenceController extends Controller
                 $today = new DateTime(); // Get the current date
                 
                 while ($currentDate <= $endDate && $currentDate <= $today) {
-                    $days[] = $currentDate->format('Y-m-d');
+                    $currentDay = $currentDate->format('Y-m-d');
+                    
+                    // Skip the current day
+                    if ($currentDay == date('Y-m-d')) {
+                        $currentDate->add(new DateInterval('P1D'));
+                        continue;
+                    }
+                    
+                    $days[] = $currentDay;
                     $currentDate->add(new DateInterval('P1D'));
                 }
                 
@@ -223,6 +231,10 @@ class PresenceController extends Controller
     $selfie=null;
     $qrcode=null;
     $elevator=null;
+    $longitude=null;
+    $latitude=null;
+    $id_presence=null;
+    $lateTime=null;
     foreach ($presence as $p) {
         if ($p->attendance_day == $day) {
             $found = true; // Set the flag to true to indicate a match
@@ -233,9 +245,13 @@ class PresenceController extends Controller
             $elevator=$p->qrcodes->elevator->name ." at ".$p->qrcodes->mission ." in ".$p->qrcodes->elevator->location->ville;
             $assignTimeIn = DateTime::createFromFormat('H:i:s', $assign->time_in);
             $checkIin = DateTime::createFromFormat('H:i:s', $p->check_in);
-            
+            $longitude=$p->qrcodes->elevator->location->longitude;
+            $latitude=$p->qrcodes->elevator->location->latitude;
+            $id_presence=$p->id_presence;
             $timeDifference = $checkIin->diff($assignTimeIn);
             $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
+            $lateTime=$timeDifferenceMinutes-15;
+
             
             if ($checkIin <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
                                 $status = 'On Time';
@@ -259,7 +275,11 @@ class PresenceController extends Controller
                         'check_out'=>$checkOut,
                         'selfie'=>$selfie,
                         'qrcode'=>$qrcode,
-                        'elevator'=>$elevator
+                        'elevator'=>$elevator,
+                        'longitude'=>$longitude,
+                        'latitude'=>$latitude,
+                        'id_presence'=>$id_presence,
+                        'lateTime'=>$lateTime
                     ];
                 }
             }
