@@ -99,6 +99,7 @@ Route::post('/changePassword2', [AuthController::class, 'changePassword2']);
 
 
     // Route::post('/getPresenceByIdEmp',[PresenceController::class,'getPresenceByIdEmp']);    
+    // Route::post('/getPresenceForDashboard',[PresenceController::class,'getPresenceForDashboard']);    
 
 
 
@@ -116,6 +117,7 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
     Route::post('/getIdPresence',[AuthController::class,'getIdPresence']);    
     Route::put('/updatePresence',[AuthController::class,'updatePresence']);    
     Route::post('/getPresenceByIdEmp',[PresenceController::class,'getPresenceByIdEmp']);    
+    Route::post('/getPresenceForDashboard',[PresenceController::class,'getPresenceForDashboard']);    
 
 });
 

@@ -125,7 +125,15 @@ class PresenceController extends Controller
                 $today = new DateTime(); // Get the current date
                 
                 while ($currentDate <= $endDate && $currentDate <= $today) {
-                    $days[] = $currentDate->format('Y-m-d');
+                    $currentDay = $currentDate->format('Y-m-d');
+                    
+                    // Skip the current day
+                    if ($currentDay == date('Y-m-d')) {
+                        $currentDate->add(new DateInterval('P1D'));
+                        continue;
+                    }
+                    
+                    $days[] = $currentDay;
                     $currentDate->add(new DateInterval('P1D'));
                 }
                 
@@ -287,6 +295,86 @@ class PresenceController extends Controller
             return $result;
         }
 
+        // fetch presence //getPresenceByIdEmployee
+        public function getPresenceForDashboard(Request $request)
+{
+    $attr = $request->validate([
+        'id_employee' => 'required|integer|exists:users,id',
+    ]);
+
+    $currentMonthStart = date('Y-m-01');
+    $currentMonthEnd = date('Y-m-t');
+
+    $presence = Presence::with(['employee', 'qrcodes.elevator.location'])
+        ->where('id_employee', $attr['id_employee'])
+        ->whereBetween('attendance_day', [$currentMonthStart, $currentMonthEnd])
+        ->get();
+
+    $assignment = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+        ->where('id_employee', $attr['id_employee'])
+        ->get();
+
+    $result = [];
+    $statusCounts = ['Absent' => 0, 'On Time' => 0, 'Late' => 0];
+
+    // Sort assignments by start date in ascending order
+    $assignment = $assignment->sortBy('start_date');
+
+    foreach ($assignment as $assign) {
+        $days = [];
+        $startDate = new DateTime($assign->start_date);
+        $endDate = new DateTime(min($assign->end_date, date('Y-m-d')));
+        $currentDate = clone $startDate;
+
+        $today = new DateTime(); // Get the current date
+
+        while ($currentDate <= $endDate && $currentDate <= $today) {
+            $currentDay = $currentDate->format('Y-m-d');
+
+            // Check if the current day is within the current month and not today
+            if ($currentDay >= $currentMonthStart && $currentDay <= $currentMonthEnd && $currentDay != date('Y-m-d')) {
+                $days[] = $currentDay;
+            }
+
+            $currentDate->add(new DateInterval('P1D'));
+        }
+
+        foreach ($days as $day) {
+            $found = false;
+
+            foreach ($presence as $p) {
+                if ($p->attendance_day == $day) {
+                    $found = true; // Set the flag to true to indicate a match
+
+                    $assignTimeIn = DateTime::createFromFormat('H:i:s', $assign->time_in);
+                    $checkIn = DateTime::createFromFormat('H:i:s', $p->check_in);
+
+                    $timeDifference = $checkIn->diff($assignTimeIn);
+                    $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
+                    
+                    if ($checkIn <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
+                        $status = 'On Time';
+                    } else {
+                        $status = 'Late';
+                    }
+
+                    // Update the count for the current status
+                    $statusCounts[$status]++;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                $statusCounts['Absent']++;
+            }
+        }
+    }
+
+    return response()->json($statusCounts); // Assuming this is returning a JSON response
+}
+
+
+        // export pdf
         public function singleexportToPDF($id)
         {
             $employees =$this->getPresenceByIdEmployee($id);
