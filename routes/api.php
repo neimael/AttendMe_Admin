@@ -98,7 +98,7 @@ Route::post('/changePassword2', [AuthController::class, 'changePassword2']);
 // Route::post('/getIdPresence',[AuthController::class,'getIdPresence']);    
 
 
-// Route::post('/getPresenceById', [AuthController::class, 'getPresenceById']);
+    // Route::post('/getPresenceByIdEmp',[PresenceController::class,'getPresenceByIdEmp']);    
 
 
 
