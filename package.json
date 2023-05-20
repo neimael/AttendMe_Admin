@@ -20,7 +20,7 @@
         "@mdi/js": "^7.2.96",
         "@tailwindcss/forms": "^0.5.3",
         "bcryptjs": "^2.4.3",
-        "chart.js": "^4.2.1",
+        "chart.js": "^4.3.0",
         "compressorjs": "^1.2.1",
         "daisyui": "^2.51.6",
         "laravel-vue-pagination": "^4.1.0",
@@ -30,6 +30,7 @@
         "sweetalert": "^2.1.2",
         "sweetalert2": "^11.7.3",
         "vue": "^3.2.36",
+        "vue-chartjs": "^5.2.0",
         "vue-pagination-2": "^3.1.0",
         "vue-router": "^4.0.13"
     }

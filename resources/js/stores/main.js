@@ -12,8 +12,7 @@ export const useMainStore = defineStore("main", {
   actions: {
     setUser(payload) {
       if (payload.name) {
-        this.userName = payload.name;
-        
+        this.userName = payload.name; 
       }
     
     },

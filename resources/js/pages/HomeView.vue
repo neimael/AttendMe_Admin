@@ -9,6 +9,10 @@ import {
   mdiReload,
   mdiGithub,
   mdiChartPie,
+  mdiElevatorPassengerOutline,
+mdiFaceRecognition,
+mdiScannerOff,
+mdiQrcodeScan
 } from "@mdi/js";
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -23,6 +27,7 @@ import CardBoxClient from "@/components/CardBoxClient.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionBannerStarOnGitHub from "@/components/SectionBannerStarOnGitHub.vue";
+import MyPieChartComponent from "@/components/my-pie-chart.vue";
 
 const chartData = ref(null);
 
@@ -54,79 +59,65 @@ const transactionBarItems = computed(() => mainStore.history);
 
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
         <CardBoxWidget
-          trend="12%"
+         
           trend-type="up"
           color="text-emerald-500"
           :icon="mdiAccountMultiple"
-          :number="512"
-          label="Clients"
+          :number="totalEmployees"
+          label="Employees"
+
         />
         <CardBoxWidget
-          trend="12%"
+         
           trend-type="down"
           color="text-blue-500"
-          :icon="mdiCartOutline"
-          :number="7770"
-          prefix="$"
-          label="Sales"
+          :icon="mdiElevatorPassengerOutline"
+          :number="totalElevators"
+          label="Elevators"
         />
         <CardBoxWidget
-          trend="Overflow"
-          trend-type="alert"
+    
           color="text-red-500"
-          :icon="mdiChartTimelineVariant"
-          :number="256"
-          suffix="%"
-          label="Performance"
+          :icon="mdiQrcodeScan"
+          :number="totalPresence"
+          label="Today's Presence"
         />
       </div>
+    
+      <div class="grid grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
+        <div v-for="client in latest_regulations" :key="client.id_presence_regulation">
+  <CardBoxClient
+    :name="client.employee ? (client.employee.first_name + ' ' + client.employee.last_name) : ''"
+    :login="client.attendance_day"
+    :date="client.issue_type"
+    :progress="client.status"
+    :image="client.employee && client.employee.avatar ? client.employee.avatar : null"
+  />
+</div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div class="flex flex-col justify-between">
-          <CardBoxTransaction
-            v-for="(transaction, index) in transactionBarItems"
-            :key="index"
-            :amount="transaction.amount"
-            :date="transaction.date"
-            :business="transaction.business"
-            :type="transaction.type"
-            :name="transaction.name"
-            :account="transaction.account"
-          />
-        </div>
-        <div class="flex flex-col justify-between">
-          <CardBoxClient
-            v-for="client in clientBarItems"
-            :key="client.id"
-            :name="client.name"
-            :login="client.login"
-            :date="client.created"
-            :progress="client.progress"
-          />
-        </div>
-      </div>
+</div>
 
-      <SectionBannerStarOnGitHub class="mt-6 mb-6" />
 
-      <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
+      <!-- <div>
+      <my-pie-chart :chart-data="chartData" :options="chartOptions" style="width: 400px; height: 400px;"></my-pie-chart>
+    </div> -->
+
+      <!-- <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
         <BaseButton
           :icon="mdiReload"
           color="whiteDark"
           @click="fillChartData"
         />
-      </SectionTitleLineWithButton>
+      </SectionTitleLineWithButton> -->
 
-      <CardBox class="mb-6">
+      <!-- <CardBox class="mb-6">
         <div v-if="chartData">
           <line-chart :data="chartData" class="h-96" />
         </div>
-      </CardBox>
+      </CardBox> -->
 
-      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Clients" />
+      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Today's Presence" />
 
-      <NotificationBar color="info" :icon="mdiMonitorCellphone">
-        <b>Responsive table.</b> Collapses on mobile
-      </NotificationBar>
 
       <CardBox has-table>
         <TableAttendance />
@@ -134,3 +125,80 @@ const transactionBarItems = computed(() => mainStore.history);
     </SectionMain>
   </LayoutAuthenticated>
 </template>
+<script>
+import axios from 'axios';
+import Swal from "sweetalert2";
+
+export default {
+  name: "HomeView",
+  data() {
+    return {
+    totalEmployees: 0,
+    totalElevators: 0,
+    totalPresence: 0,
+    latest_regulations: [],
+    
+    };
+
+  },
+
+  methods: {
+    async getCountEmployees() {
+      axios.get('/api/count_employees')
+  .then(response => {
+    this.totalEmployees = response.data;
+  
+  })
+  .catch(error => {
+    console.error(error);
+  });
+    },
+    async getCountElevators() {
+      axios.get('/api/count_elevators')
+  .then(response => {
+    this.totalElevators = response.data;
+
+  })
+  .catch(error => {
+    console.error(error);
+  });
+    },
+    async getCountPresence() {
+      axios.get('/api/count_today_presence')
+  .then(response => {
+    this.totalPresence = response.data;
+  
+  })
+  .catch(error => {
+    console.error(error);
+  });
+    },
+    async getLatestRegulations() {
+      axios.get('/api/get_latest_regulations')
+  .then(response => {
+    this.latest_regulations = response.data;
+    console.log(this.latest_regulations); // Check the structure of the response data
+  })
+  .catch(error => {
+    console.error(error);
+  });
+    }
+  
+
+    
+    
+
+  
+
+  },
+ 
+  mounted() {
+    this.getCountEmployees();
+    this.getCountElevators();
+    this.getCountPresence();
+    this.getLatestRegulations();
+  }
+};
+</script>
+
+

@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-
+import MyPieChart from './components/my-pie-chart.vue';
 import App from "./components/app.vue";
 import router from "./router";
 import { useMainStore } from "@/stores/main.js";
@@ -9,12 +9,11 @@ import { darkModeKey, styleKey } from "@/config.js";
 
 import "../css/app.css";
 
-
 /* Init Pinia */
 const pinia = createPinia();
 
 /* Create Vue app */
-createApp(App).use(router).use(pinia).mount("#app");
+createApp(App).use(router).use(pinia).component("my-pie-chart", MyPieChart).mount("#app");
 
 /* Init Pinia stores */
 const mainStore = useMainStore(pinia);

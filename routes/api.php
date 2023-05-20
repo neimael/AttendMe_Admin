@@ -81,6 +81,12 @@ Route::put('aprove_presence_regulation/{id}', [PresenceRegulationsController::cl
 Route::get('get_presence_regulation/{id}', [PresenceRegulationsController::class, 'getRegulation']);
 Route::get('export_regulations', [PresenceRegulationsController::class, 'export']);
 Route::get('export_regulations_pdf', [PresenceRegulationsController::class, 'exportToPDF']);
+//Dashboard
+Route::get('count_employees', [PresenceController::class, 'calculateTotalEmployees']);
+Route::get('count_elevators', [PresenceController::class, 'calculateTotalElevators']);
+Route::get('count_today_presence', [PresenceController::class, 'calculateTotalPresence']);
+Route::get('get_latest_regulations', [PresenceController::class, 'getLatestSixRegulation']);
+Route::get('pie_chart_presence', [PresenceController::class, 'getPresenceForWebDashboard']);
 //Auth 
 Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
 Route::put('update_profile/{id}', [AdminController::class, 'updateProfile']);

@@ -17,7 +17,10 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
-use App\Exports\SinglePresenceExport; 
+use App\Exports\SinglePresenceExport;
+use App\Models\Elevator;
+use App\Models\PresenceRegulation;
+use App\Models\User;
 
 class PresenceController extends Controller
 {
@@ -192,14 +195,14 @@ class PresenceController extends Controller
         
             return $result;
         }
-        public function singleexport($id)
-        {
-             $filename = 'presences.xlsx'; // Desired filename
-             $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
+        // public function singleexport($id)
+        // {
+        //      $filename = 'presences.xlsx'; // Desired filename
+        //      $format = \Maatwebsite\Excel\Excel::XLSX; // Desired file format (XLSX or CSV)
     
-            return Excel::download(new SinglePresenceExport($id), $filename, $format);
+        //     return Excel::download(new SinglePresenceExport($id), $filename, $format);
            
-        }
+        // }
 
         // fetch presence //getPresenceByIdEmployee
         public function getPresenceByIdEmp(Request $request)
@@ -399,8 +402,97 @@ class PresenceController extends Controller
             return $pdf->download('presences.pdf');
             
         }
-        
-       
+        public function calculateTotalEmployees(){
+            $employees = User::count();
+            return $employees;
+        }
+        public function calculateTotalElevators(){
+            $elevators = Elevator::count();
+            return $elevators;
+        }
+        public function calculateTotalPresence(){
+            $presences = Presence::whereDate('attendance_day', today())->count();
+           
+            return $presences;
+        }
+        public function getLatestSixRegulation(){
+            $regulations = PresenceRegulation::with('employee')->orderBy('created_at', 'desc')->take(6)->get();
+            return $regulations;
+        }
 
- 
+        
+    public function getPresenceForWebDashboard()
+{
+    $currentMonthStart = date('Y-m-01');
+    $currentMonthEnd = date('Y-m-t');
+
+    $presence = Presence::whereBetween('attendance_day', [$currentMonthStart, $currentMonthEnd])->get();
+
+    $assignments = AssignmentElevator::get();
+
+    $result = [];
+    $statusCounts = ['Absent' => 0, 'On Time' => 0, 'Late' => 0];
+
+    // Sort assignments by start date in ascending order
+    $assignments = $assignments->sortBy('start_date');
+
+    foreach ($assignments as $assignment) {
+        $employeeId = $assignment->id_employee; // Get the employee ID from the assignment
+
+        // Check if the assignment's employee ID exists in the presence table
+        $employeePresence = $presence->where('id_employee', $employeeId);
+
+        if ($employeePresence->isNotEmpty()) {
+            $days = [];
+            $startDate = new DateTime($assignment->start_date);
+            $endDate = new DateTime(min($assignment->end_date, date('Y-m-d')));
+            $currentDate = clone $startDate;
+
+            $today = new DateTime(); // Get the current date
+
+            while ($currentDate <= $endDate && $currentDate <= $today) {
+                $currentDay = $currentDate->format('Y-m-d');
+
+                // Check if the current day is within the current month and not today
+                if ($currentDay >= $currentMonthStart && $currentDay <= $currentMonthEnd && $currentDay != date('Y-m-d')) {
+                    $days[] = $currentDay;
+                }
+
+                $currentDate->add(new DateInterval('P1D'));
+            }
+
+            foreach ($days as $day) {
+                $found = false;
+
+                foreach ($employeePresence as $p) {
+                    if ($p->attendance_day == $day) {
+                        $found = true; // Set the flag to true to indicate a match
+
+                        $assignTimeIn = DateTime::createFromFormat('H:i:s', $assignment->time_in);
+                        $checkIn = DateTime::createFromFormat('H:i:s', $p->check_in);
+
+                        $timeDifference = $checkIn->diff($assignTimeIn);
+                        $timeDifferenceMinutes = ($timeDifference->h * 60) + $timeDifference->i;
+
+                        if ($checkIn <= $assignTimeIn || $timeDifferenceMinutes <= 15) {
+                            $status = 'On Time';
+                        } else {
+                            $status = 'Late';
+                        }
+
+                        // Update the count for the current status
+                        $statusCounts[$status]++;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    $statusCounts['Absent']++;
+                }
+            }
+        }
+    }
+
+    return response()->json($statusCounts);
+}
 }

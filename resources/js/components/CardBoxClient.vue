@@ -31,6 +31,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  image :{
+    type: String,
+    required: true,
+  }
 });
 
 const pillType = computed(() => {
@@ -39,13 +43,15 @@ const pillType = computed(() => {
   }
 
   if (props.progress) {
-    if (props.progress >= 60) {
+    if (props.progress == 'Approved') {
       return "success";
     }
-    if (props.progress >= 40) {
+    if (props.progress == 'Pending') {
       return "warning";
     }
-
+    if (props.progress == 'Rejected') {
+      return "danger";
+    }
     return "danger";
   }
 
@@ -54,28 +60,38 @@ const pillType = computed(() => {
 
 const pillIcon = computed(() => {
   return {
-    success: mdiTrendingUp,
-    warning: mdiTrendingNeutral,
-    danger: mdiTrendingDown,
+   
     info: null,
   }[pillType.value];
 });
+const getImageSource = () => {
+  if (props.image) {
+    return props.image;
+  } else {
+    return "user.png";
+  }
+};
 
-const pillText = computed(() => props.text ?? `${props.progress}%`);
+const pillText = computed(() => props.text ?? `${props.progress}`);
 </script>
 
 <template>
   <CardBox class="mb-6 last:mb-0" is-hoverable>
     <BaseLevel>
       <BaseLevel type="justify-start">
-        <UserAvatar class="w-12 h-12 mr-6" :username="name" />
+      
+          <div class="w-14 h-14 ml-2 mr-3 rounded-full overflow-hidden">
+  <img :src="getImageSource()" alt="employee" class="w-full h-full object-cover" />
+</div>  
+          
         <div class="text-center md:text-left overflow-hidden">
           <h4 class="text-xl text-ellipsis">
             {{ name }}
           </h4>
           <p class="text-gray-500 dark:text-slate-400">
-            {{ date }} @ {{ login }}
+             {{ date }}  {{ login }}  
           </p>
+       
         </div>
       </BaseLevel>
       <PillTag :color="pillType" :label="pillText" :icon="pillIcon" />
