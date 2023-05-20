@@ -15,7 +15,7 @@ import LineChart from "@/components/Charts/LineChart.vue";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBoxWidget from "@/components/CardBoxWidget.vue";
 import CardBox from "@/components/CardBox.vue";
-import TableSampleClients from "@/components/TableSampleClients.vue";
+import TableAttendance from "@/components/TableAttendance.vue";
 import NotificationBar from "@/components/NotificationBar.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import CardBoxTransaction from "@/components/CardBoxTransaction.vue";
@@ -49,15 +49,7 @@ const transactionBarItems = computed(() => mainStore.history);
         title="Overview"
         main
       >
-        <BaseButton
-          href="https://github.com/justboil/admin-one-vue-tailwind"
-          target="_blank"
-          :icon="mdiGithub"
-          label="Star on GitHub"
-          color="contrast"
-          rounded-full
-          small
-        />
+        
       </SectionTitleLineWithButton>
 
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 mb-6">
@@ -137,7 +129,7 @@ const transactionBarItems = computed(() => mainStore.history);
       </NotificationBar>
 
       <CardBox has-table>
-        <TableSampleClients />
+        <TableAttendance />
       </CardBox>
     </SectionMain>
   </LayoutAuthenticated>

@@ -15,7 +15,8 @@ import { getCurrentInstance } from 'vue';
 const instance = getCurrentInstance();
 
 const exportData = () => {
-  axios.get('api/export_employee_presence', { responseType: 'blob' })
+  const id = instance.proxy.$route.params.id;
+  axios.get(`/api/export_employee_presence/${id}`, { responseType: 'blob' })
     .then(response => {
       handleFileDownload(response.data);
     })
