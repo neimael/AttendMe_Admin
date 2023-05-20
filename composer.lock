@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5c18e65cba539936d4c015a0e96e4228",
+    "content-hash": "b8681ebee1f7430d581360ddacc4b629",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4098,10 +4098,6 @@
                 "url": "https://github.com/symfony/console.git",
                 "reference": "12288d9f4500f84a4d02254d4aa968b15488476f"
             },
-
-
-
-    
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/console/zipball/12288d9f4500f84a4d02254d4aa968b15488476f",
