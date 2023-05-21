@@ -87,6 +87,7 @@ Route::get('count_elevators', [PresenceController::class, 'calculateTotalElevato
 Route::get('count_today_presence', [PresenceController::class, 'calculateTotalPresence']);
 Route::get('get_latest_regulations', [PresenceController::class, 'getLatestSixRegulation']);
 Route::get('pie_chart_presence', [PresenceController::class, 'getPresenceForWebDashboard']);
+Route::get('line_chart_presence', [PresenceController::class, 'getPresenceForWebDashboardYear']);
 //Auth 
 Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
 Route::put('update_profile/{id}', [AdminController::class, 'updateProfile']);
