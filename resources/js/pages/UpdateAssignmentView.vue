@@ -30,10 +30,12 @@ window.Swal = swal;
 
             target="_blank"
             :icon="mdiOrderBoolAscendingVariant"
-            label="Show Assignment"
+            label="Show All Assignments"
             color="contrast"
             rounded-full
             small
+class="font-bold"
+
           />
         </router-link>
       </SectionTitleLineWithButton>
@@ -154,9 +156,10 @@ window.Swal = swal;
           <template #footer>
              <div class="flex justify-center">
             <BaseButtons > 
-                <BaseButton  type="reset" color="info" outline label="Reset"/>
-              <BaseButton  type="submit" color="info" label="Update" @click="updateAssignments"/>
-             
+                
+              <div class="flex justify-center mt-6">
+              <BaseButton type="submit"  class="buttonStyle" label="Update Assignment" @click="updateAssignments"/> 
+           </div>
             </BaseButtons>
         </div>
           </template>
@@ -323,4 +326,31 @@ mounted() {
 }
 </script>
 
+<style scoped>
+.buttonStyle{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
+
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
+}
+
+
+
+</style>
 

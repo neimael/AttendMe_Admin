@@ -30,7 +30,7 @@ window.Swal = swal;
 
             target="_blank"
             :icon="mdiLock"
-            label="Show Employees"
+            label="Show All Employees"
             color="contrast"
             rounded-full
             small

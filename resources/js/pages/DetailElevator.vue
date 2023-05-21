@@ -22,10 +22,11 @@ import BaseButton from "@/components/BaseButton.vue";
           <BaseButton
             target="_blank"
             :icon="mdiListBox"
-            label="show Elevators"
+            label="show All Elevators"
             color="contrast"
             rounded-full
             small
+            class="font-bold"
           />
         </router-link>
       </SectionTitleLineWithButton>
