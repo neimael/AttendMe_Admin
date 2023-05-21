@@ -421,7 +421,7 @@ class PresenceController extends Controller
         }
 
         
-    public function getPresenceForWebDashboard()
+        public function getPresenceForWebDashboard()
 {
     $currentMonthStart = date('Y-m-01');
     $currentMonthEnd = date('Y-m-t');
@@ -493,6 +493,8 @@ class PresenceController extends Controller
         }
     }
 
-    return response()->json($statusCounts);
+    return $statusCounts;
 }
+
+        
 }

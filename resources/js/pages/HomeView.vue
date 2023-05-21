@@ -98,9 +98,9 @@ const transactionBarItems = computed(() => mainStore.history);
 </div>
 
 
-      <!-- <div>
-      <my-pie-chart :chart-data="chartData" :options="chartOptions" style="width: 400px; height: 400px;"></my-pie-chart>
-    </div> -->
+<div>
+  <my-pie-chart style="width: 400px; height: 300px;"></my-pie-chart>
+  </div>
 
       <!-- <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
         <BaseButton
