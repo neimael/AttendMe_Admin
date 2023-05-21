@@ -44,3 +44,4 @@ router.afterEach((to) => {
     ? `${to.meta.title} — ${defaultDocumentTitle}`
     : defaultDocumentTitle;
 });
+

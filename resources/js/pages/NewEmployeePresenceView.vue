@@ -149,8 +149,9 @@ class="font-bold"
              <div class="flex justify-center">
             <BaseButtons > 
                
-              <BaseButton  type="submit" color="info" label="Add Presence" @click="addPresence"/>
-             
+              <div class="flex justify-center mt-6">
+              <BaseButton type="submit"  class="buttonStyle" label="Add Presence" @click="addPresence"/> 
+           </div>
             </BaseButtons>
         </div>
           </template>
@@ -297,5 +298,28 @@ mounted() {
 
 }
 </script>
+<style scoped>
+.buttonStyle{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
 
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
+}
+</style>
 

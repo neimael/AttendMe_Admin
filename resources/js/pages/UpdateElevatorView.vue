@@ -1,5 +1,5 @@
 <script setup>
-import {mdiPlus, mdiLock,mdiElevatorPassengerOutline} from "@mdi/js";
+import {mdiPlus, mdiLock,mdiElevatorPassengerOutline, mdiImageEdit, mdiBookEdit, mdiHumanEdit} from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import CardBox from "@/components/CardBox.vue";
 import Form from "@/form.js";
@@ -28,10 +28,11 @@ window.Swal = swal;
   
               target="_blank"
               :icon="mdiElevatorPassengerOutline"
-              label="Show Elevators"
+              label="Show All Elevators"
               color="contrast"
               rounded-full
               small
+              class="font-bold"
             />
           </router-link>
         </SectionTitleLineWithButton>
@@ -58,8 +59,10 @@ window.Swal = swal;
             <template #footer>
               <div class="flex justify-center">
                 <BaseButtons> 
-                  <BaseButton type="reset" color="warning" outline label="Reset"/>
-                  <BaseButton type="submit" color="warning" label="Update" @click="UpdateElevator"/>
+                
+                  <div class="flex justify-center mt-6">
+              <BaseButton type="submit"  class="buttonStyle" label="Update Elevator" @click="UpdateElevator"/> 
+           </div>
                 </BaseButtons>
               </div>
             </template>
@@ -221,5 +224,31 @@ axios.put(`/api/update_elevator/${id}`, updateData)
   width: 100%;
   height: 100%;
 }
+
+.buttonStyle{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
+
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
+}
+
+
+
 </style>
 

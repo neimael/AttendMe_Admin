@@ -117,7 +117,7 @@ const transactionBarItems = computed(() => mainStore.history);
         </div>
       </CardBox> -->
 
-      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Today's Presence" />
+      <SectionTitleLineWithButton :icon="mdiQrcodeScan" title="Today's Presence" />
 
 
       <CardBox has-table>
