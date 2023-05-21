@@ -53,6 +53,7 @@ const handlePDFDownload = (fileData) => {
   <LayoutAuthenticated>
     <SectionMain>
       <SectionTitleLineWithButton :icon="mdiLock" title="Employees" main>
+        <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
   <label tabindex="0" class="btn m-1 text-white ml-auto">  <i class="fas fa-download mr-1"></i>Export</label>
   <ul tabindex="0" class="dropdown-content menu p-1 shadow bg-white rounded-box w-40">
@@ -72,12 +73,14 @@ const handlePDFDownload = (fileData) => {
           <BaseButton
             target="_blank"
             :icon="mdiPlus"
-            label="Add new employee"
+            label="Add New Employee"
             color="contrast"
             rounded-full
             small
+            class="font-bold"
           />
         </router-link>
+        </div>
       </SectionTitleLineWithButton>
      
       <CardBox has-table>

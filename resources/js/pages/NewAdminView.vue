@@ -30,10 +30,11 @@ window.Swal = swal;
 
             target="_blank"
             :icon="mdiLock"
-            label="Show Admins"
+            label="Show All Admins"
             color="contrast"
             rounded-full
             small
+            class="font-bold"
           />
         </router-link>
       </SectionTitleLineWithButton>
@@ -59,16 +60,17 @@ window.Swal = swal;
           <FormField label="Images">
           <input type="file"
                 id="avatar"
-                 class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"
+                 class="file-input file-input-bordered file-input-info w-full max-w-xs bg-black text-white"
                 
                  />
         </FormField>
           <template #footer>
             <div class="flex justify-center">
             <BaseButtons >  
-               <BaseButton  type="submit" color="warning" label="Add" @click="addAdmin()"/>
-                <BaseButton  type="reset" color="warning" outline label="Reset"/>
-
+              
+                <div class="flex justify-center mt-6">
+              <BaseButton type="submit"  class="buttonStyle" label="Add Admin" @click="addAdmin()"/> 
+           </div>
             </BaseButtons>
        </div>
           </template>
@@ -123,5 +125,28 @@ export default {
   }
 }
 </script>
+<style scoped>
+.buttonStyle{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
 
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
+}
+</style>
 

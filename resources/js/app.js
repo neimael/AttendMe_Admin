@@ -13,7 +13,7 @@ import "../css/app.css";
 const pinia = createPinia();
 
 /* Create Vue app */
-createApp(App).use(router).use(pinia).component("my-pie-chart", MyPieChart).mount("#app");
+createApp(App).use(router).use(pinia).mount("#app");
 
 /* Init Pinia stores */
 const mainStore = useMainStore(pinia);
@@ -44,3 +44,4 @@ router.afterEach((to) => {
     ? `${to.meta.title} — ${defaultDocumentTitle}`
     : defaultDocumentTitle;
 });
+
