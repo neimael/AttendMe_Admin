@@ -12,7 +12,10 @@ import {
   mdiElevatorPassengerOutline,
 mdiFaceRecognition,
 mdiScannerOff,
-mdiQrcodeScan
+mdiQrcodeScan,
+mdiFinance,
+mdiListStatus,
+mdiCheckCircle
 } from "@mdi/js";
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -28,6 +31,7 @@ import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import SectionBannerStarOnGitHub from "@/components/SectionBannerStarOnGitHub.vue";
 import MyPieChartComponent from "@/components/my-pie-chart.vue";
+import MyLineChart from "@/components/my-line-chart.vue";
 
 const chartData = ref(null);
 
@@ -83,7 +87,21 @@ const transactionBarItems = computed(() => mainStore.history);
           label="Today's Presence"
         />
       </div>
+      <SectionTitleLineWithButton :icon="mdiFinance" title="Statistics" />
+
+      <div class="chart-container">
+    <div class="chart-wrapper">
+      <my-pie-chart class="chart"></my-pie-chart>
+    </div>
+    <div class="chart-wrapper">
+      <my-line-chart class="chart"></my-line-chart>
+    </div>
+  </div>
+  
     
+
+  <SectionTitleLineWithButton :icon="mdiListStatus" title="Latest Regulations" />
+
       <div class="grid grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
         <div v-for="client in latest_regulations" :key="client.id_presence_regulation">
   <CardBoxClient
@@ -98,23 +116,8 @@ const transactionBarItems = computed(() => mainStore.history);
 </div>
 
 
-<div>
-  <my-pie-chart style="width: 400px; height: 300px;"></my-pie-chart>
-  </div>
 
-      <!-- <SectionTitleLineWithButton :icon="mdiChartPie" title="Trends overview">
-        <BaseButton
-          :icon="mdiReload"
-          color="whiteDark"
-          @click="fillChartData"
-        />
-      </SectionTitleLineWithButton> -->
 
-      <!-- <CardBox class="mb-6">
-        <div v-if="chartData">
-          <line-chart :data="chartData" class="h-96" />
-        </div>
-      </CardBox> -->
 
       <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Today's Presence" />
 
@@ -202,3 +205,23 @@ export default {
 </script>
 
 
+<style>
+.chart-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.chart-wrapper {
+  flex-basis: 50%;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart {
+  width: 98%;
+  height: 400px;
+}
+</style>

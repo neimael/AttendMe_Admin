@@ -496,5 +496,26 @@ class PresenceController extends Controller
     return $statusCounts;
 }
 
-        
+public function getPresenceForWebDashboardYear()
+{
+    $currentYear = date('Y');
+    $currentMonthStart = $currentYear . '-01-01';
+    $currentMonthEnd = $currentYear . '-12-31';
+
+    $presence = Presence::whereBetween('attendance_day', [$currentMonthStart, $currentMonthEnd])->get();
+
+    $presenceCounts = [];
+
+    foreach ($presence as $record) {
+        $month = date('F', strtotime($record->attendance_day)); // Get the full month name
+
+        if (!isset($presenceCounts[$month])) {
+            $presenceCounts[$month] = 0;
+        }
+
+        $presenceCounts[$month]++;
+    }
+
+    return $presenceCounts;
+}
 }

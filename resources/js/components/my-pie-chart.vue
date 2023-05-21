@@ -27,6 +27,7 @@ export default {
     },
     renderPieChart(statusCounts) {
       const chartCanvas = this.$refs.chartCanvas;
+      const currentMonth = new Date().toLocaleString('default', { month: 'long' });
 
       const chartData = new Chart(chartCanvas, {
         type: 'pie',
@@ -40,7 +41,16 @@ export default {
           ],
         },
         options: {
-          // Customize chart options as needed
+          plugins: {
+            title: {
+              display: true,
+              text: `Status of Presences in ${currentMonth}`, // Set the title dynamically
+              color: '#FFFFFF', // Set the font color of the title
+              font: {
+                  size: 16,
+                },
+            },
+          },
         },
       });
 
