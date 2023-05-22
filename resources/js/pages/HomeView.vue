@@ -16,7 +16,7 @@ mdiQrcodeScan,
 
 mdiFinance,
 mdiListStatus,
-mdiCheckCircle
+mdiCheckCircle,
 
 mdiPrinterPosWrenchOutline
 
