@@ -250,6 +250,14 @@ fetchInformation() {
         });
     }, 
     addPresence() {
+      if(this.form.check_in == "" || this.form.check_out == "" || this.form.attendance_day == ""  ){
+          swal({
+            text: "Please fill all the fields.",
+            icon: "error",
+            closeOnClickOutside: false,
+          });
+          return; // Exit the method if the condition is not met
+        }
       this.form.id_elevator= this.information.qrcode.id_qr_code;
       this.form.id_employee= this.informationEmp.id;
       console.log(this.form.id_elevator);
@@ -260,6 +268,7 @@ fetchInformation() {
         data.append('attendance_day', this.form.attendance_day);
         data.append('id_elevator', this.form.id_elevator);
         data.append('id_employee', this.form.id_employee);
+       
         if (this.form.check_in >= this.form.check_out) {
     swal({
       text: "Check-in time must be before check-out time.",
