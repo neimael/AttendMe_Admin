@@ -131,17 +131,38 @@ public function getInformation(Request $request)
      */
     public function store(Request $request)
     {
-            
-            $assignmentElevator=new AssignmentElevator();
-            $assignmentElevator->id_employee=$request->id_employee;
-            $assignmentElevator->id_elevator=$request->id_elevator;
-            $assignmentElevator->start_date=$request->start_date;
-            $assignmentElevator->end_date=$request->end_date;
-            $assignmentElevator->time_in=$request->time_in;
-            $assignmentElevator->time_out=$request->time_out;
-            $assignmentElevator->save();
-            return response()->json(['message' => 'Asignment has been created successfully']);
+        $id_employee = $request->id_employee;
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+    
+        // Check if there are any conflicting assignments for the same employee and overlapping dates
+        $conflictingAssignment = AssignmentElevator::where('id_employee', $id_employee)
+            ->where(function ($query) use ($start_date, $end_date) {
+                $query->whereBetween('start_date', [$start_date, $end_date])
+                    ->orWhereBetween('end_date', [$start_date, $end_date])
+                    ->orWhere(function ($query) use ($start_date, $end_date) {
+                        $query->where('start_date', '<=', $start_date)
+                            ->where('end_date', '>=', $end_date);
+                    });
+            })
+            ->first();
+    
+        if ($conflictingAssignment) {
+            return response()->json(['message' => 'This assignment conflicts with an existing assignment. Please choose different dates.'], 422);
+        }
+    
+        $assignmentElevator = new AssignmentElevator();
+        $assignmentElevator->id_employee = $id_employee;
+        $assignmentElevator->id_elevator = $request->id_elevator;
+        $assignmentElevator->start_date = $start_date;
+        $assignmentElevator->end_date = $end_date;
+        $assignmentElevator->time_in = $request->time_in;
+        $assignmentElevator->time_out = $request->time_out;
+        $assignmentElevator->save();
+    
+        return response()->json(['message' => 'Assignment has been created successfully']);
     }
+    
 
  //get assignment by id
     public function getAssignment($id)
