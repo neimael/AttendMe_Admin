@@ -303,6 +303,39 @@ fetchInformation() {
         data.append('end_date', this.form.end_date);
         data.append('id_elevator', this.form.id_elevator);
         data.append('id_employee', this.form.id_employee);
+        if(this.form.start_date == "" || this.form.end_date == "" || this.form.time_in == "" || this.form.time_out == "" || this.form.id_elevator == "" || this.form.id_employee == ""){
+          swal({
+            text: "Please fill all the fields.",
+            icon: "error",
+            closeOnClickOutside: false,
+          });
+          return; // Exit the method if the condition is not met
+        }
+        if (this.form.start_date >= this.form.end_date) {
+          swal({
+            text: "Start date must be before end date.",
+            icon: "error",
+            closeOnClickOutside: false,
+          });
+          return;
+         }
+          // Exit the method if the condition is not met
+        if (this.form.time_in >= this.form.time_out) {
+    swal({
+      text: "Time-in time must be before time-out time.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return; // Exit the method if the condition is not met
+  }else if (this.form.time_in == this.form.time_out) {
+    swal({
+        text: "Time-in time must be before time-out time.",
+        icon: "error",
+        closeOnClickOutside: false,
+        });
+        return; // Exit the method if the condition is not met
+    }
+    else{
       // Make the API call
       axios.put(`/api/update_asignment/${id}`,this.form).then(() => {
           swal({
@@ -311,11 +344,20 @@ fetchInformation() {
             closeOnClickOutside: false,
           });
           this.$router.go();
-        }).catch(error => {
-          console.log(error);
-        });
-      },
-},
+        }) .catch(error => {
+           if (error.response && error.response.status === 422) {
+      swal({
+        text: "Unprocessable Entity: " + error.response.data.message,
+        icon: "error",
+        closeOnClickOutside: false,
+      });
+    } else {
+      console.log(error);
+    }
+  });
+    }
+    },},
+
 mounted() {
     this.getMissions();
     this.getElevators();
@@ -349,8 +391,5 @@ mounted() {
   border:none;
   
 }
-
-
-
 </style>
 

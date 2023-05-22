@@ -99,27 +99,33 @@ public function update(Request $request, $id)
     $employee = User::findOrFail($id);
     $employee->first_name = $request->input('first_name');
     $employee->last_name = $request->input('last_name');
-
+    
+ 
     $employee->email = $request->input('email');
     $employee->phone_number = $request->input('phone_number');
     $employee->cin = $request->input('cin');
     $employee->adress = $request->input('adress');
     $employee->birthday = $request->input('birthday');
     
+    $image = $this->saveImage($request->avatar, 'profiles');
+    $employee->avatar = $image;
 
-    if ($request->hasFile('avatar')) {
-        $file = $request->file('avatar');
-        $extension = $file->getClientOriginalExtension();
-        $filename = time() . $file->getClientOriginalName();
-        Storage::disk('public')->put('profiles/'.$filename,  File::get($file));
-        $employee->avatar = URL::to('/').'/storage/profiles/'.$filename;
-    } 
+
+    // if($request['avatar']){
+    //     $file = $request->file('avatar');
+    //     $extension = $file->getClientOriginalExtension();
+    //     $filename = time(). $file->getClientOriginalName();
+    //     Storage::disk('public')->put('profiles/'.$filename,  File::get($file));
+    //     $employee->avatar = URL::to('/').'/storage/profiles/'.$filename;
+    // }
+
     $employee->save();
 
     return response()->json([
         'message' => 'Employee updated successfully.',
     ]);
-}
+} 
+
 public function export()
 {
      $filename = 'employees.xlsx'; // Desired filename

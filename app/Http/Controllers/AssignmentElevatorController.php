@@ -174,12 +174,31 @@ public function getInformation(Request $request)
         return $assignmentElevator;
         
     }
-    public function update(Request $request, $id)
-{
+    public function update(Request $request, $id){
+
+    $id_employee = $request->id_employee;
+    $start_date = $request->start_date;
+    $end_date = $request->end_date;
+    $conflictingAssignment = AssignmentElevator::where('id_employee', $id_employee)
+    ->where(function ($query) use ($start_date, $end_date) {
+        $query->whereBetween('start_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])
+            ->orWhere(function ($query) use ($start_date, $end_date) {
+                $query->where('start_date', '<=', $start_date)
+                    ->where('end_date', '>=', $end_date);
+            });
+    })
+    ->first();
+
+if ($conflictingAssignment) {
+    return response()->json(['message' => 'This assignment conflicts with an existing assignment. Please choose different dates.'], 422);
+}
+
     $assignmentElevator = AssignmentElevator::findOrFail($id);
     
     $assignmentElevator->id_employee = $request->id_employee;
     $assignmentElevator->id_elevator = $request->id_elevator;
+    
     $assignmentElevator->start_date = $request->start_date;
     $assignmentElevator->end_date = $request->end_date;
     $assignmentElevator->time_in = $request->time_in;

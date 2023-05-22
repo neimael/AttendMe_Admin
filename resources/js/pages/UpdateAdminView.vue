@@ -34,6 +34,7 @@ window.Swal = swal;
             color="contrast"
             rounded-full
             small
+            class="font-bold"
           />
         </router-link>
       </SectionTitleLineWithButton>
@@ -57,12 +58,11 @@ window.Swal = swal;
         </FormField>
          <FormField>
           <FormField label="Images">
-          <input type="file"
+            <input type="file"
                 id="avatar"
-                 class="file-input file-input-bordered file-input-warning w-full max-w-xs bg-black text-white"     
+                 class="file-input file-input-bordered file-input-info w-full max-w-xs bg-black text-white"  
               @change="OnFileChange"
-                
-                 />
+        />
         </FormField>
         
         <div style="width: 130px; height: 130px; border-radius: 40%; overflow: hidden;">
@@ -73,9 +73,10 @@ window.Swal = swal;
           <template #footer>
             <div class="flex justify-center">
             <BaseButtons >  
-               <BaseButton  type="submit" color="warning" label="Update" @click="updateAdmin"/>
-                <BaseButton  type="reset" color="warning" outline label="Reset"/>
-
+           
+                <div class="flex justify-center mt-6">
+              <BaseButton type="submit"  class="buttonStyle" label="Update Admin" @click="updateAdmin"/> 
+           </div>
             </BaseButtons>
        </div>
           </template>
@@ -94,18 +95,38 @@ export default {
   data() {
     return {
       previewImage : null,
+      file: null,
       form: new Form({
         first_name: "",
         last_name: "",
         phone_number: "",
         email: "",
         avatar: "",
+
       })
     }
     },
   
   props: [],
   methods: {
+    getStringImage(file) {
+    if (file === null) return null;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64String = reader.result.split(',')[1];
+        resolve(base64String);
+      };
+
+      reader.onerror = error => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  },
     async getAdminById() {
       const id = this.$route.params.id;
       try {
@@ -126,7 +147,7 @@ export default {
     last_name: this.form.last_name,
     phone_number: this.form.phone_number,
     email: this.form.email,
-    avatar: this.previewImage==null ?  this.form.avatar :this.previewImage,
+    avatar: this.form.avatar,
     
   };
 
@@ -134,7 +155,7 @@ export default {
 
 
   // Make the PUT request with the updated data and the FormData object
-  axios.put(`api/update_admin/${id}`, updatedData)
+  axios.put(`/api/update_admin/${id}`, updatedData)
     .then(() => {
       swal({
         text: "Admin Updated Successfully!",
@@ -155,18 +176,23 @@ export default {
 },
 
 OnFileChange(e) {
-  this.form.avatar = e.target.files[0];
+  this.file = e.target.files[0];
   let reader = new FileReader();
-  reader.addEventListener("load", () => {
+  reader.onload = (e) => {
     this.previewImage = reader.result;
-  }, false);
-  if (this.form.avatar) {
-    if (this.form.avatar.type.match('image.*')) {
-      reader.readAsDataURL(this.form.avatar);
-    }
-  } else {
-    this.previewImage = null;
-  }
+    this.getStringImage(this.file)
+      .then(base64String => {
+        // Do something with the base64String
+        console.log(base64String);
+        this.form.avatar = base64String;
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+  };
+  reader.readAsDataURL(this.file);
+
 },
   
     },
@@ -179,5 +205,28 @@ OnFileChange(e) {
 
 }
 </script>
+<style scoped>
+.buttonStyle{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
 
+  border:none;
+  
+}
+.buttonStyle:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+
+ 
+  font-size: 20px;
+  font-weight: 500;
+  border:none;
+  
+}
+</style>
 

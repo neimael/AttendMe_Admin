@@ -88,14 +88,11 @@ class AdminController extends Controller
    
         $admin->email = $request->input('email');
         $admin->phone_number = $request->input('phone_number');
-    
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $extension = $file->getClientOriginalExtension();
-            $filename = time() . $file->getClientOriginalName();
-            Storage::disk('public')->put('AdminAvatar/'.$filename,  File::get($file));
-            $admin->avatar = $filename;
-        } 
+        
+        $image = $this->saveImageAdmin($request->avatar, 'AdminAvatar');
+        
+        $admin->avatar = $image;
+
         $admin->save();
     
         return response()->json([
@@ -232,19 +229,8 @@ public function exportToPDF()
     $admin->email = $request->input('email');
     $admin->phone_number = $request->input('phone_number');
 
-    if ($request->hasFile('avatar')) {
-        $file = $request->file('avatar');
-        $filename = time() . '.' . $file->getClientOriginalExtension(); // Use only the extension for the filename
-        $filePath = 'AdminAvatar/' . $filename;
-        Storage::disk('public')->put($filePath, File::get($file));
-        
-        // Delete the previous avatar if it exists
-        if ($admin->avatar) {
-            Storage::disk('public')->delete('AdminAvatar/' . $admin->avatar);
-        }
-
-        $admin->avatar = $filename;
-    }
+    $image = $this->saveImageAdmin($request->avatar, 'AdminAvatar');
+    $admin->avatar = $image;
     
     $admin->save();
 
