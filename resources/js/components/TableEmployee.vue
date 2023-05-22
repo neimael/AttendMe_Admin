@@ -40,15 +40,17 @@ const checked = (isChecked, employee) => {
   }
 };
 </script>
-
 <template>
   
-  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Employee">
-  <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
+  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="">
+  <div class="text-center">
+  <h1 class="text-xl font-bold">Employee Detail</h1>
+  </div>
+  <div class="w-32 h-32  mx-auto rounded-full overflow-hidden">
     <img v-if="Selectedemployee.avatar" :src=" Selectedemployee.avatar" alt="employee" class="w-full h-full object-cover">
     <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
   </div>
-  <div class="mt-4 ml-4">
+  <div class="mt-4 ml-7">
     <p class="font-bold"><b>Name :</b> {{ Selectedemployee.first_name }} {{ Selectedemployee.last_name }}</p>
     <p><b>CIN :</b>  {{ Selectedemployee.cin }}</p>
     <p><b>Address :</b> {{ Selectedemployee.adress }}</p>

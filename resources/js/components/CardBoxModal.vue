@@ -10,11 +10,11 @@ import CardBoxComponentTitle from "@/components/CardBoxComponentTitle.vue";
 const props = defineProps({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   button: {
     type: String,
-    default: "info",
+   
   },
   buttonLabel: {
     type: String,
@@ -61,20 +61,20 @@ window.addEventListener("keydown", (e) => {
         <BaseButton
           v-if="hasCancel"
           :icon="mdiClose"
-          color="whiteDark"
+          
           small
           rounded-full
           @click.prevent="cancel"
         />
       </CardBoxComponentTitle>
 
-      <div class="space-y-3">
+      <div class="space-y-1">
         <slot />
       </div>
 
       <template #footer>
         <BaseButtons class="flex justify-center">
-          <BaseButton class="bg-blue-300  text-blue-400 hover:bg-blue-400 hover:text-white font-bold py-2 px-4 rounded" :label="buttonLabel"  @click="confirm" />
+          <BaseButton class="done" :label="buttonLabel"  @click="confirm" />
           <BaseButton
             v-if="hasCancel"
             label="Cancel"
@@ -87,3 +87,28 @@ window.addEventListener("keydown", (e) => {
     </CardBox>
   </OverlayLayer>
 </template>
+<style scoped>
+.done{
+  background-color: #0099ff;
+  color: white;
+  border-radius: 5px;
+  width: 20%;
+  font-size: 16px;
+  font-weight: 500;
+  border:none;
+ 
+  
+}
+.done:hover{
+  background-color: #0489db;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: 500;
+  border:none;
+  
+}
+
+
+
+</style>

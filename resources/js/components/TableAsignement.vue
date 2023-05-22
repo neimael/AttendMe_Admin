@@ -47,12 +47,12 @@ const checked = (isChecked, employee) => {
   <div class="text-center">
   <h1 class="text-xl font-bold">Assignment Detail</h1>
   </div>
-  <div class="mt-4 mx-auto">
+  <div class="mt-4 ml-7">
     <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
     <img v-if="this.Selectedassignment.employee?.avatar" :src="this.Selectedassignment.employee?.avatar" alt="employee" class="w-full h-full object-cover">
     <img v-else src="/user.png" alt="default" class="w-full h-full object-cover">
   </div> 
-  <p>
+  <p >
     <b>Employee :</b>  
        {{ this.Selectedassignment.employee?.first_name }} {{ this.Selectedassignment.employee?.last_name}}
   </p> 

@@ -16,7 +16,7 @@ mdiQrcodeScan,
 
 mdiFinance,
 mdiListStatus,
-mdiCheckCircle
+mdiCheckCircle,
 
 mdiPrinterPosWrenchOutline
 
@@ -105,8 +105,7 @@ const transactionBarItems = computed(() => mainStore.history);
   
     
 
-  <SectionTitleLineWithButton :icon="mdiListStatus" title="Latest Regulations" />
-      <SectionTitleLineWithButton v-if="latest_regulations" :icon="mdiPrinterPosWrenchOutline" title="Lastest Regulations" />
+      <SectionTitleLineWithButton v-if="latest_regulations" :icon="mdiListStatus" title="Latest Regulations" />
 
       <div class="grid grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
         <div v-for="client in latest_regulations" :key="client.id_presence_regulation">
