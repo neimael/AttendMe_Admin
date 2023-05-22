@@ -12,7 +12,7 @@ export default [
       {
         icon: mdiAccount,
         label: "My Profile",
-        to: "/",
+        to: "/profile",
       },
       {
         icon: mdiLogout,

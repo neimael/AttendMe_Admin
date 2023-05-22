@@ -182,9 +182,28 @@ export default {
       password:null,
       new_password:null,// Initialize the token as empty
       confirm_password:null,
+      file:null,
     };
   },
   methods: {
+    getStringImage(file) {
+    if (file === null) return null;
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64String = reader.result.split(',')[1];
+        resolve(base64String);
+      };
+
+      reader.onerror = error => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  },
     getAdmin(csrfToken) {
       // Retrieve the token from the session
       this.token = "{{ session('admin_token') }}";
@@ -269,14 +288,22 @@ export default {
 },
 
 OnFileChange(e) {
-  const file = e.target.files[0];
-      this.form.avatar = file ; // Store the file name or an empty string if no file is selected
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewImage = reader.result;
-      };
-      reader.readAsDataURL(file);
+  this.file = e.target.files[0];
+  let reader = new FileReader();
+  reader.onload = (e) => {
+    this.previewImage = reader.result;
+    this.getStringImage(this.file)
+      .then(base64String => {
+        // Do something with the base64String
+        console.log(base64String);
+        this.form.avatar = base64String;
+      })
+      .catch(error => {
+        // Handle any errors
+        console.error(error);
+      });
+  };
+  reader.readAsDataURL(this.file);
   
 },
 async updatePassword(csrfToken) {

@@ -29,6 +29,21 @@ class Controller extends BaseController
         // Url is the base url exp: localhost:8000
         return URL::to('/').'/storage/'.$path.'/'.$filename;
     }
+     public function saveImageAdmin($image, $path = 'public')
+    {
+        if(!$image)
+        {
+            return null;
+        }
+
+        $filename = time().'.png';
+        // save image
+        \Storage::disk($path)->put($filename, base64_decode($image));
+
+        //return the path
+        // Url is the base url exp: localhost:8000
+        return $filename;
+    }
 
     // save file
     public function saveFile($file, $path = 'public', $extension)

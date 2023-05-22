@@ -138,9 +138,11 @@ export default {
         //data.append('avatar', this.form.avatar);
         data.append('password', this.form.password);
         if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}
+        console.log(this.form);
         axios.post('api/add_employee', data)
     .then((response) => {
       if (response.status === 200) {
+        console.log(response);
         swal({
           text: "Employee Added Successfully!",
           icon: "success",
