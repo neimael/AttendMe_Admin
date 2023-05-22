@@ -43,10 +43,32 @@ const checked = (isChecked, employee) => {
 
 
 <template>
-  <CardBoxModal v-model="isModalActive" title="Sample modal">
-    <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
-    <p>This is sample modal</p>
-  </CardBoxModal>
+ <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" v-if="this.Selectedassignment">
+  <div class="text-center">
+  <h1 class="text-xl font-bold">Assignment Detail</h1>
+  </div>
+  <div class="mt-4 mx-auto">
+    <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+    <img v-if="this.Selectedassignment.employee?.avatar" :src="this.Selectedassignment.employee?.avatar" alt="employee" class="w-full h-full object-cover">
+    <img v-else src="/user.png" alt="default" class="w-full h-full object-cover">
+  </div> 
+  <p>
+    <b>Employee :</b>  
+       {{ this.Selectedassignment.employee?.first_name }} {{ this.Selectedassignment.employee?.last_name}}
+  </p> 
+ <p>
+  <b>Elevator:</b>
+  {{ this.Selectedassignment.qrcode?.elevator?.name }} at
+  {{ this.Selectedassignment.qrcode?.mission }} in
+  {{ this.Selectedassignment.qrcode?.elevator?.location?.ville }}
+</p>
+      <p><b>CheckIn :</b> {{ this.Selectedassignment.time_in }}</p> 
+    <p><b>CheckOut :</b> {{ this.Selectedassignment.time_out }}</p>
+    <p><b>Period:</b> From {{ this.Selectedassignment.start_date }} To  {{ this.Selectedassignment.end_date }}</p>
+    
+  </div>
+
+</CardBoxModal>
 
   <CardBoxModal
     v-model="isModalDangerActive"
@@ -116,7 +138,7 @@ const checked = (isChecked, employee) => {
               color="info"
               :icon="mdiEye"
               small
-              @click="isModalActive = true"
+              @click="isModalActive = true, getAssignment(assignment)"   
             />
            <BaseButton
             color="success"
@@ -203,6 +225,16 @@ export default {
         }
     });
 },
+async getAssignment(assignment) {
+  try {
+    const response = await axios.get(`/api/getAssignment/${assignment.id_assignment_elevator}`);
+    this.Selectedassignment = response.data[0];
+    console.log(this.Selectedassignment.id_assignment_elevator);
+   
+  } catch (error) {
+    console.log(error);
+  }
+},
   
 
     
@@ -225,6 +257,7 @@ export default {
   },
   mounted() {
     this.getAssignments();
+   
   }
 };
 </script>

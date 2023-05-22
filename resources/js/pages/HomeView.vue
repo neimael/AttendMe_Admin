@@ -13,9 +13,13 @@ import {
 mdiFaceRecognition,
 mdiScannerOff,
 mdiQrcodeScan,
+
 mdiFinance,
 mdiListStatus,
 mdiCheckCircle
+
+mdiPrinterPosWrenchOutline
+
 } from "@mdi/js";
 import * as chartConfig from "@/components/Charts/chart.config.js";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -87,6 +91,7 @@ const transactionBarItems = computed(() => mainStore.history);
           label="Today's Presence"
         />
       </div>
+
       <SectionTitleLineWithButton :icon="mdiFinance" title="Statistics" />
 
       <div class="chart-container">
@@ -101,6 +106,7 @@ const transactionBarItems = computed(() => mainStore.history);
     
 
   <SectionTitleLineWithButton :icon="mdiListStatus" title="Latest Regulations" />
+      <SectionTitleLineWithButton v-if="latest_regulations" :icon="mdiPrinterPosWrenchOutline" title="Lastest Regulations" />
 
       <div class="grid grid-cols-2 lg:grid-cols-2 gap-6 mb-6">
         <div v-for="client in latest_regulations" :key="client.id_presence_regulation">
@@ -119,7 +125,7 @@ const transactionBarItems = computed(() => mainStore.history);
 
 
 
-      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Today's Presence" />
+      <SectionTitleLineWithButton :icon="mdiQrcodeScan" title="Today's Presence" />
 
 
       <CardBox has-table>

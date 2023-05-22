@@ -89,7 +89,7 @@ const handlePDFDownload = (fileData) => {
 
             target="_blank"
             :icon="mdiListBox"
-            label="show Employees"
+            label="Show All Employees"
             color="contrast"
             rounded-full
             

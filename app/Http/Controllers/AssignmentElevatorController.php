@@ -151,6 +151,7 @@ public function getInformation(Request $request)
             return response()->json(['message' => 'Asignment not found'], 404);
         }
         return $assignmentElevator;
+        
     }
     public function update(Request $request, $id)
 {

@@ -39,5 +39,6 @@ const hasSlot = computed(() => useSlots().default);
       </h1>
     </div>
     <slot v-if="hasSlot" />
+
   </section>
 </template>
