@@ -202,6 +202,33 @@ public function exportToPDF()
     ], 200);
 }
 
+// Inside your Laravel controller
+public function checkAuthStatus(Request $request)
+{
+    $admin = $request->user('admin');
+    
+    if ($admin) {
+        $adminInfo = [
+            'first_name' => $admin->first_name,
+            'last_name' => $admin->last_name,
+            'email' => $admin->email,
+            'phone_number' => $admin->phone_number,
+            'avatar' => $admin->avatar,
+        ];
+        
+        return response()->json([
+            'authenticated' => true,
+            'admin' => $adminInfo
+        ]);
+    }
+    
+    return response()->json([
+        'authenticated' => false,
+        'admin' => null
+    ]);
+}
+
+
     public function getAuthenticatedAdmin(Request $request)
     {
         $admin = $request->user('admin');
@@ -261,36 +288,6 @@ public function updatePassword(Request $request){
         'message' => 'Password updated successfully.',
     ]);
 }
-        
-
-   // public function admin()
-    // {
-    //     if (!auth()->guard('admin')->check()) {
-    //         return response([
-    //             'errors' => 'Unauthorized'
-    //         ], 401);
-    //     }
-    
-    //     $admin = auth()->guard('admin')->user();
-    
-    //     return response([
-    //         'user' => $admin
-    //     ], 200);
-    // }
-
-    
-
-    // Function to retrieve user information
-// public function getUserInformation(Request $request)
-// {
-//      $admin = $request->session()->get('admin');
-  
-        
-//             return response([
-//                 $admin
-//             ], 200);
-           
-// }
   
     
    public function logoutAdmin(Request $request)

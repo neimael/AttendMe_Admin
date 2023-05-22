@@ -92,6 +92,7 @@ Route::get('line_chart_presence', [PresenceController::class, 'getPresenceForWeb
 Route::post('/logoutAdmin', [AdminController::class, 'logoutAdmin']);
 Route::put('update_profile/{id}', [AdminController::class, 'updateProfile']);
 Route::put('update_password/{id}', [AdminController::class, 'updatePassword']);
+Route::get('checkAuthStatus', [AdminController::class, 'checkAuthStatus']);
 Route::middleware('auth:admin')->get('/getAuthenticatedAdmin', [AdminController::class, 'getAuthenticatedAdmin']);
 //login admin
 Route::post('/loginAdmin', [AdminController::class, 'loginAdmin']);
