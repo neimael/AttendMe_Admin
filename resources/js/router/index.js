@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import axios from 'axios';
 
 import Home from "../pages/HomeView.vue"
 
@@ -8,12 +9,14 @@ const routes = [
   {
     // Document title tag
     // We combine it with defaultDocumentTitle set in `src/main.js` on router.afterEach hook
-    meta: {
-      title: "Dashboard",     
-    },
+    
     path: "/dashboard",
     name: "dashboard",
     component: Home,
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     // Document title tag
@@ -33,6 +36,10 @@ const routes = [
     path: "/admins",
     name: "admins",
     component: () => import("../pages/AdminView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   
   {
@@ -42,6 +49,10 @@ const routes = [
     path: "/add-admin",
     name: "add-admin",
     component: () => import("../pages/NewAdminView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -50,6 +61,10 @@ const routes = [
     path: "/update-admin/:id",
     name: "update-admin",
     component: () => import("../pages/UpdateAdminView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   //manage employees
   {
@@ -59,6 +74,10 @@ const routes = [
     path: "/employees",
     name: "employees",
     component: () => import("../pages/EmployeeView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -67,6 +86,10 @@ const routes = [
     path: "/update-employee/:id",
     name: "update-employee",
     component: () => import("../pages/UpdateEmployeeView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   
   {
@@ -76,6 +99,10 @@ const routes = [
     path: "/add-employee",
     name: "add-employee",
     component: () => import("../pages/NewEmployeeView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -84,6 +111,10 @@ const routes = [
     path: "/employee-presence/:id",
     name: "employee-presence",
     component: () => import("../pages/EmployeePresence.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -92,6 +123,10 @@ const routes = [
     path: "/add-manual-presence/:id",
     name: "add-manual-presence",
     component: () => import("../pages/NewEmployeePresenceView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
 
   //manage elevators
@@ -102,6 +137,10 @@ const routes = [
     path: "/elevators",
     name: "elevators",
     component: () => import("../pages/ElevatorView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   
   {
@@ -111,6 +150,10 @@ const routes = [
     path: "/add-elevator",
     name: "add-elevator",
     component: () => import("../pages/NewElevatorView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -119,6 +162,10 @@ const routes = [
     path: "/detail-elevator/:id",
     name: "detail-elevator",
     component: () => import("../pages/DetailElevator.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -127,6 +174,10 @@ const routes = [
     path: "/update-elevator/:id",
     name: "update-elevator",
     component: () => import("../pages/UpdateElevatorView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
 
   //manage attendance
@@ -137,6 +188,10 @@ const routes = [
     path: "/attendances",
     name: "attendances",
     component: () => import("../pages/AttendanceView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
 
   //manage Asignements
@@ -147,6 +202,10 @@ const routes = [
     path: "/assignments",
     name: "assignments",
     component: () => import("../pages/AssignmentView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -155,6 +214,10 @@ const routes = [
     path: "/add-assignment",
     name: "add-assignment",
     component: () => import("../pages/NewAssignmentView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -163,6 +226,10 @@ const routes = [
     path: "/update-assignment/:id",
     name: "update-assigment",
     component: () => import("../pages/UpdateAssignmentView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   
   //manage regulations
@@ -173,6 +240,10 @@ const routes = [
     path: "/sanitary-issues",
     name: "sanitaryIssues",
     component: () => import("../pages/SanitaryIssuesView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -181,6 +252,10 @@ const routes = [
     path: "/technical-issues",
     name: "technicalIssues",
     component: () => import("../pages/TechnicalIssuesView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
   {
     meta: {
@@ -189,6 +264,10 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: () => import("../pages/ProfileView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
  
   {
@@ -198,6 +277,10 @@ const routes = [
     path: "/error",
     name: "error",
     component: () => import("../pages/ErrorView.vue"),
+    meta: {
+      title: "Dashboard",
+      requiresAuth: true // Add meta field to indicate authentication requirement
+    }
   },
 
 ];
@@ -208,6 +291,19 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     return savedPosition || { top: 0 };
   },
+});
+
+router.beforeEach(async (to, from, next) => {
+  const response = await axios.get('/api/checkAuthStatus');
+  const { authenticated } = response.data;
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !authenticated) {
+    // User is not authenticated, redirect to login page
+    next('/');
+  } else {
+    // User is authenticated or route doesn't require authentication
+    next();
+  }
 });
 
 export default router;
