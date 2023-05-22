@@ -131,17 +131,37 @@ export default {
         //data.append('avatar', this.form.avatar);
         data.append('password', this.form.password);
         if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}
-        axios.post('api/add_employee', data).then(() => {
-          swal({
-            text: "Employee Added Successfully!",
-            icon: "success",
-            closeOnClickOutside: false,
-          });
-          this.$router.go();
-        }).catch(error => {
-          console.log(error);
+        axios.post('api/add_employee', data)
+    .then((response) => {
+      if (response.status === 200) {
+        swal({
+          text: "Employee Added Successfully!",
+          icon: "success",
+          closeOnClickOutside: false,
         });
-      },
+        this.$router.go();
+      }
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 400) {
+        swal({
+          text: "Email already exists in the database.",
+          icon: "error",
+          closeOnClickOutside: false,
+        });
+      } else {
+        console.log(error);
+      }
+    });
+},
+
+
+
+
+
+
+
+
    
   }
 }
