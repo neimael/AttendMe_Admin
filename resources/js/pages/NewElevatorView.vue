@@ -121,6 +121,14 @@ getCities(){
       });
 },
 async addElevator() {
+  if (!this.form.name || !this.form.adress || !this.form.longitude || !this.form.latitude || !this.form.ville) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
   let data = new FormData();
   data.append('name', this.form.name);
   data.append('adress', this.form.adress);
@@ -129,20 +137,21 @@ async addElevator() {
 
   axios
     .post('/api/add_elevator', this.form)
-    .then(() => {
-      swal({
-        text: 'Elevator Added Successfully! \n And qrCodes are generated',
-        icon: 'success',
-        closeOnClickOutside: false,
-      });
-
-      this.$router.go();
+    .then((response) => {
+      if (response.status === 200) {
+        swal({
+          text: "Elevator Added Successfully! \n QrCodes are being generated.",
+          icon: "success",
+          closeOnClickOutside: false,
+        });
+        this.$router.go();
+      }
     })
     .catch(error => {
-      if (error.response && error.response.status === 422 && error.response.data.errors.name) {
+      if (error.response && error.response.status === 400) {
         swal({
-          text: 'Elevator name already exists. Please choose a different name.',
-          icon: 'error',
+          text: "Name already exists in the database.",
+          icon: "error",
           closeOnClickOutside: false,
         });
       } else {
@@ -150,6 +159,7 @@ async addElevator() {
       }
     });
 },
+
 
 },
   mounted() {

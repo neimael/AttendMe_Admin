@@ -101,7 +101,14 @@ export default {
   props: [],
   methods: {
     async addAdmin() {
-
+      if (!this.form.first_name || !this.form.last_name || !this.form.email ) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
         let data = new FormData();
         data.append('first_name', this.form.first_name);
         data.append('last_name', this.form.last_name);
@@ -110,17 +117,28 @@ export default {
         //data.append('avatar', this.form.avatar);
        // data.append('password', this.form.password);
         if(document.getElementById('avatar').files[0]){data.append('avatar', document.getElementById('avatar').files[0]);}
-        axios.post('api/add_admin', data).then(() => {
-          swal({
-            text: "Admin Added Successfully!",
-            icon: "success",
-            closeOnClickOutside: false,
-          });
-          this.$router.go();
-        }).catch(error => {
-          console.log(error);
+        axios.post('api/add_admin', data).then((response) => {
+      if (response.status === 200) {
+        swal({
+          text: "Admin Added Successfully!",
+          icon: "success",
+          closeOnClickOutside: false,
         });
-      },
+        this.$router.go();
+      }
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 400) {
+        swal({
+          text: "Email already exists in the database.",
+          icon: "error",
+          closeOnClickOutside: false,
+        });
+      } else {
+        console.log(error);
+      }
+    });
+},
    
   }
 }

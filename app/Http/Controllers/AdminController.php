@@ -42,6 +42,12 @@ class AdminController extends Controller
         $add_admin = new Admin();
         $add_admin->first_name = $request->input('first_name');
         $add_admin->last_name = $request->input('last_name');
+        $existingEmployee = Admin::where('email', $request->email)->first();
+        if ($existingEmployee) {
+            return response()->json([
+                'message' => 'Email already exists in the database.'
+            ], 400);
+        }
         $add_admin->email = $request->input('email');
         $add_admin->phone_number = $request->input('phone_number');
         
@@ -79,6 +85,7 @@ class AdminController extends Controller
         $admin = Admin::findOrFail($id);
         $admin->first_name = $request->input('first_name');
         $admin->last_name = $request->input('last_name');
+   
         $admin->email = $request->input('email');
         $admin->phone_number = $request->input('phone_number');
     

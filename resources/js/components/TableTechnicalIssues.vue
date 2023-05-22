@@ -43,20 +43,25 @@ const checked = (isChecked, regulation) => {
 
 <template>
  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" >
- 
-    <h1 class="text-xl ml-24"><b>Detail Regulation</b>  </h1> <div class="mt-4 ml-24">
-    <p><b>Employee's name :</b> <span style="padding-left: 10px">{{ Selectedregulation.employee?.first_name }} {{ Selectedregulation.employee?.last_name }}</span></p>
-    <p><b>Check In : </b> <span style="padding-left: 10px">{{ Selectedregulation.check_in }}</span></p>
-    <p><b>Check Out :</b> <span style="padding-left: 10px">{{ Selectedregulation.check_out }}</span></p>
-    <!-- <p><b>Employee's name : </b> {{ Selectedregulation.employee.first_name }} {{ Selectedregulation.employee.last_name }}</p>
-    <p><b>Employee's cin :</b>  {{ Selectedregulation.employee.cin }}</p>  -->
-    <p><b>Issue Type:</b> <span style="padding-left: 10px">{{ Selectedregulation.issue_type }}</span></p>
-    <p><b>Status :</b> <span style="padding-left: 10px">{{ Selectedregulation.status }}</span></p>
-    <p><b>Regulation Date :</b> <span style="padding-left: 10px">{{ Selectedregulation.attendance_day }}</span></p>
+ <div class="text-center">
+    <h1 class="text-xl font-bold"><b>Regulation Detail </b>  </h1> 
+ </div> 
+   <div class="mt-4 ml-7">
+      <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+    <img v-if="this.Selectedregulation.employee?.avatar" :src="this.Selectedregulation.employee?.avatar" alt="employee" class="w-full h-full object-cover">
+    <img v-else src="/user.png" alt="default" class="w-full h-full object-cover">
+  </div> 
+    <p><b>Employee :</b> {{ Selectedregulation.employee?.first_name }} {{ Selectedregulation.employee?.last_name }}</p>
+    <p><b>Check In : </b> {{ Selectedregulation?.check_in }}</p>
+    <p><b>Check Out :</b>{{ Selectedregulation?.check_out }} </p>
+    <p><b>Employee's cin :</b>  {{ Selectedregulation.employee?.cin }}</p>
+    <p><b>Issue Type:</b> {{ Selectedregulation?.issue_type }}</p>
+    <p><b>Status :</b> {{ Selectedregulation?.status }}</p>
+    <p><b>Regulation Date :</b> {{ Selectedregulation?.attendance_day }}</p>
   
   <p><b>Report :</b>
    
-    <span style="padding-left: 10px">{{ Selectedregulation.report }}</span>
+    {{ Selectedregulation.report }}
   </p></div>
 </CardBoxModal>
 

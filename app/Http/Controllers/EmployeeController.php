@@ -35,6 +35,13 @@ class EmployeeController extends Controller
         $employee = new User();
         $employee->first_name=$request->first_name;
         $employee->last_name=$request->last_name;
+        $existingEmployee = User::where('email', $request->email)->first();
+        if ($existingEmployee) {
+            return response()->json([
+                'message' => 'Email already exists in the database.'
+            ], 400);
+        }
+    
         $employee->email=$request->email;
         $employee->phone_number=$request->phone_number;
         // Convert the image to base64 encoding
@@ -92,6 +99,7 @@ public function update(Request $request, $id)
     $employee = User::findOrFail($id);
     $employee->first_name = $request->input('first_name');
     $employee->last_name = $request->input('last_name');
+
     $employee->email = $request->input('email');
     $employee->phone_number = $request->input('phone_number');
     $employee->cin = $request->input('cin');

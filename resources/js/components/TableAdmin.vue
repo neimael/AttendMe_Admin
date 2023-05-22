@@ -42,7 +42,10 @@ const checked = (isChecked, admin) => {
 </script>
 
 <template>
-<CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Admin">
+<CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="">
+  <div class="text-center">
+  <h1 class="text-xl font-bold">Admin Detail</h1>
+  </div>
   <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
     <img v-if="Selectedadmin.avatar" :src="'/storage/AdminAvatar/' + Selectedadmin.avatar" alt="admin" class="w-full h-full object-cover">
     <img v-else src="user.png" alt="default" class="w-full h-full object-cover">

@@ -43,28 +43,33 @@ const checked = (isChecked, presence) => {
 </script>
 
 <template>
-  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="View Detail Attendance" v-if="Selectedpresence">
-  <div class="w-32 h-32  ml-28 rounded-full overflow-hidden">
-    <img v-if="Selectedpresence.selfie" :src=" Selectedpresence.selfie" alt="employee" class="w-full h-full object-cover">
+  <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" v-if="Selectedpresence">
+    <div class="text-center">
+    <h1 class="text-xl font-bold"><b>Attendance Detail </b>  </h1> 
+ </div> 
+  <div class="w-16 h-16  mx-auto rounded-full overflow-hidden">
+    <img v-if="this.Selectedpresence?.selfie" :src=" this.Selectedpresence?.selfie" alt="employee" class="w-full h-full object-cover">
     <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
   </div>
-  <div class="mt-4 ml-4">
+  <div class="mt-4 ml-7">
+    <p><b>Employee :</b>     {{ this.Selectedpresence.employee?.first_name }} {{ this.Selectedpresence.employee?.last_name}}</p> 
+ 
     <p>
   <b>Elevator:</b>
   {{ this.Selectedpresence.qrcodes?.elevator?.name }} at
   {{ this.Selectedpresence.qrcodes?.mission }} in
   {{ this.Selectedpresence.qrcodes?.elevator?.location?.ville }}
 </p>
-    <p><b>Employee :</b>     {{ this.Selectedpresence.employee?.first_name }} {{ this.Selectedpresence.employee?.last_name}}</p> 
-    <p><b>CheckIn :</b> {{ Selectedpresence.check_in }}</p> 
+       <p><b>CheckIn :</b> {{ Selectedpresence.check_in }}</p> 
     <p><b>CheckOut :</b> {{ Selectedpresence.check_out }}</p>
     <p><b>Attendance Day:</b> {{ Selectedpresence.attendance_day }}</p>
-    <div class="w-32 h-32  ml-28 overflow-hidden">
-    <img v-if="Selectedpresence.qrcode" :src=" Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
-    <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
-  </div>
   </div>
 
+    <div class="w-20 h-20  mx-auto overflow-hidden">
+    <img v-if="Selectedpresence.qrcode" :src=" Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
+    <img v-else src="qrcode.png" alt="default" class="w-full h-full object-cover">
+  </div>
+  
 </CardBoxModal>
 
   <CardBoxModal
