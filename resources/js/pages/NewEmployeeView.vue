@@ -119,7 +119,14 @@ export default {
   props: [],
   methods: {
     async addEmployee() {
-
+      if (!this.form.first_name || !this.form.last_name || !this.form.email || !this.form.phone_number || !this.form.cin || !this.form.birthday || !this.form.adress) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
         let data = new FormData();
         data.append('first_name', this.form.first_name);
         data.append('last_name', this.form.last_name);

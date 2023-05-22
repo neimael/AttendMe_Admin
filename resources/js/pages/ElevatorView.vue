@@ -58,7 +58,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiLock" title="Elevators" main>
+      <SectionTitleLineWithButton :icon="mdiElevatorPassengerOutline" title="Elevators" main>
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
   <label tabindex="0" class="btn m-1 text-white ml-auto">  <i class="fas fa-download mr-1"></i>Export</label>
@@ -75,7 +75,7 @@ const handlePDFDownload = (fileData) => {
         <router-link to="/add-elevator">
           <BaseButton
             target="_blank"
-            :icon="mdiElevatorPassengerOutline"
+            :icon="mdiPlus"
             label="Add New Elevator"
             color="contrast"
             rounded-full

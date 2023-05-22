@@ -1,5 +1,5 @@
 <script setup>
-import { mdiPlus, mdiLock, mdiExportVariant  } from "@mdi/js";
+import { mdiPlus, mdiLock, mdiExportVariant ,mdiAccountMultiple } from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
 import TableEmployee from "@/components/TableEmployee.vue";
 import CardBox from "@/components/CardBox.vue";
@@ -52,7 +52,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <SectionTitleLineWithButton :icon="mdiLock" title="Employees" main>
+      <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Employees" main>
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
   <label tabindex="0" class="btn m-1 text-white ml-auto">  <i class="fas fa-download mr-1"></i>Export</label>
