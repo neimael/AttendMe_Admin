@@ -69,6 +69,12 @@ class ElevatorController extends Controller
     
         // create and save the elevator
         $elevator = new Elevator();
+        $existingElevator= Elevator::where('name', $request->name)->first();
+        if ($existingElevator) {
+            return response()->json([
+                'message' => 'Name already exists in the database.'
+            ], 400);
+        }
         $elevator->name = $request->name;
         $elevator->id_location = $location->id_location;
         $elevator->location()->save($location); // associate location with elevator
@@ -96,7 +102,10 @@ class ElevatorController extends Controller
      $qrCodeRecord->save();
     }
     
-        return $elevator;
+    return response()->json([
+        'message' => 'Elevator created successfully.',
+        'data' => $elevator
+    ], 200);
     }
     public function getElevator($id)
 {
