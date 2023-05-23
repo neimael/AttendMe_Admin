@@ -139,6 +139,14 @@ const updateData = {
     adress: this.adress,
     ville: this.ville
   };
+  if (!this.elevators.name|| !this.adress || !this.longitude|| !this.latitude || !this.ville) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
 axios.put(`/api/update_elevator/${id}`, updateData)
   .then(() => {
           swal({
