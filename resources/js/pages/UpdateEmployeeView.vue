@@ -150,6 +150,14 @@ export default {
     });
   },
     async updateEmployee() {
+      if (!this.form.first_name || !this.form.last_name || !this.form.email || !this.form.phone_number || !this.form.cin || !this.form.birthday || !this.form.adress) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
   const id = this.$route.params.id;
   const updatedData = {
     first_name: this.form.first_name,
@@ -189,21 +197,27 @@ export default {
 
   // Make the PUT request with the updated data and the FormData object
   axios.put(`/api/update_employee/${id}`,updatedData)
-    .then(() => {
-      swal({
-        text: "Employee Updated Successfully!",
-        icon: "success",
-        closeOnClickOutside: false,
-      });
-      this.$router.go();
+  .then((response) => {
+      if (response.status === 200) {
+        console.log(response);
+        swal({
+          text: "Employee Updated Successfully!",
+          icon: "success",
+          closeOnClickOutside: false,
+        });
+        this.$router.go();
+      }
     })
     .catch(error => {
-      console.log(error);
-      swal({
-        text: "Error updating employee",
-        icon: "error",
-        closeOnClickOutside: false,
-      });
+      if (error.response && error.response.status === 400) {
+        swal({
+          text: "Email already exists in the database.",
+          icon: "error",
+          closeOnClickOutside: false,
+        });
+      } else {
+        console.log(error);
+      }
     });
 },
 

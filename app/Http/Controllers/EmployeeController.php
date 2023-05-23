@@ -100,7 +100,12 @@ public function update(Request $request, $id)
     $employee->first_name = $request->input('first_name');
     $employee->last_name = $request->input('last_name');
     
- 
+    $existingEmployee = User::where('email', $request->email)->where('id','!=', $id)->first();
+    if ($existingEmployee) {
+        return response()->json([
+            'message' => 'Email already exists in the database.'
+        ], 400);
+    }
     $employee->email = $request->input('email');
     $employee->phone_number = $request->input('phone_number');
     $employee->cin = $request->input('cin');
