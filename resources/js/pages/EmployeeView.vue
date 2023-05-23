@@ -7,6 +7,8 @@ import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
 import BaseButton from "@/components/BaseButton.vue";
 import axios from 'axios';
+import FormControl from "@/components/FormControl.vue";
+import NavBarItemPlain from "@/components/NavBarItemPlain.vue";
 
 const exportData = () => {
   axios.get('api/export_employees', { responseType: 'blob' })
@@ -52,7 +54,18 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
+      <NavBarItemPlain use-margin>
+  <FormControl
+    v-model="searchTerm"
+    placeholder="Search (ctrl+k)"
+    ctrl-k-focus
+    transparent
+    borderless
+    class="w-full"
+  />
+</NavBarItemPlain>
       <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Employees" main>
+      
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
   <label tabindex="0" class="btn m-1 text-white ml-auto">  <i class="fas fa-download mr-1"></i>Export</label>
