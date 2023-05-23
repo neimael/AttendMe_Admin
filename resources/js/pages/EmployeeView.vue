@@ -1,7 +1,7 @@
 <script setup>
 import { mdiPlus, mdiLock, mdiExportVariant ,mdiAccountMultiple } from "@mdi/js";
 import SectionMain from "@/components/SectionMain.vue";
-import TableEmployee from "@/components/TableEmployee.vue";
+
 import CardBox from "@/components/CardBox.vue";
 import LayoutAuthenticated from "@/auth/LayoutAuthenticated.vue";
 import SectionTitleLineWithButton from "@/components/SectionTitleLineWithButton.vue";
