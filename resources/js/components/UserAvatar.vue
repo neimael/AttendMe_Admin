@@ -16,25 +16,18 @@ const props = defineProps({
   },
 });
 
-const avatar = computed(
-  () =>
-    props.avatar ??
-    `https://avatars.dicebear.com/api/${props.api}/${props.username.replace(
-      /[^a-z0-9]+/i,
-      "-"
-    )}.svg`
-);
+const avatar = computed(() => props.avatar);
+
+
 
 const username = computed(() => props.username);
 </script>
 
 <template>
-  <div>
-    <img
-      :src="avatar"
-      :alt="username"
-      class="rounded-full block h-auto w-full max-w-full bg-gray-100 dark:bg-slate-800"
-    />
+      <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;" >
+    <img v-bind:src=" avatar ? avatar : '/user.png' "  class="w-full h-full object-cover" />
+
+
     <slot />
   </div>
 </template>
