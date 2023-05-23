@@ -176,22 +176,25 @@ public function getOneElevator($id)
         // update the QR codes
         $areas = ['area1', 'area2', 'area3'];
         foreach ($areas as $area) {
-            $qrCode = QrCode::format('png')->size(200)->generate("Location : ". $location-> ville.' '.$location->adress.' '.$location->longitude. '-' .$location->latitude ."\n".'Name : '.$elevator-> name ."\n" .'Mission : ' .$area);
-            $qrCodePath = 'qrcodes/' . $area . '_' . $elevator->id_elevator . '.png';
-            Storage::disk('public')->put($qrCodePath, $qrCode);
-            
+          
             // update the QR code or create a new one
             $qrCodeModel = QrCodes::updateOrCreate(
                 [
                     'mission' => $area,
                     'id_elevator' => $elevator->id_elevator,
                 ],
-                [
-                    'mission' => $area,
-                    'qr_code' => $qrCodePath,
-                    'id_elevator' => $elevator->id_elevator,
-                ]
+               
             );
+             // Generate the QR code content
+         $qrCodeContent = "Location: " . $location->ville . ' ' . $location->adress . ' ' . $location->longitude . '-' . $location->latitude . "\n"
+         . 'Name: ' . $elevator->name . "\n"
+         . 'Mission: ' . $area . "\n"
+         . 'QR Code ID: ' . $qrCodeModel->id_qr_code;
+            $qrCode = QrCode::format('png')->size(200)->generate($qrCodeContent);
+            $qrCodePath = 'qrcodes/' . $area . '_' . $qrCodeModel->id_qr_code . '.png';
+            Storage::disk('public')->put($qrCodePath, $qrCode);
+            $qrCodeModel->qr_code = $qrCodePath;
+            $qrCodeModel->save();
         }
         return response()->json([
             'message' => 'Elevator updated successfully.',
