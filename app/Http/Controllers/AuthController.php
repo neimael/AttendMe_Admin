@@ -148,7 +148,7 @@ class AuthController extends Controller
 
         return response([
             'presence' => $presence,
-            'message' => 'Your presence has been saved successfully',
+            'message' => 'Your CheckIn has been saved successfully',
         ]);
     }
     public function updatePresence(Request $request)
@@ -179,7 +179,7 @@ class AuthController extends Controller
         ]);
         return response([
             'presence' => $presence,
-            'message' => 'Your presence has been modified successfully',
+            'message' => 'Your presence has been saved successfully',
         ]);
     }
     //get presnece_id 
