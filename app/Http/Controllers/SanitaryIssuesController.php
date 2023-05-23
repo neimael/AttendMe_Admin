@@ -18,12 +18,23 @@ class SanitaryIssuesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sanitaryissue= SanitaryIssues::with('employee')->get();
-       return $sanitaryissue;
+        $searchTerm = $request->input('search');
+    
+        if (!empty($searchTerm)) {
+            $sanitaryIssues = SanitaryIssues::with('employee')
+                ->whereHas('employee', function ($query) use ($searchTerm) {
+                    $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                })
+                ->get();
+        } else {
+            $sanitaryIssues = SanitaryIssues::with('employee')->get();
+        }
+    
+        return response()->json($sanitaryIssues);
     }
-
     public function export()
     {
          $filename = 'sanitary_issues.xlsx'; // Desired filename

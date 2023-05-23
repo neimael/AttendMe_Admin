@@ -24,23 +24,30 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
-    {
-        $search = $request->input('search');
-    
-        $query = User::where(function ($q) use ($search) {
-            $q->where('first_name', 'LIKE', "%$search%")
-              ->orWhere('last_name', 'LIKE', "%$search%")
-              ->orWhere('email', 'LIKE', "%$search%")
-              ->orWhere('phone_number', 'LIKE', "%$search%")
-              ->orWhere('cin', 'LIKE', "%$search%")
-              ->orWhere('adress', 'LIKE', "%$search%");
-        });
-    
-        $employees = $query->paginate(10); // Adjust the page size as needed
-    
-      return $employees;
+   // Laravel Controller
+public function index(Request $request)
+{
+    $searchTerm = $request->input('search');
+
+    if (!empty($searchTerm)) {
+        $users = User::where(function ($query) use ($searchTerm) {
+            $query->where('cin', 'like', '%' . $searchTerm . '%')
+                ->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('email', 'like', '%' . $searchTerm . '%')
+                ->orWhere('phone_number', 'like', '%' . $searchTerm . '%')
+                ->orWhere('adress', 'like', '%' . $searchTerm . '%');
+        })->get();
+    } else {
+        $users = User::all();
     }
+
+    return response()->json($users);
+}
+
+    
+
+
 
     public function store(request $request)
     {
