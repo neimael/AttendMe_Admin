@@ -215,7 +215,7 @@ export default {
       }
 
       axios
-        .get("api/getAuthenticatedAdmin", {
+        .get("/api/getAuthenticatedAdmin", {
           headers: {
             "X-CSRF-TOKEN": csrfToken,
             Authorization: `Bearer ${this.token}`,
@@ -256,7 +256,7 @@ export default {
 
 
   // Make the PUT request with the updated data and the FormData object
-  await axios.put(`api/update_profile/${this.token}`, updatedData,{
+  await axios.put(`/api/update_profile/${this.token}`, updatedData,{
           headers: {
             "X-CSRF-TOKEN": csrfToken,
             Authorization: `Bearer ${this.token}`,
@@ -355,7 +355,7 @@ bcrypt.compare(this.password, this.form.password)
 
 
   // Make the PUT request with the updated data and the FormData object
-   axios.put(`api/update_password/${this.token}`, updatedData,{
+   axios.put(`/api/update_password/${this.token}`, updatedData,{
           headers: {
             "X-CSRF-TOKEN": csrfToken,
             Authorization: `Bearer ${this.token}`,

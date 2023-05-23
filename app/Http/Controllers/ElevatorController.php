@@ -145,6 +145,12 @@ public function getOneElevator($id)
     public function update(Request $request, $id)
     {
         $elevator = Elevator::findOrFail($id);
+        $existingElevator= Elevator::where('name', $request->name)->first();
+        if ($existingElevator) {
+            return response()->json([
+                'message' => 'Name already exists in the database.'
+            ], 400);
+        }
         $elevator->name = $request->name;
         
         // update or create the location
