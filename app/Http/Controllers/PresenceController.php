@@ -27,12 +27,33 @@ class PresenceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $presence=Presence::with(['employee','qrcodes.elevator.location'])->whereDate('attendance_day', today())
-        ->get();
-        return $presence;
+    public function index(Request $request)
+{
+    $searchTerm = $request->input('search');
+
+    if (!empty($searchTerm)) {
+        $presence = Presence::with(['employee', 'qrcodes.elevator.location'])
+            ->whereDate('attendance_day', now()->toDateString())
+            ->where(function ($query) use ($searchTerm) {
+                $query->whereHas('employee', function ($query) use ($searchTerm) {
+                    $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                })
+                ->orWhereHas('qrcodes.elevator.location', function ($query) use ($searchTerm) {
+                    $query->where('name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('ville', 'like', '%' . $searchTerm . '%');
+                });
+            })
+            ->get();
+    } else {
+        $presence = Presence::with(['employee', 'qrcodes.elevator.location'])
+            ->whereDate('attendance_day', now()->toDateString())
+            ->get();
     }
+
+    return response()->json($presence);
+}
+
 
     public function getPresence($id)
     {

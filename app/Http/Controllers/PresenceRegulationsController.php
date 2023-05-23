@@ -17,11 +17,28 @@ class PresenceRegulationsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-       $presenceRegulations = PresenceRegulation::with('employee')->get();
-       return $presenceRegulations;
+    public function index(Request $request)
+{
+    $searchTerm = $request->input('search');
+
+    $presenceRegulations = PresenceRegulation::with('employee');
+
+    if (!empty($searchTerm)) {
+        $presenceRegulations->where(function ($query) use ($searchTerm) {
+            $query->where('status', 'like', '%' . $searchTerm . '%')
+                ->orWhere('issue_type', 'like', '%' . $searchTerm . '%')
+                ->orWhereHas('employee', function ($query) use ($searchTerm) {
+                    $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                });
+        });
     }
+
+    $presenceRegulations = $presenceRegulations->get();
+
+    return response()->json($presenceRegulations);
+}
+
 
     /**
      * Show the form for creating a new resource.

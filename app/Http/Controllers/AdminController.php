@@ -23,12 +23,23 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $admins=Admin::all();
-        //return $employees[0]-> sanitaryIssues;
-        return  $admins;
+    public function index(Request $request)
+{
+    $searchTerm = $request->input('search');
+
+    if (!empty($searchTerm)) {
+        $admin = Admin::where(function ($query) use ($searchTerm) {
+            $query->orWhere('first_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerm . '%')
+                ->orWhere('email', 'like', '%' . $searchTerm . '%')
+                ->orWhere('phone_number', 'like', '%' . $searchTerm . '%');
+        })->get();
+    } else {
+        $admin = Admin::all();
     }
+
+    return response()->json($admin);
+}
 
     /**
      * Show the form for creating a new resource.
