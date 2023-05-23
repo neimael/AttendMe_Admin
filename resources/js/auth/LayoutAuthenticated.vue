@@ -12,13 +12,21 @@ import NavBar from "@/components/NavBar.vue";
 import NavBarItemPlain from "@/components/NavBarItemPlain.vue";
 import AsideMenu from "@/components/AsideMenu.vue";
 import FooterBar from "@/components/FooterBar.vue";
+import axios from 'axios';
 
-useMainStore().setUser({
-  name: "Admin",
-  email: "naima@gmail.com",
-  avatar:
-    "https://avatars.dicebear.com/api/avataaars/example.svg?options[top][]=shortHair&options[accessoriesChance]=93",
-});
+axios
+  .get("/api/getAuthenticatedAdmin")
+  .then((response) => {
+    const adminData = response.data.admin;
+    useMainStore().setUser({
+      name: adminData.first_name + " " + adminData.last_name,
+      email: adminData.email,
+      avatar: '/storage/AdminAvatar/'+adminData.avatar,
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
 const layoutAsidePadding = "xl:pl-60";
 
@@ -40,8 +48,16 @@ const menuClick = (event, item) => {
   }
 
   if (item.isLogout) {
-    router.push("/login");  
-  }
+  axios.post('/api/logoutAdmin')
+    .then(response => {
+      // Handle successful logout
+      router.push("/");
+    })
+    .catch(error => {
+      // Handle error
+      console.error(error);
+    });
+}
 };
 </script>
 

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+
 export const useMainStore = defineStore("main", {
   state: () => ({
     /* User */
@@ -8,24 +9,28 @@ export const useMainStore = defineStore("main", {
     /* Sample data (commonly used) */
     clients: [],
     history: [],
+    userName: "",
+    userAvatar: "",
   }),
+
   actions: {
     setUser(payload) {
       if (payload.name) {
-        this.userName = payload.name; 
+        this.userName = payload.name;
       }
-    
+      if (payload.avatar) {
+        this.userAvatar = payload.avatar;
+      }
     },
 
     fetchAdminData() {
       axios
-        .get("/api/admin") // Replace with your API endpoint for fetching admin data
+        .get("/api/getAuthenticatedAdmin")
         .then((response) => {
           const adminData = response.data.admin;
-          this.setUser({
-            name: adminData.first_name + " " + adminData.last_name,
-
-          });
+          const fullName = adminData.first_name + " " + adminData.last_name;
+          const avatar = adminData.avatar;
+          this.setUser({ name: fullName, avatar: avatar });
         })
         .catch((error) => {
           alert(error.message);
@@ -44,7 +49,5 @@ export const useMainStore = defineStore("main", {
           alert(error.message);
         });
     },
-
-    
   },
 });
