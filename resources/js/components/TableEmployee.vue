@@ -188,6 +188,7 @@ const checked = (isChecked, employee) => {
 <script>
 import axios from 'axios';
 import Swal from "sweetalert2";
+import { debounce } from 'lodash';
 
 export default {
   name: "EmployeeView",
@@ -198,12 +199,16 @@ export default {
       currentPage: 0,
       pageSize: 10,
       EMPLOYEE_API_BASE_URL: "http://localhost/AttendMe_Admin/public/api/employees",
+      searchTerm: "",
     };
 
   },
   methods: {
     async getEmployees() {
-      await axios.get(this.EMPLOYEE_API_BASE_URL)
+      const params = {
+        search: this.debouncedSearch, // Use debounced search term
+      };
+      await axios.get(this.EMPLOYEE_API_BASE_URL, { params })
         .then(response => this.employees = response.data)
         .catch(error => console.log(error))
     },
@@ -259,7 +264,23 @@ showAllInfo() {
     }
 
   },
+  watch: {
+    debouncedSearch: {
+      handler() {
+        this.currentPage = 0; // Reset the current page when search term changes
+        this.getEmployees();
+      },
+    },
+  },
   computed: {
+   
+    debouncedSearch: function () {
+  return debounce(() => {
+    this.searchTerm
+    // Perform your search logic here
+    // This code will be executed after the debounce delay
+  }, 500); // Adjust the debounce delay as needed
+},
     paginatedEmployees: function () {
       const startIndex = this.currentPage * this.pageSize;
       const endIndex = startIndex + this.pageSize;

@@ -148,17 +148,26 @@ const updateData = {
     return;
   }
 axios.put(`/api/update_elevator/${id}`, updateData)
-  .then(() => {
+.then((response) => {
+      if (response.status === 200) {
           swal({
             text: "Elevator Updated Successfully! \n And qrCodes are regenerated successfully!",
             icon: "success",
             closeOnClickOutside: false,
           });
+        }
           this.$router.go();
         }).catch(error => {
-          console.log(error);
+      if (error.response && error.response.status === 400) {
+        swal({
+          text: "Name already exists in the database.",
+          icon: "error",
+          closeOnClickOutside: false,
         });
-        console.log(this.elevators);
+      } else {
+        console.log(error);
+      }
+    });
       },
    
 

@@ -139,6 +139,14 @@ export default {
       }
     },
     async updateAdmin() {
+      if (!this.form.first_name || !this.form.last_name || !this.form.email ) {
+    swal({
+      text: "Please fill in all the required fields.",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
+    return;
+  }
   const id = this.$route.params.id;
 
   // Create a new object that only contains the fields you want to update
@@ -156,22 +164,26 @@ export default {
 
   // Make the PUT request with the updated data and the FormData object
   axios.put(`/api/update_admin/${id}`, updatedData)
-    .then(() => {
-      swal({
-        text: "Admin Updated Successfully!",
-        icon: "success",
-        closeOnClickOutside: false,
-      });
-      console.log(updatedData);
-      this.$router.go();
+  .then((response) => {
+  if (response.status === 200) {
+        swal({
+          text: "Admin Updated Successfully!",
+          icon: "success",
+          closeOnClickOutside: false,
+        });
+        this.$router.go();
+      }
     })
     .catch(error => {
-      console.log(error);
-      swal({
-        text: "Error updating admin",
-        icon: "error",
-        closeOnClickOutside: false,
-      });
+      if (error.response && error.response.status === 400) {
+        swal({
+          text: "Email already exists in the database.",
+          icon: "error",
+          closeOnClickOutside: false,
+        });
+      } else {
+        console.log(error);
+      }
     });
 },
 

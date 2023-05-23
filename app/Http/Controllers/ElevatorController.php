@@ -145,7 +145,9 @@ public function getOneElevator($id)
     public function update(Request $request, $id)
     {
         $elevator = Elevator::findOrFail($id);
-        $existingElevator= Elevator::where('name', $request->name)->first();
+        $existingElevator = Elevator::where('name', $request->name)
+    ->where('id_elevator', '!=', $id)
+    ->first();
         if ($existingElevator) {
             return response()->json([
                 'message' => 'Name already exists in the database.'
@@ -191,8 +193,10 @@ public function getOneElevator($id)
                 ]
             );
         }
-        
-        return $elevator;
+        return response()->json([
+            'message' => 'Elevator updated successfully.',
+            'data' => $elevator
+        ], 200);
     }
     
 

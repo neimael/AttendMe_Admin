@@ -25,6 +25,7 @@
         "compressorjs": "^1.2.1",
         "daisyui": "^2.51.6",
         "laravel-vue-pagination": "^4.1.0",
+        "lodash": "^4.17.21",
         "numeral": "^2.0.6",
         "ol": "^7.3.0",
         "pinia": "^2.0.35",

@@ -24,12 +24,24 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees=User::all();
-        return $employees;
-        //
+        $search = $request->input('search');
+    
+        $query = User::where(function ($q) use ($search) {
+            $q->where('first_name', 'LIKE', "%$search%")
+              ->orWhere('last_name', 'LIKE', "%$search%")
+              ->orWhere('email', 'LIKE', "%$search%")
+              ->orWhere('phone_number', 'LIKE', "%$search%")
+              ->orWhere('cin', 'LIKE', "%$search%")
+              ->orWhere('adress', 'LIKE', "%$search%");
+        });
+    
+        $employees = $query->paginate(10); // Adjust the page size as needed
+    
+      return $employees;
     }
+
     public function store(request $request)
     {
         $employee = new User();
@@ -100,7 +112,12 @@ public function update(Request $request, $id)
     $employee->first_name = $request->input('first_name');
     $employee->last_name = $request->input('last_name');
     
- 
+    $existingEmployee = User::where('email', $request->email)->where('id','!=', $id)->first();
+    if ($existingEmployee) {
+        return response()->json([
+            'message' => 'Email already exists in the database.'
+        ], 400);
+    }
     $employee->email = $request->input('email');
     $employee->phone_number = $request->input('phone_number');
     $employee->cin = $request->input('cin');

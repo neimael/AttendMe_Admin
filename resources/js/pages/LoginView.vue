@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { mdiAccount, mdiLock } from "@mdi/js";
 import SectionFullScreen from "@/components/SectionFullScreen.vue";
@@ -23,17 +23,20 @@ styleStore.setDarkMode(false);
 
 const router = useRouter();
 const click = (slug) => {
- 
- router.push("/dashboard");
+  router.push("/dashboard");
 };
+
+const loading = ref(false); // Loading indicator state
+
 const form = reactive({
   login: "",
   password: "",
- 
 });
 
 const submit = async () => {
   try {
+    loading.value = true; // Show loading indicator
+
     const response = await axios.post("/api/loginAdmin", {
       email: form.login,
       password: form.password,
@@ -48,12 +51,14 @@ const submit = async () => {
   } catch (error) {
     //add swal 
     swal({
-            text: "Your Credentials are incorrect Please Try again!",
-            icon: "error",
-            closeOnClickOutside: false,
-          });
+      text: "Your credentials are incorrect. Please try again!",
+      icon: "error",
+      closeOnClickOutside: false,
+    });
     // Handle the error
     console.error(error.response.data);
+  } finally {
+    loading.value = false; // Hide loading indicator
   }
 };
 </script>
@@ -74,7 +79,7 @@ const submit = async () => {
           />
         </FormField>
 
-          <FormField label="Password" style="color:white">
+        <FormField label="Password" style="color:white">
           <FormControlPass
             v-model="form.password"
             type="password"
@@ -85,18 +90,19 @@ const submit = async () => {
             required
           />
         </FormField>
-      
-      
 
         <template #footer>
           <div class="flex justify-center mt-6">
             <BaseButton
-  type="submit"
-  label="Login"
-  class="buttonStyle"
-  
-/>
-
+              type="submit"
+              label="Login"
+              class="buttonStyle"
+              :disabled="loading" 
+            >
+              <!-- Show loading indicator when loading is true -->
+              <span v-if="loading" class="spinner"></span>
+              <span v-else>Login</span>
+            </BaseButton>
           </div>
         </template>
       </CardBox>
@@ -104,6 +110,21 @@ const submit = async () => {
   </LayoutGuest>
 </template>
 <style>
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .custom-card {
   width: 600px; 
   background: transparent;
