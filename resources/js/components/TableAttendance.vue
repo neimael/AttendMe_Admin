@@ -47,10 +47,24 @@ const checked = (isChecked, presence) => {
     <div class="text-center">
     <h1 class="text-xl font-bold"><b>Attendance Detail </b>  </h1> 
  </div> 
-  <div class="w-16 h-16  mx-auto rounded-full overflow-hidden">
-    <img v-if="this.Selectedpresence?.selfie" :src=" this.Selectedpresence?.selfie" alt="employee" class="w-full h-full object-cover">
-    <img v-else src="user.png" alt="default" class="w-full h-full object-cover">
+<div class="flex justify-center items-center">
+  <div class="w-16 h-16  rounded-full overflow-hidden">
+    <img v-if="this.Selectedpresence?.selfie" :src="this.Selectedpresence?.selfie" alt="employee" class="w-full h-full object-cover">
+    <!-- <img v-else src="user.png" alt="default" class="w-full h-full object-cover"> -->
   </div>
+
+  <div v-if="this.Selectedpresence?.selfie"  class="w-20 h-20 ml-2  overflow-hidden" >
+    
+    <img v-if="Selectedpresence.qrcode" :src="Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
+    <img v-else src="qrcode.png" alt="default" class="w-full h-full object-cover">
+  
+  </div>
+   <div v-else class="w-20 h-20 mr-16 overflow-hidden">
+    <img v-if="Selectedpresence.qrcode" :src="Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
+    <img v-else src="qrcode.png" alt="default" class="w-full h-full object-cover">
+  </div>
+</div>
+
   <div class="mt-4 ml-7">
     <p><b>Employee :</b>     {{ this.Selectedpresence.employee?.first_name }} {{ this.Selectedpresence.employee?.last_name}}</p> 
  
@@ -65,10 +79,7 @@ const checked = (isChecked, presence) => {
     <p><b>Attendance Day:</b> {{ Selectedpresence.attendance_day }}</p>
   </div>
 
-    <div class="w-20 h-20  mx-auto overflow-hidden">
-    <img v-if="Selectedpresence.qrcode" :src=" Selectedpresence.qrcode" alt="qrcode" class="w-full h-full object-cover">
-    <img v-else src="qrcode.png" alt="default" class="w-full h-full object-cover">
-  </div>
+  
   
 </CardBoxModal>
 
@@ -145,7 +156,7 @@ const checked = (isChecked, presence) => {
         <td data-label="Qrcode">
           <div style="width: 90px; height: 90px; overflow: hidden;">
             <img v-if="presence.qrcode" :src="presence.qrcode" alt="qrcode" class="w-full h-full object-cover">
-            <p v-else > Not yet </p>
+              <img v-else src="qrcode.png" alt="qrcode" class="w-full h-full object-cover">
             </div>
         </td>
         <td data-label="Created" class="lg:w-1 whitespace-nowrap">
