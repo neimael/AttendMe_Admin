@@ -25,7 +25,10 @@ class ElevatorController extends Controller
      */
     public function index()
     {
-        $elevators=qrcodes::with('elevator.location')->get();
+            $elevators =qrcodes::with('elevator.location')
+                ->get();
+        
+    
         return $elevators;
     }
 
@@ -129,10 +132,29 @@ public function getOneElevator($id)
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show(Request $request)
     {
-        $elevators=Elevator::with('location')->get();
-        return $elevators;
+        
+        $searchTerm = $request->input('search');
+
+        if (!empty($searchTerm)) {
+            $elevators = Elevator::with('location')
+               
+                ->where(function ($query) use ($searchTerm) {
+                    $query->whereHas('location', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('ville', 'like', '%' . $searchTerm . '%');
+                    });
+                })
+                ->get();
+                   
+        } else {
+            $elevators =Elevator::with('location')
+                ->get();
+        }
+    
+        return response()->json($elevators);
+       
     }
 
     /**

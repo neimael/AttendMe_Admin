@@ -158,6 +158,7 @@ export default {
         .put(`/api/update_elevator/${id}`, updateData)
         .then((response) => {
           if (response.status === 200) {
+           
             swal({
               text: 'Elevator Updated Successfully! \n And qrCodes are regenerated successfully!',
               icon: 'success',
@@ -165,7 +166,9 @@ export default {
             });
           }
           this.$router.go();
+         
         })
+     
         .catch((error) => {
           if (error.response && error.response.status === 400) {
             swal({
@@ -179,54 +182,54 @@ export default {
         });
     },
     initMap() {
-      // Define the map view
-      const view = new View({
-        center: fromLonLat([this.longitude, this.latitude]), // Set center to the fetched coordinates
-        zoom: 12, // Increase zoom level to focus on the marker
-        projection: 'EPSG:3857',
-      });
+  // Define the map view
+  const view = new View({
+    center: fromLonLat([this.longitude, this.latitude]), // Set center to the fetched coordinates
+    zoom: 12, // Increase zoom level to focus on the marker
+    projection: 'EPSG:3857',
+  });
 
-      // Define the map layer
-      const layer = new TileLayer({
-        source: new OSM(),
-      });
+  // Define the map layer
+  const layer = new TileLayer({
+    source: new OSM(),
+  });
 
-      // Create the marker feature
-      const marker = new Feature({
-        geometry: new Point(fromLonLat([this.longitude, this.latitude])),
-      });
+  // Create the marker feature
+  const marker = new Feature({
+    geometry: new Point(fromLonLat([this.longitude, this.latitude])),
+  });
 
-      const markerStyle = new Style({
-        image: new Circle({
-          radius: 10,
-          fill: new Fill({
-            color: 'red',
-          }),
+  const vectorLayer = new VectorLayer({
+    source: new VectorSource({
+      features: [marker],
+    }),
+    style: new Style({
+      image: new Circle({
+        radius: 6,
+        fill: new Fill({
+          color: 'red',
         }),
-      });
+      }),
+    }),
+  });
 
-      const vectorLayer = new VectorLayer({
-        source: new VectorSource({
-          features: [marker],
-        }),
-      });
+  // Create the map object and set it as the view's target
+  const map = new Map({
+    target: this.$refs.mapContainer,
+    layers: [layer, vectorLayer],
+    view: view,
+  });
 
-      // Create the map object and set it as the view's target
-      const map = new Map({
-        target: this.$refs.mapContainer,
-        layers: [layer, vectorLayer],
-        view: view,
-      });
+  // Add an event listener to the map to move the marker to the clicked location
+  map.on('click', (event) => {
+    const [longitude, latitude] = transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+    this.longitude = longitude; // Update the longitude property
+    this.latitude = latitude; // Update the latitude property
+    marker.setGeometry(new Point(fromLonLat([longitude, latitude])));
+    console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  });
+},
 
-      // Add an event listener to the map to move the marker to the clicked location
-      map.on('click', (event) => {
-        const [longitude, latitude] = transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
-        this.elevators.location.longitude = longitude;
-        this.elevators.location.latitude = latitude;
-        console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        marker.setGeometry(new Point(event.coordinate));
-      });
-    },
   },
   mounted() {
     this.getCities();

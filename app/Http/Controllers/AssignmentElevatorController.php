@@ -23,10 +23,32 @@ class AssignmentElevatorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    { 
-        $assignmentElevator=AssignmentElevator::with(['employee','qrcode.elevator.location'])->get();
-        return $assignmentElevator;
+    public function index(Request $request)
+    {
+        $searchTerm = $request->input('search');
+    
+        if (!empty($searchTerm)) {
+            $assignmentElevator = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+              
+                ->where(function ($query) use ($searchTerm) {
+                    $query->whereHas('employee', function ($query) use ($searchTerm) {
+                        $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('qrcode.elevator.location', function ($query) use ($searchTerm) {
+                        $query->where('name', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('ville', 'like', '%' . $searchTerm . '%');
+                    });
+                })
+                ->get();
+        } else {
+            $assignmentElevator = AssignmentElevator::with(['employee', 'qrcode.elevator.location'])
+       
+                ->get();
+        }
+    
+        return response()->json($assignmentElevator);
+      
     }
     public function missions()
     {
