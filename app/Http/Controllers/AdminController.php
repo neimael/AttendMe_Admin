@@ -273,8 +273,10 @@ public function checkAuthStatus(Request $request)
     $admin->email = $request->input('email');
     $admin->phone_number = $request->input('phone_number');
 
-    $image = $this->saveImageAdmin($request->avatar, 'AdminAvatar');
-    $admin->avatar = $image;
+    if (!empty($request->avatar)) {
+        $image = $this->saveImageAdmin($request->avatar, 'AdminAvatar');
+        $admin->avatar = $image;
+    }
     
     $admin->save();
 
