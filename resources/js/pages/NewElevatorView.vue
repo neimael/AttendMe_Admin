@@ -59,16 +59,16 @@ window.Swal = swal;
         <div id="map"></div>
 
 
-
           <template #footer>
-             <div class="flex justify-center">
+            <div class="flex justify-center">
             <BaseButtons > 
-                <div class="flex justify-center mt-6">
+                <div class="flex justify-center">
               <BaseButton type="submit"  class="buttonStyle" label="Add Elevator" @click="addElevator"/> 
            </div>
              
             </BaseButtons>
-        </div>
+            </div>
+        
           </template>
         </CardBox>
       </div>
@@ -159,15 +159,13 @@ async addElevator() {
       }
     });
 },
-
-
 },
   mounted() {
     this.getCities();
     // Define the map view
     const view = new View({
       center: fromLonLat([-9.6, 30.4]), // Set center to Agadir coordinates
-      zoom: 12, // Increase zoom level to focus on Agadir
+      zoom: 10, // Increase zoom level to focus on Agadir
       projection: 'EPSG:3857'
     });
 
@@ -185,7 +183,7 @@ async addElevator() {
     // Create a new style for the marker
     const markerStyle = new Style({
       image: new Circle({
-        radius: 10,
+        radius: 6,
         fill: new Fill({
           color: 'red'
         })
@@ -230,6 +228,7 @@ async addElevator() {
 #map {
   width: 100%;
   height: 100%;
+ 
 }
 
 .buttonStyle{
