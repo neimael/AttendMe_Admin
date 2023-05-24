@@ -167,35 +167,14 @@ export default {
     cin: this.form.cin,
     adress: this.form.adress,
     birthday: this.form.birthday,
-    avatar: this.form.avatar,
 
   };
+  if (this.file) {
+    const base64String = await this.getStringImage(this.file);
+    updatedData.avatar = base64String;
+  }
   console.log(updatedData);
-  // let data = new FormData();
-  //     data.append("first_name", this.form.first_name);
-  //     data.append("last_name", this.form.last_name);
-  //     data.append("email", this.form.email);
-  //     data.append("phone_number", this.form.phone_number);
-  //     data.append("cin", this.form.cin);
-  //     data.append("birthday", this.form.birthday);
-  //     data.append("address", this.form.adress);
-
-  //     if (this.form.avatar) {
-  //       data.append("avatar", this.avatar);
-  //     }
-
-  // Create a new FormData object to send the updated form data
-  // const formData = new FormData();
-  // Object.keys(updatedData).forEach(key => {
-  //   formData.append(key, updatedData[key]);
-  // });
-  
-  // Append the updated avatar image file if it exists
-  // if (this.form.avatar instanceof File) {
-  //   formData.append('avatar', this.form.avatar);
-  // }
-
-  // Make the PUT request with the updated data and the FormData object
+ 
   axios.put(`/api/update_employee/${id}`,updatedData)
   .then((response) => {
       if (response.status === 200) {
@@ -222,19 +201,7 @@ export default {
 },
 
 OnFileChange(e) {
-  // this.form.avatar = e.target.files[0];
-  // let reader = new FileReader();
-  // reader.addEventListener("load", () => {
-  //   this.previewImage = reader.result;
-  // }, false);
-  // if (this.form.avatar) {
-  //   if (this.form.avatar.type.match('image.*')) {
-  //     reader.readAsDataURL(this.form.avatar);
-  //   }
-  // } else {
-  //   this.previewImage = null;
-  // }
- 
+
   this.file = e.target.files[0];
   let reader = new FileReader();
   reader.onload = (e) => {

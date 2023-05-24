@@ -155,9 +155,12 @@ export default {
     last_name: this.form.last_name,
     phone_number: this.form.phone_number,
     email: this.form.email,
-    avatar: this.form.avatar,
     
   };
+  if (this.file) {
+    const base64String = await this.getStringImage(this.file);
+    updatedData.avatar = base64String;
+  }
 
   // Create a new FormData object to send the updated form data
 

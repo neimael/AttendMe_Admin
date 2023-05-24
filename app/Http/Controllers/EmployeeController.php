@@ -131,17 +131,12 @@ public function update(Request $request, $id)
     $employee->adress = $request->input('adress');
     $employee->birthday = $request->input('birthday');
     
-    $image = $this->saveImage($request->avatar, 'profiles');
-    $employee->avatar = $image;
+    if (!empty($request->avatar)) {
+        $image = $this->saveImage($request->avatar, 'profiles');
+        $employee->avatar = $image;
+    }
 
-
-    // if($request['avatar']){
-    //     $file = $request->file('avatar');
-    //     $extension = $file->getClientOriginalExtension();
-    //     $filename = time(). $file->getClientOriginalName();
-    //     Storage::disk('public')->put('profiles/'.$filename,  File::get($file));
-    //     $employee->avatar = URL::to('/').'/storage/profiles/'.$filename;
-    // }
+    
 
     $employee->save();
 
