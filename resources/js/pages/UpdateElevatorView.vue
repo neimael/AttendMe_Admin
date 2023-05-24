@@ -169,11 +169,8 @@ axios.put(`/api/update_elevator/${id}`, updateData)
       }
     });
       },
-   
-
-  },
-   
-  mounted() {
+  }, 
+    mounted() {
     this.getCities();
     this.getElevatorById();
     // Define the map view
@@ -189,7 +186,7 @@ axios.put(`/api/update_elevator/${id}`, updateData)
 
     // Create the marker feature
     const marker = new Feature({
-      geometry: new Point([0, 0]),
+      geometry: new Point([0,0]),
     });
 
     // Create a new style for the marker
@@ -222,13 +219,9 @@ axios.put(`/api/update_elevator/${id}`, updateData)
     // Add an event listener to the map to move the marker to the clicked location
     map.on('click', (event) => {
       const [longitude, latitude] = transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
-      //fill the location object
-      //this.property.location.longitude = longitude;
-     // this.property.location.latitude = latitude;
      this.elevators.location.longitude = longitude;
       this.elevators.location.latitude = latitude;
       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-      //console.log("location", this.property.location);
       marker.setGeometry(new Point(event.coordinate));
     });
   },
