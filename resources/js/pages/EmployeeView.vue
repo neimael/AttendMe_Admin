@@ -93,17 +93,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <NavBarItemPlain use-margin>
-        <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getEmployees"
-    />
-</NavBarItemPlain>
+      
       <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="Employees" main>
       
         <div class="space-x-3">
@@ -135,7 +125,18 @@ const handlePDFDownload = (fileData) => {
         </router-link>
         </div>
       </SectionTitleLineWithButton>
-     
+  <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getEmployees"
+    />
+  </div>
       <CardBox has-table>
         <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="">
   <div class="text-center">
@@ -388,5 +389,14 @@ showAllInfo() {
 <style>
 .yellow-button {
   background-color: yellow;
+}
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
 }
 </style>

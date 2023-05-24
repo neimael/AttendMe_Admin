@@ -98,15 +98,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getRegulations"
-    />
+      
       <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Sanitary Issues Regulations" main>
        <!--<router-link to="/add-manual-attendance">
           <BaseButton
@@ -131,7 +123,18 @@ const handlePDFDownload = (fileData) => {
   </ul>
 </div>
       </SectionTitleLineWithButton>
-
+      <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getRegulations"
+    />
+  </div>
       <CardBox has-table>
         <CardBoxModal v-model="isModalActive" title="Sample modal">
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
@@ -309,3 +312,14 @@ export default {
   }
 };
 </script>
+<style>
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+</style>

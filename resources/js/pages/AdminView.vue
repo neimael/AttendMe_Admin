@@ -96,17 +96,7 @@ const checked = (isChecked, admin) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <NavBarItemPlain use-margin>
-        <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getAdmins"
-    />
-</NavBarItemPlain>
+      
       <SectionTitleLineWithButton :icon="mdiLock" title="Admins" main>
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2 space-between">
@@ -135,7 +125,20 @@ const checked = (isChecked, admin) => {
         </router-link>
         </div>
       </SectionTitleLineWithButton>
-
+      <NavBarItemPlain use-margin>
+  <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getAdmins"
+    />
+  </div>
+</NavBarItemPlain>
       <CardBox has-table>
         <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" title="">
   <div class="text-center">
@@ -374,3 +377,15 @@ export default {
   }
 };
 </script>
+
+<style>
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+</style>

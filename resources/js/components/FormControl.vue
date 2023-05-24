@@ -61,7 +61,7 @@ const computedValue = computed({
 
 const inputElClass = computed(() => {
   const base = [
-    "px-3 py-2 max-w-full focus:ring focus:outline-none border-gray-700 rounded w-full",
+    "px-3 py-2 max-w-full focus:outline-none rounded w-full",
     "dark:placeholder-gray-400",
     computedType.value === "textarea" ? "h-24" : "h-12",
     props.borderless ? "border-0" : "border",
@@ -72,8 +72,14 @@ const inputElClass = computed(() => {
     base.push("pl-10");
   }
 
+  // Add transparent border on focus
+  base.push("focus:ring-0 focus:border-transparent");
+
   return base;
 });
+
+
+
 
 const computedType = computed(() => (props.options ? "select" : props.type));
 
