@@ -101,17 +101,11 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <NavBarItemPlain use-margin>
-        <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getPresences"
-    />
-</NavBarItemPlain>
+     
+
+
+
+
       <SectionTitleLineWithButton :icon="mdiListBoxOutline" title="Today's Attendance" main>
       
         <div class="dropdown dropdown-bottom ml-2">
@@ -127,7 +121,20 @@ const handlePDFDownload = (fileData) => {
   </ul>
 </div>
       </SectionTitleLineWithButton>
-
+ <NavBarItemPlain use-margin>
+  <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getPresences"
+    />
+  </div>
+</NavBarItemPlain>
       <CardBox has-table>
         <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" v-if="Selectedpresence">
     <div class="text-center">
@@ -363,3 +370,15 @@ export default {
   }
 };
 </script>
+
+<style>
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+</style>

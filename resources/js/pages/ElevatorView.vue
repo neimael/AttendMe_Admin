@@ -90,17 +90,6 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <NavBarItemPlain use-margin>
-        <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getElevators"
-    />
-</NavBarItemPlain>
       <SectionTitleLineWithButton :icon="mdiElevatorPassengerOutline" title="Elevators" main>
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
@@ -128,7 +117,18 @@ const handlePDFDownload = (fileData) => {
         </router-link>
         </div>
       </SectionTitleLineWithButton>
-
+      <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getElevators"
+    />
+  </div>
       <CardBox has-table>
         <CardBoxModal v-model="isModalActive" title="Sample modal">
     <p>Lorem ipsum dolor sit amet <b>adipiscing elit</b></p>
@@ -320,3 +320,14 @@ export default {
   }
 };
 </script>
+<style>
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+</style>

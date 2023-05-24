@@ -100,17 +100,7 @@ const handlePDFDownload = (fileData) => {
 <template>
   <LayoutAuthenticated>
     <SectionMain>
-      <NavBarItemPlain use-margin>
-        <FormControl
-      v-model="searchTerm"
-      placeholder="Search"
-      ctrl-k-focus
-      transparent
-      borderless
-      class="w-full"
-      @input="getAssignments"
-    />
-</NavBarItemPlain>
+      
       <SectionTitleLineWithButton :icon="mdiOrderBoolAscendingVariant" title="Elevator Assignments" main>
         <div class="space-x-3">
         <div class="dropdown dropdown-bottom ml-2">
@@ -138,6 +128,18 @@ const handlePDFDownload = (fileData) => {
         </router-link>
         </div>
       </SectionTitleLineWithButton>
+  <div class="search-container" style="border: 1px solid #ccc; padding: 5px; margin-bottom: 15px;">
+    <i class="fa fa-search"></i>
+    <FormControl
+      v-model="searchTerm"
+      placeholder="Search"
+      ctrl-k-focus
+      transparent
+      borderless
+      class="w-full"
+      @input="getAssignments"
+    />
+  </div>
       <CardBox has-table>
         <CardBoxModal class="flex justify-center items-center h-screen" v-model="isModalActive" v-if="this.Selectedassignment">
   <div class="text-center">
@@ -368,3 +370,14 @@ async getAssignment(assignment) {
   }
 };
 </script>
+<style>
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container i {
+  margin-right: 5px;
+  margin-left: 15px;
+}
+</style>
