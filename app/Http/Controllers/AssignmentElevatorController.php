@@ -14,9 +14,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
-
-
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AffectationCreated;
 
 class AssignmentElevatorController extends Controller
 {
@@ -181,7 +180,16 @@ public function getInformation(Request $request)
         $assignmentElevator->time_in = $request->time_in;
         $assignmentElevator->time_out = $request->time_out;
         $assignmentElevator->save();
-    
+        try {
+            $employee = User::find($id_employee);
+            $qrcode = qrcodes::find($request->id_elevator);
+
+            Mail::to($employee->email)->send(new AffectationCreated($request->time_in,$request->time_out,$start_date,$end_date,$qrcode->elevator->name.' '.$qrcode->mission.' '.$qrcode->elevator->location->ville.' '.$qrcode->elevator->location->adress));
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error sending email: ' . $e->getMessage()
+            ], 500);
+        }
         return response()->json(['message' => 'Assignment has been created successfully']);
     }
     
