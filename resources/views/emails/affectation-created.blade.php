@@ -5,7 +5,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            color: #333;
+            color: #000000;
         }
         h1 {
             margin-top: 0;
