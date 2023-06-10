@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AffectationCreated;
+use App\Mail\AffectationModified;
 
 class AssignmentElevatorController extends Controller
 {
@@ -210,6 +211,7 @@ public function getInformation(Request $request)
     $start_date = $request->start_date;
     $end_date = $request->end_date;
     $conflictingAssignment = AssignmentElevator::where('id_employee', $id_employee)
+    ->where('id_assignment_elevator', '!=', $id)
     ->where(function ($query) use ($start_date, $end_date) {
         $query->whereBetween('start_date', [$start_date, $end_date])
             ->orWhereBetween('end_date', [$start_date, $end_date])
@@ -235,7 +237,16 @@ if ($conflictingAssignment) {
     $assignmentElevator->time_out = $request->time_out;
     
     $assignmentElevator->save();
-    
+    try {
+        $employee = User::find($id_employee);
+        $qrcode = qrcodes::find($request->id_elevator);
+
+        Mail::to($employee->email)->send(new AffectationModified($request->time_in,$request->time_out,$start_date,$end_date,$qrcode->elevator->name.' '.$qrcode->mission.' '.$qrcode->elevator->location->ville.' '.$qrcode->elevator->location->adress));
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error sending email: ' . $e->getMessage()
+        ], 500);
+    }
     return response()->json(['message' => 'Assignment has been updated successfully']);
 }
     /**
